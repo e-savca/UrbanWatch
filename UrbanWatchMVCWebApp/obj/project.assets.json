@@ -61,11 +61,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Eugeniu\\source\\repos\\Pet-project\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp.csproj",
+      "projectUniqueName": "C:\\Users\\Eugeniu\\Source\\Repos\\e-savca\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp.csproj",
       "projectName": "UrbanWatchMVCWebApp",
-      "projectPath": "C:\\Users\\Eugeniu\\source\\repos\\Pet-project\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp.csproj",
+      "projectPath": "C:\\Users\\Eugeniu\\Source\\Repos\\e-savca\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp.csproj",
       "packagesPath": "C:\\Users\\Eugeniu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Eugeniu\\source\\repos\\Pet-project\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\obj\\",
+      "outputPath": "C:\\Users\\Eugeniu\\Source\\Repos\\e-savca\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
