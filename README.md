@@ -17,6 +17,6 @@ To run the application, follow the steps below:
 
 1. Clone the repository
 2. Open the solution in Visual Studio
-3. Run the application through IIS Express
+3. Run the application through IIS Express or self-hosted
 
 We hope our application offers you a pleasant navigating experience through the city of Chisinau!
