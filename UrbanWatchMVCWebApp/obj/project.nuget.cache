@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hZXxs4QdnaCVzk8gcHHFlvGVSLQVyI+pA9RNgaz62DkQcTD7HshmIdEFDk5/P4Zj8E/uCje6EZp0t9zF3B2B5w==",
+  "dgSpecHash": "Eq12+s052QOWh18aUXtNYJVC8Q0RAPOScv1ITFEqkxyqfcYh/a5coZL1o05wECs63/BLzY7WRyUzg3EHDVDWNA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Eugeniu\\Source\\Repos\\e-savca\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp.csproj",
+  "projectFilePath": "C:\\Users\\Eugeniu\\source\\repos\\e-savca\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp\\UrbanWatchMVCWebApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Eugeniu\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
   ],
