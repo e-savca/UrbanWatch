@@ -3,7 +3,7 @@ This is a pet-project that allows users to view the position of public transport
 
 ## Technologies used
 
-- [ASP.NET](http://asp.net/) Core MVC
+- ASP.NET Core MVC
 - LeafletJS
 - HTML/CSS/JavaScript
 
