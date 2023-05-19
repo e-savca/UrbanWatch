@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Bine ați venit pe pagina principală!</h1>
-    <p>Utilizarea datelor din ViewData pentru a afișa vehicule pe o hartă LeafletJS</p>
+    <p>Utilizarea datelor din  pentru a afișa vehicule pe o hartă LeafletJS</p>
     <div id="map" style="height: 500px;"></div>
 
 </div>
@@ -25,8 +25,6 @@
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-
-        //var marker = L.marker([47.02543731466161, 28.830271935332686]).addTo(map).bindPopup('<b>VehicleName' + '</b> VehicleType');
         for(var i = 0; i < vehicles.length; i++){
             var vehicle = vehicles[i];
             var marker = L.marker([vehicle.latitude, vehicle.longitude]).addTo(map).bindPopup('<table><tbody><tr><td><h3>route_id</h3></td><td><h3>' + vehicle.route_id + '</h3></td></tr><tr><td>trip_id</td><td>' + vehicle.trip_id + '</td></tr><tr><td>speed</td><td>' + vehicle.speed + '</td></tr><tr><td>vehicle_type</td><td>' + vehicle.vehicle_type + '</td></tr><tr><td>timestamp</td><td>' + vehicle.timestamp + '</td></tr><tr><td>label</td><td>' + vehicle.label + '</td></tr></tbody></table>');
@@ -34,15 +32,3 @@
 
     </script>
 }
-@*@section Scripts {
-    <script>
-        var vehicles = @Html.Raw(ViewData["VehiclesText"]);
-
-        for (var i = 0; i < vehicles.length; i++) {
-            var vehicle = vehicles[i];
-            L.marker([vehicle.Latitude, vehicle.Longitude]).addTo(map)
-                .bindPopup('<b>' + vehicle.Label + '</b>\\
-                            ' + vehicle.routeId);
-                }
-    </script>
-}*@
