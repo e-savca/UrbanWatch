@@ -1,0 +1,37 @@
+﻿@model UrbanWatchMVCWebApp.DataTypes.Vehicle[]
+@{
+    ViewData["Title"] = "Maps page";
+}
+<div id="jsonData" data-json="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)"></div>
+
+<div class="text-center">
+    <h1 class="display-4">Public Transport Map of Chisinau</h1>
+    <p>
+        Hello! We present to you the public transport map of Chisinau, which will help you plan your trip around the city. On the map, you will find all the trolleybus and bus routes, as well as their stops. Additionally, you can check the schedule and duration of the trip. Use this map to quickly and efficiently reach your destination.
+    </p>
+    <p>Thank you for using our service!</p>
+    <div id="map" style="height: 500px;"></div>
+
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        var jsonDataElement = document.getElementById('jsonData');
+        var vehicles = JSON.parse(jsonDataElement.getAttribute('data-json'));
+
+        var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        for (var i = 0; i < vehicles.length; i++) {
+            var vehicle = vehicles[i];
+            var marker = L.marker([vehicle.latitude, vehicle.longitude]).addTo(map).bindPopup('<table><tbody><tr><td><h3>route_id</h3></td><td><h3>' + vehicle.route_id + '</h3></td></tr><tr><td>trip_id</td><td>' + vehicle.trip_id + '</td></tr><tr><td>speed</td><td>' + vehicle.speed + '</td></tr><tr><td>vehicle_type</td><td>' + vehicle.vehicle_type + '</td></tr><tr><td>timestamp</td><td>' + vehicle.timestamp + '</td></tr><tr><td>label</td><td>' + vehicle.label + '</td></tr></tbody></table>');
+        }
+
+    </script>
+}

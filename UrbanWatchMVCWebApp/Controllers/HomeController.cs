@@ -9,7 +9,6 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly TranzyService _tranzyService = new TranzyService();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -19,13 +18,7 @@ namespace UrbanWatchMVCWebApp.Controllers
 
         public IActionResult Index()
         {
-            // Utilizați metoda GetData pentru a obține datele de tipul Vehicles[]
-            Vehicle[] vehicles = _tranzyService.GetData();
-            //var json = JsonConvert.SerializeObject(vehicles);
-            //// Pasați datele în modelul view-ului
-            //ViewData["VehiclesText"] = json;
-
-            return View(vehicles);
+            return View();
         }
 
         public IActionResult Privacy()
