@@ -1,5 +1,5 @@
-# UrbanWatchMVCWebApp
-This is a pet-project that allows users to view the position of public transport in Chisinau, Moldova in an interactive and user-friendly way. The project is developed within the [ASP.NET](http://asp.net/) Core MVC WebApp platform.
+# UrbanWatch
+This is a pet-project that allows users to view the position of public transport in Chisinau, Moldova in an interactive and user-friendly way. The project is developed within the ASP.NET Core MVC WebApp platform.
 
 ## Technologies used
 
@@ -17,6 +17,6 @@ To run the application, follow the steps below:
 
 1. Clone the repository
 2. Open the solution in Visual Studio
-3. Run the application through IIS Express
+3. Run the application through IIS Express or self-hosted
 
-We hope our application offers you a pleasant navigating experience through the city of Chisinau!
+Hope my application offers you a pleasant navigating experience through the city of Chisinau!
