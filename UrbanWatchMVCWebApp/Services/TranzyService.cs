@@ -42,10 +42,10 @@ namespace UrbanWatchMVCWebApp.Services
             var body = GetData(_vehiclesAPILink);
             return JsonConvert.DeserializeObject<Vehicle[]>(body);
         }
-        public UrbanWatchMVCWebApp.DataTypes.Route[] GetRoutesData()
+        public DataTypes.Route[] GetRoutesData()
         {
             var body = GetData(_routesAPILink);
-            return JsonConvert.DeserializeObject<UrbanWatchMVCWebApp.DataTypes.Route[]>(body);
+            return JsonConvert.DeserializeObject<DataTypes.Route[]>(body);
         }
         public Trip[] GetTripsData()
         {

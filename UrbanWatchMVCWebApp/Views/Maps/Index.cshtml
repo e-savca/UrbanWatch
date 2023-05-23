@@ -1,4 +1,5 @@
-﻿@model UrbanWatchMVCWebApp.DataTypes.Vehicle[]
+﻿@using UrbanWatchMVCWebApp.DataTypes;
+@model ExtendedVehicle[]
 @{
     ViewData["Title"] = "Maps page";
 }
@@ -30,7 +31,7 @@
         }).addTo(map);
         for (var i = 0; i < vehicles.length; i++) {
             var vehicle = vehicles[i];
-            var marker = L.marker([vehicle.latitude, vehicle.longitude]).addTo(map).bindPopup('<table><tbody><tr><td><h3>route_id</h3></td><td><h3>' + vehicle.route_id + '</h3></td></tr><tr><td>trip_id</td><td>' + vehicle.trip_id + '</td></tr><tr><td>speed</td><td>' + vehicle.speed + '</td></tr><tr><td>vehicle_type</td><td>' + vehicle.vehicle_type + '</td></tr><tr><td>timestamp</td><td>' + vehicle.timestamp + '</td></tr><tr><td>label</td><td>' + vehicle.label + '</td></tr></tbody></table>');
+            var marker = L.marker([vehicle.latitude, vehicle.longitude]).addTo(map).bindPopup('<table><tbody><tr><td><h3>routeShortName</h3></td><td><h3>' + vehicle.route_short_name + '</h3></td></tr><tr><td>trip_id</td><td>' + vehicle.trip_id + '</td></tr><tr><td>speed</td><td>' + vehicle.speed + '</td></tr><tr><td>vehicle_type</td><td>' + vehicle.vehicle_type + '</td></tr><tr><td>timestamp</td><td>' + vehicle.timestamp + '</td></tr><tr><td>label</td><td>' + vehicle.label + '</td></tr></tbody></table>');
         }
 
     </script>

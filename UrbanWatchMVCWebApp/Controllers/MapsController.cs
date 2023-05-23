@@ -6,10 +6,11 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class MapsController : Controller
     {
-        private TranzyService _tranzyService = new TranzyService();
+        private TranzyAdapter _tranzyAdapter = new TranzyAdapter(new TranzyService());
+
         public IActionResult Index()
         {            
-            return View(_tranzyService.GetVehiclesData());
+            return View(_tranzyAdapter.GetExtendedVehicles());
         }
         //public IActionResult Index(int id)
         //{
