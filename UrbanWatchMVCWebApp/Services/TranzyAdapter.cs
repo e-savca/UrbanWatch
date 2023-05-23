@@ -20,6 +20,11 @@ namespace UrbanWatchMVCWebApp.Services
         {
             return _extendedVehicles;
         }
+        public ExtendedVehicle[] GetExtendedVehicles(int id)
+        {
+            string stringId = $"{id}";
+            return _extendedVehicles.Where(item => item.routeShortName == stringId).ToArray();
+        }
         private void ConvertTypes()
         {
             for (int i = 0; i < _vehicles.Length; i++)
