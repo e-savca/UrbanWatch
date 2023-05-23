@@ -20,21 +20,17 @@ namespace UrbanWatchMVCWebApp.Services
         {
             return _extendedVehicles;
         }
-        public ExtendedVehicle[] GetExtendedVehicles(int id)
+        public ExtendedVehicle[] GetExtendedVehicles(string id)
         {
-            string stringId = $"{id}";
-            return _extendedVehicles.Where(item => item.routeShortName == stringId).ToArray();
+            return _extendedVehicles.Where(item => item.routeShortName == id).ToArray();
         }
         private void ConvertTypes()
         {
             for (int i = 0; i < _vehicles.Length; i++)
             {
-                _extendedVehicles[i] = new ExtendedVehicle();
-                _extendedVehicles[i].AddVehicleData(_vehicles[i]);
+                _extendedVehicles[i] = new ExtendedVehicle(_vehicles[i]);
                 if (_vehicles[i].routeId != null)
-                {
                     _extendedVehicles[i].AddRouteData(_routes.Where(item => item.routeId == _vehicles[i].routeId).First());
-                }
                            
             }
         }

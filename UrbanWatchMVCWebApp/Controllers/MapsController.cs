@@ -6,16 +6,34 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class MapsController : Controller
     {
-        private TranzyAdapter _tranzyAdapter = new TranzyAdapter(new TranzyService());
-        [HttpGet("maps")]
+        private readonly TranzyService _tranzyService;
+        private readonly TranzyAdapter _tranzyAdapter;
+
+        public MapsController()
+        {
+            _tranzyService = new TranzyService();
+            _tranzyAdapter = new TranzyAdapter(_tranzyService);
+        }
+        [HttpGet("maps")] 
         public IActionResult Index()
         {            
             return View(_tranzyAdapter.GetExtendedVehicles());
         }
         [HttpGet("maps/{id?}")]
-        public IActionResult Index(int id)
+        public IActionResult Index(string id)
         {
             return View(_tranzyAdapter.GetExtendedVehicles(id));
         }
+
+        //[HttpGet("maps/routes")]
+        //public IActionResult Routes()
+        //{
+        //    return View(_tranzyService.GetRoutesData());
+        //}
+        //[HttpGet("maps/routes/{id?}")]
+        //public IActionResult Routes(string id)
+        //{
+        //    return View(_tranzyService.GetRoutesData());
+        //}
     }
 }

@@ -28,6 +28,7 @@ namespace UrbanWatchMVCWebApp.Services
                 Headers =
                 {
                     { "X-Agency-Id", _AgencyId },
+                    { "Accept", "application/json" },
                     { "X-API-KEY", _APIKey },
                 },
             };
