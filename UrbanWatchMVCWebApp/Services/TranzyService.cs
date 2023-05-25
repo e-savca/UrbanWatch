@@ -53,10 +53,14 @@ namespace UrbanWatchMVCWebApp.Services
             var body = GetData(_tripsAPILink);
             return JsonConvert.DeserializeObject<Trip[]>(body);
         }
-        public Shape[] GetShapesData()
+        private Shape[] GetShapesData()
         {
             var body = GetData(_shapesAPILink);
             return JsonConvert.DeserializeObject<Shape[]>(body);
+        }
+        public Shape[] GetShapesData(string Id)
+        {
+            return GetShapesData().Where(item => item.shapeId == Id).ToArray();
         }
         public Stop[] GetStopsData()
         {

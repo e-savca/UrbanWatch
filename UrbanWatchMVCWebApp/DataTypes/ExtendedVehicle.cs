@@ -5,26 +5,26 @@ namespace UrbanWatchMVCWebApp.DataTypes
     public class ExtendedVehicle
     {
         // Vehicle properties
-        [JsonProperty("id")] public string Id { get; set; }
-        [JsonProperty("label")] public string Label { get; set; }        
-        [JsonProperty("latitude")] public string Latitude { get; set; }
-        [JsonProperty("longitude")] public string Longitude { get; set; }
-        [JsonProperty("timestamp")] public string Timestamp { get; set; }
-        [JsonProperty("vehicle_type")] public string vehicleType { get; set; }
-        [JsonProperty("bike_accessible")] public string bikeAccessible { get; set; }
-        [JsonProperty("wheelchair_accessible")] public string wheelchairAccessible { get; set; }
-        [JsonProperty("x_provider")] public string xProvider { get; set; }
-        [JsonProperty("x_rand")] public string xRand { get; set; }
-        [JsonProperty("speed")] public string Speed { get; set; }
-        [JsonProperty("route_id")] public string routeId { get; set; }
-        [JsonProperty("trip_id")] public string tripId { get; set; }
+        public string Id { get; set; }
+        public string Label { get; set; }        
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string Timestamp { get; set; }
+        public string vehicleType { get; set; }
+        public string bikeAccessible { get; set; }
+        public string wheelchairAccessible { get; set; }
+        public string xProvider { get; set; }
+        public string xRand { get; set; }
+        public string Speed { get; set; }
+        public string routeId { get; set; }
+        public string tripId { get; set; }
 
         // Route properties
-        [JsonProperty("agency_id")] public int agencyId { get; set; } = 0;        
-        [JsonProperty("route_short_name")] public string routeShortName { get; set; } = "";
-        [JsonProperty("route_long_name")] public string routeLongName { get; set; } = "";
-        [JsonProperty("route_color")] public string routeColor { get; set; } = "";
-        [JsonProperty("route_type")] public int routeType { get; set; } = 0;
+        public int agencyId { get; set; } = 0;        
+        public string routeShortName { get; set; } = "";
+        public string routeLongName { get; set; } = "";
+        public string routeColor { get; set; } = "";
+        public int routeType { get; set; } = 0;
         public ExtendedVehicle(Vehicle vehicle)
         {
             this.Id = vehicle.Id;
