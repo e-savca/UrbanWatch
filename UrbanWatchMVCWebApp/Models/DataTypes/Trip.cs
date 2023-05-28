@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace UrbanWatchMVCWebApp.DataTypes
+namespace UrbanWatchMVCWebApp.Models.DataTypes
 {
     public class Trip
     {

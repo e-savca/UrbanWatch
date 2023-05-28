@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using UrbanWatchMVCWebApp.Models;
 using UrbanWatchMVCWebApp.Services;
-using UrbanWatchMVCWebApp.DataTypes;
+using UrbanWatchMVCWebApp.Models.DataTypes;
 using Newtonsoft.Json;
 
 namespace UrbanWatchMVCWebApp.Controllers

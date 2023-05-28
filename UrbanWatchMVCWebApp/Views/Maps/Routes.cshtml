@@ -1,4 +1,4 @@
-﻿@using UrbanWatchMVCWebApp.DataTypes;
+﻿@using UrbanWatchMVCWebApp.Models.DataTypes;
 @model Shape[]
 @{
     ViewData["Title"] = "Maps page";
@@ -20,8 +20,8 @@
 
 @section Scripts {
     <script>
-        //var jsonDataElement = document.getElementById('jsonData');
-        //var shapes = JSON.parse(jsonDataElement.getAttribute('data-json'));
+        var jsonDataElement = document.getElementById('jsonData');
+        var shapes = JSON.parse(jsonDataElement.getAttribute('data-json'));
 
         var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12);
 
@@ -29,22 +29,22 @@
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+        
         // create a red polyline from an array of LatLng points
-        var latlngs = [
-            [45.51, -122.68],
-            [37.77, -122.43],
-            [34.04, -118.2]
-        ];
+        
+        var latlngs = [];
+        for(let i = 0; i < shapes.length; i++){
+            var point = [];
+            point[0] = shapes[i].shape_pt_lat;
+            point[1] = shapes[i].shape_pt_lon;
+            latlngs.push(point);
+        }
+
 
         var polyline = L.polyline(latlngs, { color: 'red' }).addTo(map);
 
         // zoom the map to the polyline
         map.fitBounds(polyline.getBounds());
-
-        //for (var i = 0; i < shapes.length; i++) {
-        //    var shape = vehicles[i];
-        //    var marker = L.marker([vehicle.shape_pt_lat, vehicle.shape_pt_lon]).addTo(map).bindPopup('<table><tbody><tr><td><h3>routeShortName</h3></td><td><h3>' + vehicle.route_short_name + '</h3></td></tr><tr><td>trip_id</td><td>' + vehicle.trip_id + '</td></tr><tr><td>speed</td><td>' + vehicle.speed + '</td></tr><tr><td>vehicle_type</td><td>' + vehicle.vehicle_type + '</td></tr><tr><td>timestamp</td><td>' + vehicle.timestamp + '</td></tr><tr><td>label</td><td>' + vehicle.label + '</td></tr></tbody></table>');
-        //}
 
     </script>
 }

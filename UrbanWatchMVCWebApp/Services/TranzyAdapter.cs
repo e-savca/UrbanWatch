@@ -1,4 +1,5 @@
-﻿using UrbanWatchMVCWebApp.DataTypes;
+﻿using UrbanWatchMVCWebApp.Models;
+using UrbanWatchMVCWebApp.Models.DataTypes;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -6,7 +7,7 @@ namespace UrbanWatchMVCWebApp.Services
     {
         private TranzyService _tranzyService;
         private Vehicle[] _vehicles;
-        private DataTypes.Route[] _routes;
+        private Models.DataTypes.Route[] _routes;
         private ExtendedVehicle[] _extendedVehicles;
         public TranzyAdapter(TranzyService tranzyService)
         {

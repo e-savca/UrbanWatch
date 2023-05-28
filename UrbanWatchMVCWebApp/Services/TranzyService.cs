@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using NuGet.Packaging.Licenses;
 using System.Drawing.Text;
-using UrbanWatchMVCWebApp.DataTypes;
+using UrbanWatchMVCWebApp.Models.DataTypes;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -43,17 +43,17 @@ namespace UrbanWatchMVCWebApp.Services
             var body = GetData(_vehiclesAPILink);
             return JsonConvert.DeserializeObject<Vehicle[]>(body);
         }
-        public DataTypes.Route[] GetRoutesData()
+        public Models.DataTypes.Route[] GetRoutesData()
         {
             var body = GetData(_routesAPILink);
-            return JsonConvert.DeserializeObject<DataTypes.Route[]>(body);
+            return JsonConvert.DeserializeObject<Models.DataTypes.Route[]>(body);
         }
         public Trip[] GetTripsData()
         {
             var body = GetData(_tripsAPILink);
             return JsonConvert.DeserializeObject<Trip[]>(body);
         }
-        private Shape[] GetShapesData()
+        public Shape[] GetShapesData()
         {
             var body = GetData(_shapesAPILink);
             return JsonConvert.DeserializeObject<Shape[]>(body);

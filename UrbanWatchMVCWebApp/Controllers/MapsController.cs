@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UrbanWatchMVCWebApp.DataTypes;
+using UrbanWatchMVCWebApp.Models.DataTypes;
 using UrbanWatchMVCWebApp.Services;
 
 namespace UrbanWatchMVCWebApp.Controllers

@@ -4,6 +4,11 @@
 .vs/
 UrbanWatchMVCWebApp/bin/
 UrbanWatchMVCWebApp/obj/
+UrbanWatchMVCWebApp/.vscode/
+
+UrbanWatchConsoleApp/bin/
+UrbanWatchConsoleApp/obj/
+UrbanWatchConsoleApp/.vscode/
 
 *.suo
 *.user
