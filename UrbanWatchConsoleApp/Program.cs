@@ -28,21 +28,16 @@ foreach (var item in shapeIDsUnique)
 }
                      
 Console.Write("Select the Shape ID: ");
-string readString = Console.ReadLine();
+string readString = "6_0";
 if (readString != null)
 {
-    shapes = shapes.Where(item => item.shapeId == readString).ToArray();
-    for (int i = 0; i < shapes.Length; i++)
+    Shape[] newShapes = shapes.Where(item => item.shapeId == readString).ToArray();
+    for (int i = 0; i < newShapes.Length; i++)
     {
         if (i != 0)
         {
-            double lat1, lon1, lat2, lon2;
-            lat1 = double.Parse(shapes[i - 1].shapePointLat);
-            lon1 = double.Parse(shapes[i - 1].shapePointLon);
-            lat2 = double.Parse(shapes[i].shapePointLat);
-            lon2 = double.Parse(shapes[i].shapePointLon);
-            double distance = HaversineDistanceCalculator.CalculateHaversineDistance(lat1, lon1, lat2, lon2);
-            Console.WriteLine($"Distanta dintre punctul [{i-1}] si [{i}] => {distance*1000} metri");
+            double distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].shapePointLat, newShapes[i - 1].shapePointLon, newShapes[i].shapePointLat, newShapes[i].shapePointLon) * 1000;
+            Console.WriteLine($"[{i - 1}] [{i}] => {Math.Round(distance, 3)} metri");
         }
         else
         {

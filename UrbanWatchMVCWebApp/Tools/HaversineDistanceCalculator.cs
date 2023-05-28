@@ -4,8 +4,13 @@
     {
         private const double EarthRadiusInKm = 6371.0;
 
-        public static double CalculateHaversineDistance(double lat1, double lon1, double lat2, double lon2)
+        public static double CalculateHaversineDistance(string LA1, string LO1, string LA2, string LO2)
         {
+            double lat1 = double.Parse(LA1);
+            double lon1 = double.Parse(LO1);
+            double lat2 = double.Parse(LA2);
+            double lon2 = double.Parse(LO2);
+
             double dLat = DegreesToRadians(lat2 - lat1);
             double dLon = DegreesToRadians(lon2 - lon1);
 
