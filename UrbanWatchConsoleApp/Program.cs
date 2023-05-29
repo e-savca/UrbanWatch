@@ -36,8 +36,8 @@ if (readString != null)
     {
         if (i != 0)
         {
-            double distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].shapePointLat, newShapes[i - 1].shapePointLon, newShapes[i].shapePointLat, newShapes[i].shapePointLon) * 1000;
-            Console.WriteLine($"[{i - 1}] [{i}] => {Math.Round(distance, 3)} metri");
+            double distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].shapePointLat, newShapes[i - 1].shapePointLon, newShapes[i].shapePointLat, newShapes[i].shapePointLon);
+            Console.WriteLine($"[{i - 1}] [{i}] => {distance} metri");
         }
         else
         {
