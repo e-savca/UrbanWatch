@@ -4,13 +4,6 @@ using UrbanWatchMVCWebApp.Models.DataTypes;
 using UrbanWatchMVCWebApp.Services;
 using UrbanWatchMVCWebApp.Tools;
 
-//double lat1 = 46.98862; // 46.98862, 28.88614
-//double lon1 = 28.88614;
-
-//double lat2 = 47.00633; // 47.00633, 28.86642
-//double lon2 = 28.86642;
-
-//double distance = HaversineDistanceCalculator.CalculateHaversineDistance(lat1, lon1, lat2, lon2);
 
 TranzyService tranzyService = new TranzyService();
 Shape[] shapes = tranzyService.GetShapesData();
@@ -36,8 +29,8 @@ if (readString != null)
     {
         if (i != 0)
         {
-            double distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].shapePointLat, newShapes[i - 1].shapePointLon, newShapes[i].shapePointLat, newShapes[i].shapePointLon);
-            Console.WriteLine($"[{i - 1}] [{i}] => {distance} metri");
+            float distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].shapePointLat, newShapes[i - 1].shapePointLon, newShapes[i].shapePointLat, newShapes[i].shapePointLon);
+            Console.WriteLine($"[{newShapes[i - 1].shapePointLat}, {newShapes[i - 1].shapePointLon}]\t[{newShapes[i].shapePointLat}, {newShapes[i].shapePointLon}]\t[{i - 1}] [{i}] => {distance} metri");
         }
         else
         {
