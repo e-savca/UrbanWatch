@@ -60,7 +60,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public Shape[] GetShapesData(string Id)
         {
-            return GetShapesData().Where(item => item.shapeId == Id).ToArray();
+            return GetShapesData().Where(item => item.Id == Id).ToArray();
         }
         public Stop[] GetStopsData()
         {

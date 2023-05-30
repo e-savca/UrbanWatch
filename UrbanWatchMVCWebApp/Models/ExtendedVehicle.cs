@@ -17,7 +17,7 @@ namespace UrbanWatchMVCWebApp.Models
         public string xProvider { get; set; }
         public string xRand { get; set; }
         public string Speed { get; set; }
-        public string routeId { get; set; }
+        public int? routeId { get; set; }
         public string tripId { get; set; }
 
         // Route properties

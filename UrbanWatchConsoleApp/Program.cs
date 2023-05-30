@@ -12,7 +12,7 @@ Console.WriteLine("The Shape's IDs");
 string[] shapeIDs = new string[shapes.Length];
 for (int i = 0; i < shapes.Length; i++)
 {
-    shapeIDs[i] = shapes[i].shapeId;
+    shapeIDs[i] = shapes[i].Id;
 }
 string[] shapeIDsUnique = shapeIDs.Distinct().ToArray();
 foreach (var item in shapeIDsUnique)
@@ -24,13 +24,13 @@ Console.Write("Select the Shape ID: ");
 string readString = "6_0";
 if (readString != null)
 {
-    Shape[] newShapes = shapes.Where(item => item.shapeId == readString).ToArray();
+    Shape[] newShapes = shapes.Where(item => item.Id == readString).ToArray();
     for (int i = 0; i < newShapes.Length; i++)
     {
         if (i != 0)
         {
-            float distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].shapePointLat, newShapes[i - 1].shapePointLon, newShapes[i].shapePointLat, newShapes[i].shapePointLon);
-            Console.WriteLine($"[{newShapes[i - 1].shapePointLat}, {newShapes[i - 1].shapePointLon}]\t[{newShapes[i].shapePointLat}, {newShapes[i].shapePointLon}]\t[{i - 1}] [{i}] => {distance} metri");
+            float distance = HaversineDistanceCalculator.CalculateHaversineDistance(newShapes[i - 1].Latitude, newShapes[i - 1].Longitude, newShapes[i].Latitude, newShapes[i].Longitude);
+            Console.WriteLine($"[{newShapes[i - 1].Latitude}, {newShapes[i - 1].Longitude}]\t[{newShapes[i].Latitude}, {newShapes[i].Longitude}]\t[{i - 1}] [{i}] => {distance} metri");
         }
         else
         {

@@ -11,6 +11,15 @@
         Hello! We present to you the public transport map of Chisinau, which will help you plan your trip around the city. On the map, you will find all the trolleybus and bus routes, as well as their stops. Additionally, you can check the schedule and duration of the trip. Use this map to quickly and efficiently reach your destination.
     </p>
     <p>Thank you for using our service!</p>
+
+    <h1>Select a Route:</h1>
+    <select id="routeDropdown">
+        <option value="">Select a Route</option>
+        <option value="1">Route 1</option>
+        <option value="2">Route 2</option>
+        <option value="3">Route 3</option>
+        <!-- Add more routes as needed -->
+    </select>
     <div id="map" style="height: 500px;"></div>
 
 </div>
@@ -32,6 +41,55 @@
             var stop = stops[i];
             var marker = L.marker([stop.stop_lat, stop.stop_lon]).addTo(map).bindPopup('<table>  <tbody>    <tr>      <td><h3>stopName</h3></td>      <td><h3>' + stop.stop_name + '</h3></td>    </tr>    <tr>      <td>locationType</td>      <td>' + stop.location_type + '</td>    </tr>  </tbody>  </table>');
         }
+
+        var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12); // Set the initial map view
+
+        // Function to load trolleybus locations, bus stops, and route on the map
+        function loadMapData(routeId) {
+            // Clear previous markers, polylines, etc.
+            // ...
+
+            // Load trolleybus locations for the selected route using an AJAX request
+            $.ajax({
+                url: '/Map/GetTrolleybusLocations',
+                type: 'GET',
+                data: { routeId: routeId },
+                success: function (trolleybusLocations) {
+                    // Add trolleybus markers to the map
+                    // ...
+                }
+            });
+
+            // Load bus stops for the selected route using an AJAX request
+            $.ajax({
+                url: '/Map/GetBusStops',
+                type: 'GET',
+                data: { routeId: routeId },
+                success: function (busStops) {
+                    // Add bus stop markers to the map
+                    // ...
+                }
+            });
+
+            // Load trolleybus route using an AJAX request
+            $.ajax({
+                url: '/Map/GetTrolleybusRoute',
+                type: 'GET',
+                data: { routeId: routeId },
+                success: function (trolleybusRoute) {
+                    // Add route polyline to the map
+                    // ...
+                }
+            });
+        }
+
+        // Event listener for route selection
+        document.getElementById('routeDropdown').addEventListener('change', function () {
+            var selectedRouteId = this.value;
+            if (selectedRouteId !== '') {
+                loadMapData(selectedRouteId);
+            }
+        });
 
     </script>
 }

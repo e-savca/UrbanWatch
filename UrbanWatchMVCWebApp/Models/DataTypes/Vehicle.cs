@@ -15,7 +15,7 @@ namespace UrbanWatchMVCWebApp.Models.DataTypes
         [JsonProperty("x_provider")] public string xProvider { get; set; } = "";
         [JsonProperty("x_rand")] public string xRand { get; set; } = "";
         [JsonProperty("speed")] public string Speed { get; set; } = "";
-        [JsonProperty("route_id")] public string routeId { get; set; } = "";
+        [JsonProperty("route_id")] public int? routeId { get; set; }
         [JsonProperty("trip_id")] public string tripId { get; set; } = "";
     }
 }

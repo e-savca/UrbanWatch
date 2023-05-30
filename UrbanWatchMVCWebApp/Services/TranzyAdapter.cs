@@ -31,7 +31,7 @@ namespace UrbanWatchMVCWebApp.Services
             {
                 _extendedVehicles[i] = new ExtendedVehicle(_vehicles[i]);
                 if (_vehicles[i].routeId != null)
-                    _extendedVehicles[i].AddRouteData(_routes.Where(item => item.routeId == _vehicles[i].routeId).First());
+                    _extendedVehicles[i].AddRouteData(_routes.Where(item => item.Id == _vehicles[i].routeId).First());
                            
             }
         }
