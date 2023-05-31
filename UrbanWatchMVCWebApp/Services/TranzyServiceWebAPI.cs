@@ -2,11 +2,11 @@
 using Newtonsoft.Json;
 using NuGet.Packaging.Licenses;
 using System.Drawing.Text;
-using UrbanWatchMVCWebApp.Models.DataTypes;
+using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
-    public class TranzyService
+    public class TranzyServiceWebAPI : ITranzyService
     {
         // links to Tranzy APIs
         private readonly Uri _vehiclesAPILink = new Uri("https://api.tranzy.dev/v1/opendata/vehicles");
@@ -43,10 +43,10 @@ namespace UrbanWatchMVCWebApp.Services
             var body = GetData(_vehiclesAPILink);
             return JsonConvert.DeserializeObject<Vehicle[]>(body);
         }
-        public Models.DataTypes.Route[] GetRoutesData()
+        public Models.Route[] GetRoutesData()
         {
             var body = GetData(_routesAPILink);
-            return JsonConvert.DeserializeObject<Models.DataTypes.Route[]>(body);
+            return JsonConvert.DeserializeObject<Models.Route[]>(body);
         }
         public Trip[] GetTripsData()
         {
@@ -57,10 +57,6 @@ namespace UrbanWatchMVCWebApp.Services
         {
             var body = GetData(_shapesAPILink);
             return JsonConvert.DeserializeObject<Shape[]>(body);
-        }
-        public Shape[] GetShapesData(string Id)
-        {
-            return GetShapesData().Where(item => item.Id == Id).ToArray();
         }
         public Stop[] GetStopsData()
         {

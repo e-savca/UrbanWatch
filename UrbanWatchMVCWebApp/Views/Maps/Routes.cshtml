@@ -1,5 +1,4 @@
-﻿@using UrbanWatchMVCWebApp.Models.DataTypes;
-@model Shape[]
+﻿@model List<List<string[]>>
 @{
     ViewData["Title"] = "Maps page";
 }
@@ -28,20 +27,9 @@
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-        
-        // create a red polyline from an array of LatLng points
-        
-        var latlngs = [];
-        for(let i = 0; i < shapes.length; i++){
-            var point = [];
-            point[0] = shapes[i].shape_pt_lat;
-            point[1] = shapes[i].shape_pt_lon;
-            latlngs.push(point);
-        }
+        }).addTo(map);       
 
-
-        var polyline = L.polyline(latlngs, { color: 'red' }).addTo(map);
+        var polyline = L.polyline(shapes, { color: 'red' }).addTo(map);
 
         // zoom the map to the polyline
         map.fitBounds(polyline.getBounds());

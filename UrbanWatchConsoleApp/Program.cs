@@ -1,11 +1,10 @@
 ﻿using UrbanWatchMVCWebApp;
 using UrbanWatchMVCWebApp.Models;
-using UrbanWatchMVCWebApp.Models.DataTypes;
 using UrbanWatchMVCWebApp.Services;
 using UrbanWatchMVCWebApp.Tools;
 
 
-TranzyService tranzyService = new TranzyService();
+TranzyServiceWebAPI tranzyService = new TranzyServiceWebAPI();
 Shape[] shapes = tranzyService.GetShapesData();
 
 Console.WriteLine("The Shape's IDs");

@@ -1,33 +1,69 @@
-﻿@{
+﻿@model dynamic
+@{
     ViewData["Title"] = "Home page";
 }
-
 <div class="text-center">
-    <h1 class="display-4">Welcome to the home page!</h1>
-    <p>This is a pet-project that allows users to view the position of public transport in Chisinau, Moldova in an interactive and user-friendly way. The project is developed within the ASP.NET Core MVC WebApp platform.</p>
+    <h1 class="display-4">Public Transport Map of Chisinau</h1>
+    <p>
+        Hello! We present to you the public transport map of Chisinau, which will help you plan your trip around the city. On the map, you will find all the trolleybus and bus routes, as well as their stops. Additionally, you can check the schedule and duration of the trip. Use this map to quickly and efficiently reach your destination.
+    </p>
+    <p>Thank you for using our service!</p>
+    <div id="map" style="height: 500px;"></div>
+
 </div>
-    <h2>Technologies used</h2>
-
-    <ul>
-        <li>ASP.NET Core MVC</li>
-        <li>LeafletJS</li>
-        <li>HTML/CSS/JavaScript</li>
-    </ul>
-
-    <h2>How it works</h2>
-
-    <p>The application displays the position of public transport in Chisinau, Moldova in real-time. Users can select the transport line, and the application will display its route on the map. Additionally, users can view information such as the number of available buses/trolleybuses on a certain line, as well as the estimated arrival time of these.</p>
-
-    <h2>How to run the application</h2>
-
-    <p>To run the application, follow the steps below:</p>
-
-    <ol>
-        <li>Clone the repository</li>
-        <li>Open the solution in Visual Studio</li>
-        <li>Run the application through IIS Express or self-hosted</li>
-    </ol>
-
-    <p>Hope my application offers you a pleasant navigating experience through the city of Chisinau!</p>
 
 
+@section Scripts {
+    <script>
+        var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        @if (ViewBag.TypeOfData == 0)
+        {
+         <text>
+            var shapes = @Html.Raw(Json.Serialize(Model));
+            var polyline = L.polyline(shapes, { color: 'blue' }).addTo(map);
+            map.fitBounds(polyline.getBounds());
+         </text>
+        }
+        else
+        {
+            foreach (Stop stop in Model.Stops)
+            {
+                <text>
+                var marker = L.marker([@stop.Latitude, @stop.Longitude]).addTo(map);
+                marker.bindPopup('Statia: @stop.Name');
+                </text>
+            }            
+            foreach (Vehicle vehicle in Model.Vehicles)
+            {
+                <text>
+                    var marker = L.marker([@vehicle.Latitude, @vehicle.Longitude]).addTo(map);
+                    marker.bindPopup('Troleu No: @vehicle.Label Speed:@vehicle.Speed');
+                </text>
+            }
+
+            List<string[]> shapesArray = new List<string[]>();
+
+            foreach (Shape shape in Model.Shapes)
+            {                
+                string[] point = new string[2];
+                point[0] = shape.Latitude;
+                point[1] = shape.Longitude;
+                shapesArray.Add(point);
+            }            
+            <text>
+                var shapes = @Html.Raw(Json.Serialize(shapesArray));
+            var polyline = L.polyline(shapes, { color: 'red' }).addTo(map);
+            </text>
+   
+            <text>
+            // zoom the map to the polyline
+            map.fitBounds(polyline.getBounds());
+            </text>
+        }
+    </script>
+}

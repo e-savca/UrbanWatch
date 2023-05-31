@@ -1,10 +1,9 @@
-﻿@using UrbanWatchMVCWebApp.Models.DataTypes;
-
-@model ExtendedVehicle[]
+﻿@model dynamic
 @{
     ViewData["Title"] = "Public Transport map page";
 }
 <div id="jsonData" data-json="@Newtonsoft.Json.JsonConvert.SerializeObject(Model)"></div>
+
 
 <div class="text-center">
     <h1 class="display-4">Public Transport Map of Chisinau</h1>
@@ -21,15 +20,9 @@
 
 @section Scripts {
     <script>
-        var jsonDataElement = document.getElementById('jsonData');
-        var vehicles = JSON.parse(jsonDataElement.getAttribute('data-json'));
-
-        var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12);
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+        //var jsonDataElement = document.getElementById('jsonData');
+        //var vehicles = JSON.parse(jsonDataElement.getAttribute('data-json'));
+        var vehicles = @Html.Raw(ViewBag.JsonModel);
         for (var i = 0; i < vehicles.length; i++) {
             var vehicle = vehicles[i];
             var marker = L.marker([vehicle.Latitude, vehicle.Longitude]).addTo(map).bindPopup('<table><tbody><tr><td><h3>routeShortName</h3></td><td><h3>' + vehicle.routeShortName + '</h3></td></tr><tr><td>trip_id</td><td>' + vehicle.tripId + '</td></tr><tr><td>speed</td><td>' + vehicle.Speed + '</td></tr><tr><td>vehicle_type</td><td>' + vehicle.vehicleType + '</td></tr><tr><td>timestamp</td><td>' + vehicle.Timestamp + '</td></tr><tr><td>label</td><td>' + vehicle.Label + '</td></tr></tbody></table>');
