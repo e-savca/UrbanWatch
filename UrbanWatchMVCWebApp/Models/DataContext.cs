@@ -8,7 +8,8 @@ namespace UrbanWatchMVCWebApp.Models
 {
     public class DataContext
     {
-        public Route? theRoute { get; set; }
+        public Models.Route? theRoute { get; set; }
+        public Models.Route[]? Routes { get; set; }
         public Shape[]? Shapes { get; set; }
         public Stop[]? Stops { get; set; }
         public Trip? theTrip { get; set; }

@@ -18,17 +18,25 @@ namespace UrbanWatchMVCWebApp.Controllers
             _tranzyService = new TranzyServiceWebAPI();
             _tranzyAdapter = new TranzyAdapter(_tranzyService);
         }
-        [HttpGet("/")]
+        [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.TypeOfData = 0;
             return View(_tranzyAdapter.GetRoutes());
         }
-        [HttpGet("/{id}")]
-        public IActionResult Index(string id)
+        [HttpPost]
+        public IActionResult Index(string routeId, bool OnWay)
         {
             ViewBag.TypeOfData = 1;
-            return View(_tranzyAdapter.GetDataContext(id));
+            string param = "0";
+            if (OnWay)
+            {
+                param = "0";
+            }
+            else
+            {
+                param = "1";
+            }
+            return View(_tranzyAdapter.GetDataContext($"{routeId}_{param}"));
         }
         public IActionResult About()
         {

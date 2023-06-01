@@ -7,61 +7,35 @@ namespace UrbanWatchMVCWebApp.Services
     public class TranzyAdapter
     {
         private ITranzyService _tranzyService;
-        private string? _tripId;
         private Trip? _trip;
-        private Models.Route? _route;
         public TranzyAdapter(ITranzyService tranzyService)
         {
             _tranzyService = tranzyService;
         }
         public DataContext GetDataContext(string tripId)
         {
-            _tripId = tripId;
+            _trip = GetTheTrip(tripId);
             return new DataContext()
             {
-                theTrip = GetTheTrip(),
+                theTrip = _trip,
                 theRoute = GetTheRoute(),
+                Routes = GetRoutes(),
                 Shapes = GetShapes(),
                 Stops = GetStops(),
                 Vehicles = GetVehicles()
             };
         }
-        public List<List<string[]>> GetRoutes()
+        public Models.Route[] GetRoutes()
         {
-            Shape[] shapes = _tranzyService.GetShapesData();
-            List<string> shapeIds = new List<string>();
-            foreach (Shape shape in shapes)
-            {
-                if (!shapeIds.Contains(shape.Id))
-                {
-                    shapeIds.Add(shape.Id);
-                }
-            }
-            List<List<string[]>> GrouppedShapes = new List<List<string[]>>();            
-
-            foreach (string ShapeId in shapeIds)
-            {
-                List<string[]> shapesById = new List<string[]>();
-                foreach (Shape shape in shapes.Where(shape => shape.Id == ShapeId).ToList<Shape>())
-                {
-                    string[] point = new string[2];
-                    point[0] = shape.Latitude;
-                    point[1] = shape.Longitude;
-                    shapesById.Add(point);
-                }
-                GrouppedShapes.Add(shapesById);
-            }
-            return GrouppedShapes;
+            return _tranzyService.GetRoutesData();
         }
-        private Trip GetTheTrip()
+        private Trip GetTheTrip(string tripId)
         {
-            _trip = _tranzyService.GetTripsData().FirstOrDefault(trip => trip.tripId == _tripId);
-            return _trip;
+            return _tranzyService.GetTripsData().FirstOrDefault(trip => trip.tripId == tripId);
         }
         private Models.Route GetTheRoute()
         {
-            _route = _tranzyService.GetRoutesData().FirstOrDefault(route => route.Id == _trip.routeId);
-            return _route;
+            return GetRoutes().FirstOrDefault(route => route.Id == _trip.routeId);
         }
         private Shape[] GetShapes()
         {
