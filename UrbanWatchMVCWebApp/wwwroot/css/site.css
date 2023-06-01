@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+.bus-stop-div-icon {
+    background: #90ee90;
+    border: 1px solid #666;
+}
+.bus-div-icon {
+    background: #4DC3FF;
+    border: 1px solid #666;
+    border-radius: 50%;
+}

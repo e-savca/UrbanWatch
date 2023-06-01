@@ -15,7 +15,7 @@ namespace UrbanWatchMVCWebApp.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _tranzyService = new TranzyServiceLocal();
+            _tranzyService = new TranzyServiceWebAPI();
             _tranzyAdapter = new TranzyAdapter(_tranzyService);
         }
         [HttpGet("/")]
@@ -24,11 +24,11 @@ namespace UrbanWatchMVCWebApp.Controllers
             ViewBag.TypeOfData = 0;
             return View(_tranzyAdapter.GetRoutes());
         }
-        [HttpGet("/{id?}")]
-        public IActionResult Index(string Id)
+        [HttpGet("/{id}")]
+        public IActionResult Index(string id)
         {
             ViewBag.TypeOfData = 1;
-            return View(_tranzyAdapter.GetDataContext(Id));
+            return View(_tranzyAdapter.GetDataContext(id));
         }
         public IActionResult About()
         {

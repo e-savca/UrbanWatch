@@ -13,7 +13,7 @@ namespace UrbanWatchMVCWebApp.Services
         private readonly string _stopTimesFile = "stop_times.txt";
         private string GetData(string file)
         {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + file;
+            string filePath = @"wwwroot\TranzyData\" + file;
             return File.ReadAllText(filePath);
         }
         public Vehicle[] GetVehiclesData()

@@ -1,5 +1,5 @@
 ﻿@model dynamic
-@{
+@{    
     ViewData["Title"] = "Home page";
 }
 <div class="text-center">
@@ -31,17 +31,22 @@
         }
         else
         {
+            <text>
+                
+            </text>
             foreach (Stop stop in Model.Stops)
             {
                 <text>
-                var marker = L.marker([@stop.Latitude, @stop.Longitude]).addTo(map);
+                var busStopIcon = L.divIcon({ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) });
+                var marker = L.marker([@stop.Latitude, @stop.Longitude], { icon: busStopIcon }).addTo(map);
                 marker.bindPopup('Statia: @stop.Name');
                 </text>
             }            
             foreach (Vehicle vehicle in Model.Vehicles)
             {
                 <text>
-                    var marker = L.marker([@vehicle.Latitude, @vehicle.Longitude]).addTo(map);
+                    var busIcon = L.divIcon({ className: 'bus-div-icon', iconSize: new L.Point(20, 20)});
+                    var marker = L.marker([@vehicle.Latitude, @vehicle.Longitude], { icon: busIcon }).addTo(map);
                     marker.bindPopup('Troleu No: @vehicle.Label Speed:@vehicle.Speed');
                 </text>
             }
@@ -57,7 +62,7 @@
             }            
             <text>
                 var shapes = @Html.Raw(Json.Serialize(shapesArray));
-            var polyline = L.polyline(shapes, { color: 'red' }).addTo(map);
+            var polyline = L.polyline(shapes, { color: '@Model.theRoute.routeColor' }).addTo(map);
             </text>
    
             <text>
