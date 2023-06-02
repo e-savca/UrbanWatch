@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<ITranzyService, TranzyServiceLocal>();
+builder.Services.AddTransient<ITranzyAdapter, TranzyAdapter>();
 
 var app = builder.Build();
 

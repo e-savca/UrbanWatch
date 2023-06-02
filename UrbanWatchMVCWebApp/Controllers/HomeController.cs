@@ -8,15 +8,13 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ITranzyService _tranzyService;
         private readonly TranzyAdapter _tranzyAdapter;
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _tranzyService = new TranzyServiceLocal();
-            _tranzyAdapter = new TranzyAdapter(_tranzyService);
+            _tranzyAdapter = new TranzyAdapter();
         }
         [HttpGet]
         public IActionResult Index()
@@ -24,19 +22,15 @@ namespace UrbanWatchMVCWebApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(string routeId, bool OnWay)
+        public IActionResult Index(string tripId)
         {
             ViewBag.TypeOfData = 1;
-            string param = "0";
-            if (OnWay)
-            {
-                param = "0";
-            }
-            else
-            {
-                param = "1";
-            }
-            return View(_tranzyAdapter.GetDataContext($"{routeId}_{param}"));
+            Dictionary<string, string> model = new Dictionary<string, string>();
+            model["tripId"] = tripId;
+            model["shapeId"] = _tranzyAdapter.GetTheTrip(tripId).shapeId;
+            model["routeId"] = $"{_tranzyAdapter.GetTheTrip(tripId).routeId}";
+
+            return View(model);
         }
         public IActionResult About()
         {

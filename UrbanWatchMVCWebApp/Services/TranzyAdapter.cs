@@ -4,57 +4,43 @@ using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
-    public class TranzyAdapter
+    public class TranzyAdapter : ITranzyAdapter
     {
-        private ITranzyService _tranzyService;
-        private Trip? _trip;
-        public TranzyAdapter(ITranzyService tranzyService)
+        private ITranzyService _tranzyServiceLocal = new TranzyServiceLocal();
+        private ITranzyService _tranzyServiceWebAPI = new TranzyServiceWebAPI();
+        public Trip[] GetTrips()
         {
-            _tranzyService = tranzyService;
-        }
-        public DataContext GetDataContext(string tripId)
+            return _tranzyServiceLocal.GetTripsData();
+        }        
+        public Trip GetTheTrip(string tripId)
         {
-            _trip = GetTheTrip(tripId);
-            return new DataContext()
-            {
-                theTrip = _trip,
-                theRoute = GetTheRoute(),
-                Shapes = GetShapes(),
-                Stops = GetStops(),
-                Vehicles = GetVehicles()
-            };
+            return GetTrips().FirstOrDefault(trip => trip.tripId == tripId);
         }
-        private Models.Route[] GetRoutes()
+        public Models.Route[] GetRoutes()
         {
-            return _tranzyService.GetRoutesData();
+            return _tranzyServiceLocal.GetRoutesData().OrderBy(item => item.routeShortName).ToArray();
         }
-        private Trip GetTheTrip(string tripId)
+        public Models.Route GetTheRoute(int? routeId)
         {
-            return _tranzyService.GetTripsData().FirstOrDefault(trip => trip.tripId == tripId);
+            return GetRoutes().FirstOrDefault(route => route.Id == routeId);
         }
-        private Models.Route GetTheRoute()
+        public Shape[] GetShapes(string? shapeId)
         {
-            return GetRoutes().FirstOrDefault(route => route.Id == _trip.routeId);
+            return _tranzyServiceLocal.GetShapesData().Where(shape => shape.Id == shapeId).ToArray();
         }
-        private Shape[] GetShapes()
-        {
-            return _tranzyService.GetShapesData().Where(shape => shape.Id == _trip.shapeId).ToArray();
-        }
-        private Stop[] GetStops()
+        public Stop[] GetStops(string? shapeId)
         {
             List<Stop> stops = new List<Stop>();
-            foreach (StopTimes stopTime in _tranzyService.GetStopTimesData().Where(stoptime => stoptime.tripId == _trip.shapeId).ToArray())
+            foreach (StopTimes stopTime in _tranzyServiceLocal.GetStopTimesData().Where(stoptime => stoptime.tripId == shapeId).ToArray())
             {
-                stops.Add(_tranzyService.GetStopsData().FirstOrDefault(stop => stop.Id == stopTime.stopId));
+                stops.Add(_tranzyServiceLocal.GetStopsData().FirstOrDefault(stop => stop.Id == stopTime.stopId));
             }
 
             return stops.ToArray();
         }
-        private Vehicle[] GetVehicles()
+        public Vehicle[] GetVehicles(string tripId)
         {
-            return _tranzyService.GetVehiclesData().Where(vehicle => vehicle.tripId == _trip.tripId).ToArray();
+            return _tranzyServiceWebAPI.GetVehiclesData().Where(vehicle => vehicle.tripId == tripId).ToArray();
         }
-
-
     }
 }

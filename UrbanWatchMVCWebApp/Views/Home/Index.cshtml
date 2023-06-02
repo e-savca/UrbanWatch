@@ -1,6 +1,6 @@
-﻿@model UrbanWatchMVCWebApp.Models.DataContext
+﻿@model Dictionary<string, string>
 @using UrbanWatchMVCWebApp.Services;
-@inject ITranzyService tranzyService
+@inject ITranzyAdapter tranzyAdapter
 
 @{    
     ViewData["Title"] = "Home page";
@@ -14,21 +14,20 @@
     <p>Thank you for using our service!</p>
     <form method="post">
         <p>
-            <label for="routeId">Selectati o ruta:</label>
-            <select name="routeId">
-                
-            @foreach (Route route in tranzyService.GetRoutesData())
+            <label for="tripId">Selectati o ruta:</label>
+            <select name="tripId" asp-for="@Model["tripId"]">
+            <option ></option>
+            @foreach (Route route in tranzyAdapter.GetRoutes().OrderBy(order => order.Id).ToArray())
             {
-                <text>
-                    <option value="@route.Id">@route.routeShortName - @route.routeLongName </option>
-                </text>
+                foreach (Trip trip in tranzyAdapter.GetTrips().Where(trip => trip.routeId == route.Id).OrderBy(order => order.directionId).ToArray())
+                    {
+                        <text>
+                        <option value="@trip.tripId" >@route.routeShortName - Spre @trip.tripHeadsign </option>
+                        </text>
+                    }                
             }  
             </select>
        </p>
-       <p>
-            <label>On Way/Roundway: <input type="checkbox" name="OnWay" value="true"/></label>
-            
-        </p>
         <p>
             <input type="submit" value="Send" />
         </p>
@@ -48,15 +47,15 @@
 
         @if (ViewBag.TypeOfData == 1)
         {
-            foreach (Stop stop in Model.Stops)
+            foreach (Stop stop in tranzyAdapter.GetStops(Model["shapeId"]))
             {
                 <text>
                     var busStopIcon = L.divIcon({ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) });
                     var marker = L.marker([@stop.Latitude, @stop.Longitude], { icon: busStopIcon }).addTo(map);
                     marker.bindPopup('Statia: @stop.Name');
                 </text>
-            }            
-            foreach (Vehicle vehicle in Model.Vehicles)
+            }
+            foreach (Vehicle vehicle in tranzyAdapter.GetVehicles(Model["tripId"]))
             {
                 <text>
                     var busIcon = L.divIcon({ className: 'bus-div-icon', iconSize: new L.Point(20, 20)});
@@ -67,7 +66,7 @@
 
             List<string[]> shapesArray = new List<string[]>();
 
-            foreach (Shape shape in Model.Shapes)
+            foreach (Shape shape in tranzyAdapter.GetShapes(Model["shapeId"]))
             {                
                 string[] point = new string[2];
                 point[0] = shape.Latitude;
@@ -76,7 +75,7 @@
             }            
             <text>
                 var shapes = @Html.Raw(Json.Serialize(shapesArray));
-            var polyline = L.polyline(shapes, { color: '@Model.theRoute.routeColor' }).addTo(map);
+            var polyline = L.polyline(shapes, { color: '@tranzyAdapter.GetTheRoute(Int32.Parse(Model["routeId"])).routeColor' }).addTo(map);
             </text>
    
             <text>

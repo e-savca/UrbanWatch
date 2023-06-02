@@ -25,7 +25,7 @@ namespace UrbanWatchMVCWebApp.Services
         public Models.Route[] GetRoutesData()
         {
             var body = GetData(_routesFile);
-            return JsonConvert.DeserializeObject<Models.Route[]>(body).OrderBy(item => item.routeShortName).ToArray();
+            return JsonConvert.DeserializeObject<Models.Route[]>(body);
         }
         public Trip[] GetTripsData()
         {
