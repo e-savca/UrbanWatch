@@ -19,13 +19,12 @@ namespace UrbanWatchMVCWebApp.Services
             {
                 theTrip = _trip,
                 theRoute = GetTheRoute(),
-                Routes = GetRoutes(),
                 Shapes = GetShapes(),
                 Stops = GetStops(),
                 Vehicles = GetVehicles()
             };
         }
-        public Models.Route[] GetRoutes()
+        private Models.Route[] GetRoutes()
         {
             return _tranzyService.GetRoutesData();
         }

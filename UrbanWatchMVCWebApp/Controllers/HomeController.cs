@@ -15,13 +15,13 @@ namespace UrbanWatchMVCWebApp.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _tranzyService = new TranzyServiceWebAPI();
+            _tranzyService = new TranzyServiceLocal();
             _tranzyAdapter = new TranzyAdapter(_tranzyService);
         }
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_tranzyAdapter.GetRoutes());
+            return View();
         }
         [HttpPost]
         public IActionResult Index(string routeId, bool OnWay)

@@ -1,7 +1,11 @@
-﻿@model dynamic
+﻿@model UrbanWatchMVCWebApp.Models.DataContext
+@using UrbanWatchMVCWebApp.Services;
+@inject ITranzyService tranzyService
+
 @{    
     ViewData["Title"] = "Home page";
 }
+
 <div class="text-center">
     <h1 class="display-4">Public Transport Map of Chisinau</h1>
     <p>
@@ -12,26 +16,20 @@
         <p>
             <label for="routeId">Selectati o ruta:</label>
             <select name="routeId">
-                @if (ViewBag.TypeOfData == 1)
-                {
-                    foreach (Route route in Model.Routes)
-                    {
-                        <text>
-                        <option value="@route.Id">@route.routeShortName - @route.routeLongName </option>
-                        </text>
-                    }
-                }
-                else
-                {
-                    foreach (Route route in Model)
-                    {
-                        <text>
-                        <option value="@route.Id">@route.routeShortName - @route.routeLongName </option>
-                        </text>
-                    }
-                }                
+                
+            @foreach (Route route in tranzyService.GetRoutesData())
+            {
+                <text>
+                    <option value="@route.Id">@route.routeShortName - @route.routeLongName </option>
+                </text>
+            }  
             </select>
-            <label>On Way/Roundway: <input type="checkbox" name="OnWay" value="true" /></label>
+       </p>
+       <p>
+            <label>On Way/Roundway: <input type="checkbox" name="OnWay" value="true"/></label>
+            
+        </p>
+        <p>
             <input type="submit" value="Send" />
         </p>
     </form>
@@ -53,9 +51,9 @@
             foreach (Stop stop in Model.Stops)
             {
                 <text>
-                var busStopIcon = L.divIcon({ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) });
-                var marker = L.marker([@stop.Latitude, @stop.Longitude], { icon: busStopIcon }).addTo(map);
-                marker.bindPopup('Statia: @stop.Name');
+                    var busStopIcon = L.divIcon({ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) });
+                    var marker = L.marker([@stop.Latitude, @stop.Longitude], { icon: busStopIcon }).addTo(map);
+                    marker.bindPopup('Statia: @stop.Name');
                 </text>
             }            
             foreach (Vehicle vehicle in Model.Vehicles)
