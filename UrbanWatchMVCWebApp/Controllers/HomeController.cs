@@ -24,7 +24,6 @@ namespace UrbanWatchMVCWebApp.Controllers
         [HttpPost]
         public IActionResult Index(string tripId)
         {
-            ViewBag.TypeOfData = 1;
             Dictionary<string, string> model = new Dictionary<string, string>();
             model["tripId"] = tripId;
             model["shapeId"] = _tranzyAdapter.GetTheTrip(tripId).shapeId;

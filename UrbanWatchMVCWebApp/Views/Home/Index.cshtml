@@ -45,7 +45,7 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        @if (ViewBag.TypeOfData == 1)
+        @if (Model != null)
         {
             foreach (Stop stop in tranzyAdapter.GetStops(Model["shapeId"]))
             {
