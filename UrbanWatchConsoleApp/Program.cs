@@ -5,7 +5,7 @@ using UrbanWatchMVCWebApp.Tools;
 
 
 TranzyServiceWebAPI tranzyService = new TranzyServiceWebAPI();
-Shape[] shapes = tranzyService.GetShapesData();
+Shape[] shapes = tranzyService.GetShapesDataAsync();
 
 Console.WriteLine("The Shape's IDs");
 string[] shapeIDs = new string[shapes.Length];

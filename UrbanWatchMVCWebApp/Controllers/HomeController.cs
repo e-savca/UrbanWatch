@@ -22,12 +22,13 @@ namespace UrbanWatchMVCWebApp.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(string tripId)
+        public async Task<IActionResult> IndexAsync(string tripId)
         {
+            Trip? getTheTrip = await _tranzyAdapter.GetTheTripAsync(tripId);
             Dictionary<string, string> model = new Dictionary<string, string>();
             model["tripId"] = tripId;
-            model["shapeId"] = _tranzyAdapter.GetTheTrip(tripId).shapeId;
-            model["routeId"] = $"{_tranzyAdapter.GetTheTrip(tripId).routeId}";
+            model["shapeId"] = $"{getTheTrip.shapeId}";
+            model["routeId"] = $"{getTheTrip.routeId}";
 
             return View(model);
         }

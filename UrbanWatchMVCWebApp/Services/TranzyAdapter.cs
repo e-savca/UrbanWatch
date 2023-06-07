@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.ComponentModel.DataAnnotations;
 using UrbanWatchMVCWebApp.Models;
 
@@ -8,39 +9,46 @@ namespace UrbanWatchMVCWebApp.Services
     {
         private ITranzyService _tranzyServiceLocal = new TranzyServiceLocal();
         private ITranzyService _tranzyServiceWebAPI = new TranzyServiceWebAPI();
-        public Trip[] GetTrips()
+        public async Task<Trip[]> GetTripsAsync()
         {
-            return _tranzyServiceLocal.GetTripsData();
+            return await _tranzyServiceLocal.GetTripsDataAsync();
         }        
-        public Trip GetTheTrip(string tripId)
-        {
-            return GetTrips().FirstOrDefault(trip => trip.tripId == tripId);
+        public async Task<Trip> GetTheTripAsync(string tripId)
+        {            
+            var body = await GetTripsAsync();
+            return body.FirstOrDefault(trip => trip.tripId == tripId);
+
         }
-        public Models.Route[] GetRoutes()
+        public async Task<Models.Route[]> GetRoutesAsync()
         {
-            return _tranzyServiceLocal.GetRoutesData().OrderBy(item => item.routeShortName).ToArray();
+            var body = await _tranzyServiceLocal.GetRoutesDataAsync();
+            return body.OrderBy(item => item.routeShortName).ToArray();
         }
-        public Models.Route GetTheRoute(int? routeId)
+        public async Task<Models.Route> GetTheRouteAsync(int? routeId)
         {
-            return GetRoutes().FirstOrDefault(route => route.Id == routeId);
+            var body = await GetRoutesAsync();
+            return body.FirstOrDefault(route => route.Id == routeId);
         }
-        public Shape[] GetShapes(string? shapeId)
+        public async Task<Shape[]> GetShapesAsync(string? shapeId)
         {
-            return _tranzyServiceLocal.GetShapesData().Where(shape => shape.Id == shapeId).ToArray();
+            var body = await _tranzyServiceLocal.GetShapesDataAsync();
+            return body.Where(shape => shape.Id == shapeId).ToArray();
         }
-        public Stop[] GetStops(string? shapeId)
+        public async Task<Stop[]> GetStopsAsync(string? shapeId)
         {
             List<Stop> stops = new List<Stop>();
-            foreach (StopTimes stopTime in _tranzyServiceLocal.GetStopTimesData().Where(stoptime => stoptime.tripId == shapeId).ToArray())
+            StopTimes[] stopTimes = await _tranzyServiceLocal.GetStopTimesDataAsync();
+            Stop[] stopsData = await _tranzyServiceLocal.GetStopsDataAsync();
+            foreach (StopTimes stopTime in stopTimes.Where(stoptime => stoptime.tripId == shapeId).ToArray())
             {
-                stops.Add(_tranzyServiceLocal.GetStopsData().FirstOrDefault(stop => stop.Id == stopTime.stopId));
+                stops.Add(stopsData.FirstOrDefault(stop => stop.Id == stopTime.stopId));
             }
-
             return stops.ToArray();
         }
-        public Vehicle[] GetVehicles(string tripId)
+        public async Task<Vehicle[]> GetVehiclesAsync(string tripId)
         {
-            return _tranzyServiceWebAPI.GetVehiclesData().Where(vehicle => vehicle.tripId == tripId).ToArray();
+            Vehicle[] body = await _tranzyServiceWebAPI.GetVehiclesDataAsync();
+            return body.Where(vehicle => vehicle.tripId == tripId).ToArray();
         }
     }
 }

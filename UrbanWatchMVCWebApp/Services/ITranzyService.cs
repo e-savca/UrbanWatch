@@ -5,11 +5,11 @@ namespace UrbanWatchMVCWebApp.Services
 {
     public interface ITranzyService
     {
-        public Vehicle[] GetVehiclesData();
-        public Models.Route[] GetRoutesData();
-        public Trip[] GetTripsData();
-        public Shape[] GetShapesData();
-        public Stop[] GetStopsData();
-        public StopTimes[] GetStopTimesData();
+        public Task<Vehicle[]> GetVehiclesDataAsync();
+        public Task<Models.Route[]> GetRoutesDataAsync();
+        public Task<Trip[]> GetTripsDataAsync();
+        public Task<Shape[]> GetShapesDataAsync();
+        public Task<Stop[]> GetStopsDataAsync();
+        public Task<StopTimes[]> GetStopTimesDataAsync();
     }
 }

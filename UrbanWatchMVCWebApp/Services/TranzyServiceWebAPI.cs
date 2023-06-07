@@ -18,7 +18,7 @@ namespace UrbanWatchMVCWebApp.Services
 
         private readonly string _AgencyId = "4";
         private readonly string _APIKey = "vPb5jKPyRf1AS3AWrqYRL5hUHjxViy2u202HJ3h3";
-        private string GetData(Uri RequestUri)
+        private async Task<string> GetDataAsync(Uri RequestUri)
         {
             var client = new HttpClient();
             var request = new HttpRequestMessage
@@ -32,40 +32,40 @@ namespace UrbanWatchMVCWebApp.Services
                     { "X-API-KEY", _APIKey },
                 },
             };
-            using (var response = client.Send(request))
+            using (var response = await client.SendAsync(request))
             {
                 response.EnsureSuccessStatusCode();
-                return response.Content.ReadAsStringAsync().Result;
+                return await response.Content.ReadAsStringAsync();
             }
         }
-        public Vehicle[] GetVehiclesData()
+        public async Task<Vehicle[]> GetVehiclesDataAsync()
         {
-            var body = GetData(_vehiclesAPILink);
+            var body = await GetDataAsync(_vehiclesAPILink);
             return JsonConvert.DeserializeObject<Vehicle[]>(body);
         }
-        public Models.Route[] GetRoutesData()
+        public async Task<Models.Route[]> GetRoutesDataAsync()
         {
-            var body = GetData(_routesAPILink);
+            var body = await GetDataAsync(_routesAPILink);
             return JsonConvert.DeserializeObject<Models.Route[]>(body);
         }
-        public Trip[] GetTripsData()
+        public async Task<Trip[]> GetTripsDataAsync()
         {
-            var body = GetData(_tripsAPILink);
+            var body = await GetDataAsync(_tripsAPILink);
             return JsonConvert.DeserializeObject<Trip[]>(body);
         }
-        public Shape[] GetShapesData()
+        public async Task<Shape[]> GetShapesDataAsync()
         {
-            var body = GetData(_shapesAPILink);
+            var body = await GetDataAsync(_shapesAPILink);
             return JsonConvert.DeserializeObject<Shape[]>(body);
         }
-        public Stop[] GetStopsData()
+        public async Task<Stop[]> GetStopsDataAsync()
         {
-            var body = GetData(_stopsAPILink);
+            var body = await GetDataAsync(_stopsAPILink);
             return JsonConvert.DeserializeObject<Stop[]>(body);
         }
-        public StopTimes[] GetStopTimesData()
+        public async Task<StopTimes[]> GetStopTimesDataAsync()
         {
-            var body = GetData(_stopTimesAPILink);
+            var body = await GetDataAsync(_stopTimesAPILink);
             return JsonConvert.DeserializeObject<StopTimes[]>(body);
         }
     }

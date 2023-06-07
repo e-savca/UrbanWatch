@@ -17,9 +17,13 @@
             <label for="tripId">Selectati o ruta:</label>
             <select name="tripId" asp-for="@Model["tripId"]">
             <option ></option>
-            @foreach (Route route in tranzyAdapter.GetRoutes().OrderBy(order => order.Id).ToArray())
+                @{
+                    Route[] getRoutes = await tranzyAdapter.GetRoutesAsync();
+                    Trip[] getTrips = await tranzyAdapter.GetTripsAsync();
+                }
+                @foreach (Route route in getRoutes.OrderBy(order => order.Id).ToArray())
             {
-                foreach (Trip trip in tranzyAdapter.GetTrips().Where(trip => trip.routeId == route.Id).OrderBy(order => order.directionId).ToArray())
+                foreach (Trip trip in getTrips.Where(trip => trip.routeId == route.Id).OrderBy(order => order.directionId).ToArray())
                     {
                         <text>
                         <option value="@trip.tripId" >@route.routeShortName - Spre @trip.tripHeadsign </option>
@@ -47,7 +51,12 @@
 
         @if (Model != null)
         {
-            foreach (Stop stop in tranzyAdapter.GetStops(Model["shapeId"]))
+            Stop[] getStops = await tranzyAdapter.GetStopsAsync(Model["shapeId"]);
+            Vehicle[] getVehicles = await tranzyAdapter.GetVehiclesAsync(Model["tripId"]);
+            Shape[] getShapes = await tranzyAdapter.GetShapesAsync(Model["shapeId"]);
+            Route? routeObject = await tranzyAdapter.GetTheRouteAsync(Int32.Parse(Model["routeId"]));
+            string? routeColor = routeObject.routeColor;
+            foreach (Stop stop in getStops)
             {
                 <text>
                     var busStopIcon = L.divIcon({ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) });
@@ -55,7 +64,7 @@
                     marker.bindPopup('Statia: @stop.Name');
                 </text>
             }
-            foreach (Vehicle vehicle in tranzyAdapter.GetVehicles(Model["tripId"]))
+            foreach (Vehicle vehicle in getVehicles)
             {
                 <text>
                     var busIcon = L.divIcon({ className: 'bus-div-icon', iconSize: new L.Point(20, 20)});
@@ -66,7 +75,7 @@
 
             List<string[]> shapesArray = new List<string[]>();
 
-            foreach (Shape shape in tranzyAdapter.GetShapes(Model["shapeId"]))
+            foreach (Shape shape in getShapes)
             {                
                 string[] point = new string[2];
                 point[0] = shape.Latitude;
@@ -75,7 +84,7 @@
             }            
             <text>
                 var shapes = @Html.Raw(Json.Serialize(shapesArray));
-            var polyline = L.polyline(shapes, { color: '@tranzyAdapter.GetTheRoute(Int32.Parse(Model["routeId"])).routeColor' }).addTo(map);
+            var polyline = L.polyline(shapes, { color: '@routeColor' }).addTo(map);
             </text>
    
             <text>

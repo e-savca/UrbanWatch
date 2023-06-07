@@ -4,13 +4,13 @@ namespace UrbanWatchMVCWebApp.Services
 {
     public interface ITranzyAdapter
     {
-        public Trip[] GetTrips();
-        public Trip GetTheTrip(string tripId);
-        public Models.Route[] GetRoutes();
-        public Models.Route GetTheRoute(int? routeId);
-        public Shape[] GetShapes(string? shapeId);
-        public Stop[] GetStops(string? shapeId);
-        public Vehicle[] GetVehicles(string tripId);
+        public Task<Trip[]> GetTripsAsync();
+        public Task<Trip> GetTheTripAsync(string tripId);
+        public Task<Models.Route[]> GetRoutesAsync();
+        public Task<Models.Route> GetTheRouteAsync(int? routeId);
+        public Task<Shape[]> GetShapesAsync(string? shapeId);
+        public Task<Stop[]> GetStopsAsync(string? shapeId);
+        public Task<Vehicle[]> GetVehiclesAsync(string tripId);
     }
 
 }

@@ -12,39 +12,39 @@ namespace UrbanWatchMVCWebApp.Services
         private readonly string _shapesFile = "shapes.txt";
         private readonly string _stopsFile = "stops.txt";
         private readonly string _stopTimesFile = "stop_times.txt";
-        private string GetData(string file)
+        private async Task<string> GetDataAsync(string file)
         {
             string filePath = @"wwwroot\TranzyData\" + file;
-            return File.ReadAllText(filePath);
+            return await File.ReadAllTextAsync(filePath);
         }
-        public Vehicle[] GetVehiclesData()
+        public async Task<Vehicle[]> GetVehiclesDataAsync()
         {
-            var body = GetData(_vehiclesFile);
+            var body = await GetDataAsync(_vehiclesFile);
             return JsonConvert.DeserializeObject<Vehicle[]>(body);
         }
-        public Models.Route[] GetRoutesData()
+        public async Task<Models.Route[]> GetRoutesDataAsync()
         {
-            var body = GetData(_routesFile);
+            var body = await GetDataAsync(_routesFile);
             return JsonConvert.DeserializeObject<Models.Route[]>(body);
         }
-        public Trip[] GetTripsData()
+        public async Task<Trip[]> GetTripsDataAsync()
         {
-            var body = GetData(_tripsFile);
+            var body = await GetDataAsync(_tripsFile);
             return JsonConvert.DeserializeObject<Trip[]>(body);
         }
-        public Shape[] GetShapesData()
+        public async Task<Shape[]> GetShapesDataAsync()
         {
-            var body = GetData(_shapesFile);
+            var body = await GetDataAsync(_shapesFile);
             return JsonConvert.DeserializeObject<Shape[]>(body);
         }
-        public Stop[] GetStopsData()
+        public async Task<Stop[]> GetStopsDataAsync()
         {
-            var body = GetData(_stopsFile);
+            var body = await GetDataAsync(_stopsFile);
             return JsonConvert.DeserializeObject<Stop[]>(body);
         }
-        public StopTimes[] GetStopTimesData()
+        public async Task<StopTimes[]> GetStopTimesDataAsync()
         {
-            var body = GetData(_stopTimesFile);
+            var body = await GetDataAsync(_stopTimesFile);
             return JsonConvert.DeserializeObject<StopTimes[]>(body);
         }
     }
