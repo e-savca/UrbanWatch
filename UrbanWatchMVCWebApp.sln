@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrbanWatchMVCWebApp", "UrbanWatchMVCWebApp\UrbanWatchMVCWebApp.csproj", "{65379ED6-7EE0-44FB-9AE0-A56FDA8A360C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrbanWatchConsoleApp", "UrbanWatchConsoleApp\UrbanWatchConsoleApp.csproj", "{D6DF00E6-92AB-431E-8A87-BD20F6B6A115}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayGroundConsole", "UrbanWatchConsoleApp\PlayGroundConsole.csproj", "{D6DF00E6-92AB-431E-8A87-BD20F6B6A115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
