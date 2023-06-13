@@ -1,14 +1,16 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.ComponentModel.DataAnnotations;
-using UrbanWatchMVCWebApp.Models;
+﻿using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
     public class TranzyAdapter : ITranzyAdapter
     {
-        private ITranzyService _tranzyServiceLocal = new TranzyServiceLocal();
-        private ITranzyService _tranzyServiceWebAPI = new TranzyServiceWebAPI();
+        private TranzyServiceLocal _tranzyServiceLocal;
+        private TranzyServiceWebAPI _tranzyServiceWebAPI;
+        public TranzyAdapter(TranzyServiceLocal tranzyServiceLocal, TranzyServiceWebAPI tranzyServiceWebAPI)
+        {
+            _tranzyServiceLocal = tranzyServiceLocal;
+            _tranzyServiceWebAPI = tranzyServiceWebAPI;
+        }
         public async Task<Trip[]> GetTripsAsync()
         {
             return await _tranzyServiceLocal.GetTripsDataAsync();

@@ -2,19 +2,18 @@
 using System.Diagnostics;
 using UrbanWatchMVCWebApp.Models;
 using UrbanWatchMVCWebApp.Services;
-using Newtonsoft.Json;
 
 namespace UrbanWatchMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly TranzyAdapter _tranzyAdapter;
+        private readonly ITranzyAdapter _tranzyAdapter;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ITranzyAdapter tranzyAdapter, ILogger<HomeController> logger)
         {
+            _tranzyAdapter = tranzyAdapter;
             _logger = logger;
-            _tranzyAdapter = new TranzyAdapter();
         }
         [HttpGet]
         public IActionResult Index()

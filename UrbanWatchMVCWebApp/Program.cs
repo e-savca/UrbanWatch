@@ -1,10 +1,14 @@
+using Microsoft.Extensions.DependencyInjection;
 using UrbanWatchMVCWebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<ITranzyAdapter, TranzyAdapter>();
+builder.Services.AddScoped<ITranzyAdapter>(serviceProvider =>
+{
+    return new TranzyAdapter(new TranzyServiceLocal(), new TranzyServiceWebAPI());
+});
 
 var app = builder.Build();
 
