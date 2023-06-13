@@ -85,9 +85,7 @@
             <text>
                 var shapes = @Html.Raw(Json.Serialize(shapesArray));
             var polyline = L.polyline(shapes, { color: '@routeColor' }).addTo(map);
-            </text>
-   
-            <text>
+
             // zoom the map to the polyline
             map.fitBounds(polyline.getBounds());
             </text>

@@ -5,10 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ITranzyAdapter>(serviceProvider =>
-{
-    return new TranzyAdapter(new TranzyServiceLocal(), new TranzyServiceWebAPI());
-});
+builder.Services.AddScoped<TranzyServiceLocal>();
+builder.Services.AddScoped<TranzyServiceWebAPI>();
+builder.Services.AddScoped<ITranzyAdapter, TranzyAdapter>();
+
 
 var app = builder.Build();
 
@@ -29,7 +29,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}");
 
 
 app.Run();
