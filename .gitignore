@@ -5,10 +5,8 @@
 UrbanWatchMVCWebApp/bin/
 UrbanWatchMVCWebApp/obj/
 UrbanWatchMVCWebApp/.vscode/
+/UrbanWatchMVCWebApp/Logs/InfoLogs/
 
-UrbanWatchConsoleApp/bin/
-UrbanWatchConsoleApp/obj/
-UrbanWatchConsoleApp/.vscode/
 
 *.suo
 *.user
@@ -18,4 +16,3 @@ UrbanWatchConsoleApp/.vscode/
 *.vsp
 *.vspx
 *.sln.docstates
-/UrbanWatchMVCWebApp/Logs/InfoLogs/2023-06-14.log

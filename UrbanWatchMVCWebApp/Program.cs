@@ -1,7 +1,13 @@
-using Microsoft.Extensions.DependencyInjection;
 using UrbanWatchMVCWebApp.Services;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using UrbanWatchMVCWebApp.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), $"Logs/InfoLogs/{DateTime.Now.ToString("yyyy-MM-dd")}.log"));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -30,6 +36,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}");
-
 
 app.Run();

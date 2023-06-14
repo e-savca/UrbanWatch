@@ -16,7 +16,6 @@
         <p>
             <label for="tripId">Selectati o ruta:</label>
             <select name="tripId" asp-for="@Model["tripId"]">
-            <option ></option>
                 @{
                     Route[] getRoutes = await tranzyAdapter.GetRoutesAsync();
                     Trip[] getTrips = await tranzyAdapter.GetTripsAsync();

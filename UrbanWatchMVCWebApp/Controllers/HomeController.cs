@@ -18,19 +18,44 @@ namespace UrbanWatchMVCWebApp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            var userId = HttpContext.User.Identity.Name;
+            var executionTime = DateTime.Now;
+            var message = $"The Index action was called by user '{userId}' at '{executionTime}'.";
+
+            _logger.LogInformation(message);
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> IndexAsync(string tripId)
         {
-            Trip? getTheTrip = await _tranzyAdapter.GetTheTripAsync(tripId);
-            Dictionary<string, string> model = new Dictionary<string, string>();
-            model["tripId"] = tripId;
-            model["shapeId"] = $"{getTheTrip.shapeId}";
-            model["routeId"] = $"{getTheTrip.routeId}";
+            var userId = HttpContext.User.Identity.Name;
+            var executionTime = DateTime.Now;
+            string message = "";
 
-            return View(model);
+            Trip? getTheTrip = await _tranzyAdapter.GetTheTripAsync(tripId);
+
+            if (getTheTrip != null)
+            {
+                Dictionary<string, string> model = new Dictionary<string, string> {
+                    { "tripId", tripId },
+                    { "shapeId", getTheTrip.shapeId.ToString() },
+                    { "routeId", getTheTrip.routeId.ToString() }
+                };
+
+                message = $"The Index action was called by user '{userId}' at '{executionTime}'. The trip details were retrieved successfully.";
+                _logger.LogInformation(message);
+
+                return View(model);
+            }
+            else
+            {
+                message = $"The Index action was called by user '{userId}' at '{executionTime}'. Failed to retrieve trip details.";
+                _logger.LogWarning(message);
+
+                return RedirectToAction("Error", "Home");
+            }
         }
+
         public IActionResult About()
         {
             return View();
