@@ -18,3 +18,4 @@ UrbanWatchConsoleApp/.vscode/
 *.vsp
 *.vspx
 *.sln.docstates
+/UrbanWatchMVCWebApp/Logs/InfoLogs/2023-06-14.log
