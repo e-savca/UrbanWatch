@@ -17,7 +17,7 @@ namespace UrbanWatchMVCWebApp.Models
         [JsonProperty("x_provider")] public string? XProvider { get; set; }
         [JsonProperty("x_rand")] public string? XRand { get; set; }
         [JsonProperty("speed")] public string? Speed { get; set; }
-        [JsonProperty("route_id")] public int? RouteId { get; set; }
+        [JsonProperty("route_id")] public string? RouteId { get; set; }
         [JsonProperty("trip_id")] public string? TripId { get; set; }
     }
 }

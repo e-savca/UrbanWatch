@@ -20,14 +20,13 @@ builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), $"Logs/Inf
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<TranzyServiceLocal>();
-builder.Services.AddScoped<TranzyServiceWebAPI>();
-builder.Services.AddScoped<ITranzyAdapter, TranzyAdapter>();
+builder.Services.AddScoped<ITranzyService, TranzyServiceDb>();
+builder.Services.AddScoped<IRepository, Repository>();
 
 
 var app = builder.Build();
 
-using(var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
     await dbContext.OnApplicationStarted();

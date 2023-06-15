@@ -15,7 +15,7 @@ namespace UrbanWatchMVCWebApp.EF
         public DbSet<Shape> Shapes { get; set; } = null!;
         public DbSet<Models.Route> Routes { get; set; } = null!;
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options, [FromServices] TranzyServiceWebAPI tranzyService) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options, [FromServices] ITranzyService tranzyService) : base(options)
         {
             _tranzyService = tranzyService;
         }

@@ -9,20 +9,17 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ITranzyAdapter _tranzyAdapter;
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationContext _dbContext;
+        private readonly IRepository _repository;
 
-        public HomeController(ITranzyAdapter tranzyAdapter, ApplicationContext dbContext, ILogger<HomeController> logger)
+        public HomeController(IRepository repository, ILogger<HomeController> logger)
         {
-            _tranzyAdapter = tranzyAdapter;
-            _dbContext = dbContext;
+            _repository = repository;
             _logger = logger;
         }
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            await _dbContext.UpdateVehiclesData();
             var userId = HttpContext.User.Identity.Name;
             var executionTime = DateTime.Now;
             var message = $"The Index action was called by user '{userId}' at '{executionTime}'.";
@@ -37,8 +34,7 @@ namespace UrbanWatchMVCWebApp.Controllers
             var executionTime = DateTime.Now;
             string message = "";
 
-            //Trip? getTheTrip = await _tranzyAdapter.GetTheTripAsync(tripId);
-            Trip getTheTrip = await _dbContext.Trips.FirstOrDefaultAsync(trip => trip.TripId == tripId);
+            Trip? getTheTrip = await _repository.GetTheTripAsync(tripId);
             message = $"The Index action was called by user '{userId}' at '{executionTime}'. tripId = {tripId}. Try to get Trip getTheTrip.";
             _logger.LogInformation(message);
 
