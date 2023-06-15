@@ -1,9 +1,18 @@
 using UrbanWatchMVCWebApp.Services;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using UrbanWatchMVCWebApp.Logging;
+using Microsoft.EntityFrameworkCore;
+using UrbanWatchMVCWebApp.EF;
 
 var builder = WebApplication.CreateBuilder(args);
+
+string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationContext>(options =>
+{
+    options.UseSqlServer(connection);
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+
+});
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -17,6 +26,13 @@ builder.Services.AddScoped<ITranzyAdapter, TranzyAdapter>();
 
 
 var app = builder.Build();
+
+using(var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+    await dbContext.OnApplicationStarted();
+    await dbContext.UpdateDatabase();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

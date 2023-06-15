@@ -1,15 +1,17 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace UrbanWatchMVCWebApp.Models
 {
     public class Route
     {
-        [JsonProperty("agency_id")] public int? agencyId { get; set; }
-        [JsonProperty("route_id")] public int? Id { get; set; }
-        [JsonProperty("route_short_name")] public string? routeShortName { get; set; }
-        [JsonProperty("route_long_name")] public string? routeLongName { get; set; }
-        [JsonProperty("route_color")] public string? routeColor { get; set; }
-        [JsonProperty("route_type")] public int? routeType { get; set; }
+        public int Id { get; set; }
+        [JsonProperty("route_id")] public int? RouteId { get; set; }
+        [JsonProperty("agency_id")] public int? AgencyId { get; set; }
+        [JsonProperty("route_short_name")] public string? RouteShortName { get; set; }
+        [JsonProperty("route_long_name")] public string? RouteLongName { get; set; }
+        [JsonProperty("route_color")] public string? RouteColor { get; set; }
+        [JsonProperty("route_type")] public int? RouteType { get; set; }
     }
 
 }

@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace UrbanWatchMVCWebApp.Models
 {
     public class StopTimes
     {
-        [JsonProperty("trip_id")] public string? tripId { get; set; }
-        [JsonProperty("stop_id")] public int? stopId { get; set; }
-        [JsonProperty("stop_sequence")] public int? stopSequence { get; set; }
+        public int Id { get; set; }
+        [JsonProperty("trip_id")] public string? TripId { get; set; }
+        [JsonProperty("stop_id")] public int? StopId { get; set; }
+        [JsonProperty("stop_sequence")] public int? StopSequence { get; set; }
     }
 }

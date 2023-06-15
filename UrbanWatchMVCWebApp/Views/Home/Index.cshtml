@@ -1,6 +1,10 @@
 ﻿@model Dictionary<string, string>
 @using UrbanWatchMVCWebApp.Services;
-@inject ITranzyAdapter tranzyAdapter
+@using UrbanWatchMVCWebApp.EF;
+@using UrbanWatchMVCWebApp.Models;
+@inject ApplicationContext dbContext
+
+
 
 @{    
     ViewData["Title"] = "Home page";
@@ -17,15 +21,15 @@
             <label for="tripId">Selectati o ruta:</label>
             <select name="tripId" asp-for="@Model["tripId"]">
                 @{
-                    Route[] getRoutes = await tranzyAdapter.GetRoutesAsync();
-                    Trip[] getTrips = await tranzyAdapter.GetTripsAsync();
+                    Route[] getRoutes = dbContext.Routes.ToArray();
+                    Trip[] getTrips = dbContext.Trips.ToArray();
                 }
-                @foreach (Route route in getRoutes.OrderBy(order => order.Id).ToArray())
+                @foreach (Route route in getRoutes.OrderBy(order => order.RouteId).ToArray())
             {
-                foreach (Trip trip in getTrips.Where(trip => trip.routeId == route.Id).OrderBy(order => order.directionId).ToArray())
+                foreach (Trip trip in getTrips.Where(trip => trip.RouteId == route.RouteId).OrderBy(order => order.DirectionId).ToArray())
                     {
                         <text>
-                        <option value="@trip.tripId" >@route.routeShortName - Spre @trip.tripHeadsign </option>
+                        <option value="@trip.TripId" >@route.RouteShortName - Spre @trip.TripHeadsign </option>
                         </text>
                     }                
             }  
@@ -50,11 +54,27 @@
 
         @if (Model != null)
         {
-            Stop[] getStops = await tranzyAdapter.GetStopsAsync(Model["shapeId"]);
-            Vehicle[] getVehicles = await tranzyAdapter.GetVehiclesAsync(Model["tripId"]);
-            Shape[] getShapes = await tranzyAdapter.GetShapesAsync(Model["shapeId"]);
-            Route? routeObject = await tranzyAdapter.GetTheRouteAsync(Int32.Parse(Model["routeId"]));
-            string? routeColor = routeObject.routeColor;
+            //Stop[] getStops = await tranzyAdapter.GetStopsAsync(Model["shapeId"]);
+            //Vehicle[] getVehicles = await tranzyAdapter.GetVehiclesAsync(Model["tripId"]);
+            //Shape[] getShapes = await tranzyAdapter.GetShapesAsync(Model["shapeId"]);
+            //Route? routeObject = await tranzyAdapter.GetTheRouteAsync(Int32.Parse(Model["routeId"]));
+
+            List<Stop> getStops = new List<Stop>();
+            StopTimes[] stopTimes = dbContext.StopTimes.ToArray();
+            foreach (StopTimes stopTime in stopTimes.Where(stoptime => stoptime.TripId == Model["shapeId"]).ToArray())
+            {
+                getStops.Add(dbContext.Stops.FirstOrDefault(stop => stop.Id == stopTime.StopId));
+            }
+            
+            
+            
+            
+            
+            //Stop[] getStops = dbContext.Stops.Where(stop => stop.StopId == Int32.Parse(Model["shapeId"])).ToArray();            
+            Vehicle[] getVehicles = dbContext.Vehicles.Where(vehicle => vehicle.VehicleId == Model["tripId"]).ToArray();
+            Shape[] getShapes = dbContext.Shapes.Where(shape => shape.ShapeId == Model["shapeId"]).ToArray();
+            Route? routeObject = dbContext.Routes.FirstOrDefault(route => route.RouteId == Int32.Parse(Model["routeId"]));
+            string? routeColor = routeObject.RouteColor;
             foreach (Stop stop in getStops)
             {
                 <text>
