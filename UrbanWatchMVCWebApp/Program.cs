@@ -20,18 +20,13 @@ builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), $"Logs/Inf
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ITranzyService, TranzyServiceDb>();
 builder.Services.AddScoped<IRepository, Repository>();
+
+builder.Services.AddSingleton<ITranzyService, TranzyServiceDb>();
+builder.Services.AddHostedService<DatabaseInitializerHostedService>();
 
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-    await dbContext.OnApplicationStarted();
-    await dbContext.UpdateDatabase();
-}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
