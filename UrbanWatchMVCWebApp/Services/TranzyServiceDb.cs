@@ -6,7 +6,7 @@ using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
-    public class TranzyServiceWebAPI : ITranzyService
+    public class TranzyServiceDb : ITranzyService
     {
         // links to Tranzy APIs
         private readonly Uri _vehiclesAPILink = new Uri("https://api.tranzy.dev/v1/opendata/vehicles");
