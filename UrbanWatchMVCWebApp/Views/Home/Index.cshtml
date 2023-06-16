@@ -69,10 +69,11 @@
             }
             foreach (Vehicle vehicle in getVehicles)
             {
+                int diffSeconds = (int)DateTime.Now.AddHours(-3).Subtract(vehicle.Timestamp).TotalSeconds;
                 <text>
                     var busIcon = L.divIcon({ className: 'bus-div-icon', iconSize: new L.Point(20, 20) });
                     var marker = L.marker([@vehicle.Latitude, @vehicle.Longitude], { icon: busIcon }).addTo(map);
-                    marker.bindPopup('Vehicul: @vehicle.Label Speed:@vehicle.Speed');
+                marker.bindPopup('Vehicul: @vehicle.Label<br />Speed:@vehicle.Speed<br />De acum : @diffSeconds secunde');
                 </text>
             }
 

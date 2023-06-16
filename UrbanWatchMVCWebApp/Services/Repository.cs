@@ -62,7 +62,23 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<Vehicle[]> GetVehiclesAsync(string tripId)
         {
-            return await _context.Vehicles.Where(vehicle => vehicle.TripId == tripId).ToArrayAsync();
+            DateTime dateTime = DateTime.Now.AddHours(-3).AddMinutes(-3);            
+            List<Vehicle> vehiclesByTripId = await _context.Vehicles.Where(vehicle => vehicle.TripId == tripId && dateTime <= vehicle.Timestamp).ToListAsync();
+            List<string> vehicleIds = new List<string>();
+            List<Vehicle> vehiclesByTimeStamp = new List<Vehicle>();
+            foreach (Vehicle vehicle in vehiclesByTripId)
+            {
+                if (!vehicleIds.Contains(vehicle.Label))
+                {
+                    vehicleIds.Add(vehicle.Label);
+                }
+            }
+            foreach (string vehicleId in vehicleIds)
+            {
+                Vehicle vehicle = vehiclesByTripId.OrderByDescending(vehicle => vehicle.Timestamp).FirstOrDefault(vehicle => vehicle.Label == vehicleId);
+                vehiclesByTimeStamp.Add(vehicle);                
+            }
+            return vehiclesByTimeStamp.ToArray();
         }
     }
 }
