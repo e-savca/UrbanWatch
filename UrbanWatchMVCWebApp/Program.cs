@@ -23,7 +23,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddSingleton<ITranzyService, TranzyServiceDb>();
-builder.Services.AddHostedService<DatabaseInitializerHostedService>();
+builder.Services.AddHostedService<DataIntegrationService>();
+//builder.Services.AddHostedService<DatabaseInitializerHostedService>();
 
 
 var app = builder.Build();
