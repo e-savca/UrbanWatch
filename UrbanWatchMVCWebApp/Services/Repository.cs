@@ -8,32 +8,31 @@ namespace UrbanWatchMVCWebApp.Services
 {
     public class Repository : IRepository
     {
-        private readonly ApplicationContext _context;
-        public Repository(ApplicationContext dbContext)
+        private readonly DataContext _dataContext;
+        public Repository(DataContext dataContext)
         {
-            _context = dbContext;
+            _dataContext = dataContext;
         }
         public async Task<Trip[]> GetTripsAsync()
         {
-            return await _context.Trips.ToArrayAsync();
+            return await Task.FromResult(_dataContext.Trips);
         }
         public async Task<Trip> GetTheTripAsync(string? tripId)
         {
-            Trip? trip = await _context.Trips.SingleOrDefaultAsync(trip => trip.TripId == tripId);
+            Trip? trip = await Task.FromResult(_dataContext.Trips.FirstOrDefault(trip => trip.TripId == tripId));
             if (trip == null)
             {
                 throw new Exception("Trip not found");
             }
-
             return trip;
         }
         public async Task<Models.Route[]> GetRoutesAsync()
         {
-            return await _context.Routes.OrderBy(item => item.RouteShortName).ToArrayAsync();
+            return await Task.FromResult(_dataContext.Routes.OrderBy(item => item.RouteShortName).ToArray());
         }
         public async Task<Models.Route> GetTheRouteAsync(string? routeId)
         {
-            Models.Route? route = await _context.Routes.SingleOrDefaultAsync(route => route.RouteId == routeId);
+            Models.Route? route = await Task.FromResult(_dataContext.Routes.FirstOrDefault(route => route.RouteId == routeId));
             if (route == null)
             {
                 throw new Exception("Route not found");
@@ -42,7 +41,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<Shape[]> GetShapesAsync(string? shapeId)
         {
-            Shape[]? shapes = await _context.Shapes.Where(shape => shape.ShapeId == shapeId).ToArrayAsync();
+            Shape[]? shapes = await Task.FromResult(_dataContext.Shapes.Where(shape => shape.ShapeId == shapeId).ToArray());
             if (shapes == null)
             {
                 throw new Exception("Shapes not found");
@@ -52,8 +51,8 @@ namespace UrbanWatchMVCWebApp.Services
         public async Task<Stop[]> GetStopsAsync(string? shapeId)
         {
             List<Stop> stopsList = new List<Stop>();
-            StopTimes[] stopTimes = await _context.StopTimes.Where(stoptime => stoptime.TripId == shapeId).ToArrayAsync();
-            Stop[] stops = await _context.Stops.ToArrayAsync();
+            StopTimes[] stopTimes = await Task.FromResult(_dataContext.StopTimes.Where(stoptime => stoptime.TripId == shapeId).ToArray());
+            Stop[] stops = await Task.FromResult(_dataContext.Stops.ToArray());
             foreach (StopTimes stopTime in stopTimes)
             {
                 stopsList.Add(stops.SingleOrDefault(stop => stop.StopId == stopTime.StopId));
@@ -63,22 +62,9 @@ namespace UrbanWatchMVCWebApp.Services
         public async Task<Vehicle[]> GetVehiclesAsync(string tripId)
         {
             DateTime dateTime = DateTime.Now.AddHours(-3).AddMinutes(-3);            
-            List<Vehicle> vehiclesByTripId = await _context.Vehicles.Where(vehicle => vehicle.TripId == tripId && dateTime <= vehicle.Timestamp).ToListAsync();
-            List<string> vehicleIds = new List<string>();
-            List<Vehicle> vehiclesByTimeStamp = new List<Vehicle>();
-            foreach (Vehicle vehicle in vehiclesByTripId)
-            {
-                if (!vehicleIds.Contains(vehicle.Label))
-                {
-                    vehicleIds.Add(vehicle.Label);
-                }
-            }
-            foreach (string vehicleId in vehicleIds)
-            {
-                Vehicle vehicle = vehiclesByTripId.OrderByDescending(vehicle => vehicle.Timestamp).FirstOrDefault(vehicle => vehicle.Label == vehicleId);
-                vehiclesByTimeStamp.Add(vehicle);                
-            }
-            return vehiclesByTimeStamp.ToArray();
+            List<Vehicle> vehiclesByTripId = await Task.FromResult(_dataContext.Vehicles.Where(vehicle => vehicle.TripId == tripId && dateTime <= vehicle.Timestamp).ToList());
+            
+            return vehiclesByTripId.ToArray();
         }
     }
 }
