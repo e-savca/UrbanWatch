@@ -1,18 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
     public class DataIntegrationService : BackgroundService
-    {        
+    {
+        private DataContext _dataContext;
         private readonly ITranzyService _tranzyService;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DataIntegrationService> _logger;
         private int _executionCount;
 
-        public DataIntegrationService(ITranzyService tranzyService, IServiceProvider serviceProvider, ILogger<DataIntegrationService> logger)
+        public DataIntegrationService(DataContext dataContext, ITranzyService tranzyService, IServiceProvider serviceProvider, ILogger<DataIntegrationService> logger)
         {
+            _dataContext = dataContext;
             _tranzyService = tranzyService;
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -52,17 +55,13 @@ namespace UrbanWatchMVCWebApp.Services
                 try
                 {
                     Vehicle[]? vehiclesFromService = await _tranzyService.GetVehiclesDataAsync();
-                    Vehicle[]? vehiclesFromDb = await _context.Vehicles.ToArrayAsync();
-                    foreach (Vehicle vehicle in vehiclesFromService)
-                    {
-                        bool result = await IsDuplicateVehicle(vehicle, vehiclesFromDb);
-                        if (!result)
-                        {
-                            _context.Vehicles.Add(vehicle);
-                        }
-                    }          
-                    await _context.SaveChangesAsync();
 
+                    if (!IsDuplicateVehicle(_dataContext.Vehicles, vehiclesFromService))
+                    {
+                        _dataContext.Vehicles = vehiclesFromService;
+                        await _context.Vehicles.AddRangeAsync(vehiclesFromService);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (Exception)
                 {
@@ -82,6 +81,13 @@ namespace UrbanWatchMVCWebApp.Services
             var stops = await _tranzyService.GetStopsDataAsync();
             var stopTimes = await _tranzyService.GetStopTimesDataAsync();
 
+            _dataContext.Vehicles = vehicles;
+            _dataContext.Routes = routes;
+            _dataContext.Trips = trips;
+            _dataContext.Shapes = shapes;
+            _dataContext.Stops = stops;
+            _dataContext.StopTimes = stopTimes;
+
             using (var scope = _serviceProvider.CreateScope())
             {
                 ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
@@ -90,25 +96,26 @@ namespace UrbanWatchMVCWebApp.Services
                     //_ = await _context.Database.EnsureDeletedAsync();
                     _ = await _context.Database.EnsureCreatedAsync();                    
 
+                    // Remove Yesterday's data from Vehicles
                     DateTime dateTime = DateTime.Today.AddMinutes(-10);
                     Vehicle[] vehiclesToRemove = await _context.Vehicles.Where(vehicle => vehicle.Timestamp <= dateTime).ToArrayAsync();
                     _context.Vehicles.RemoveRange(vehiclesToRemove);
-                    _context.Vehicles.AddRange(vehicles);
+                    await _context.Vehicles.AddRangeAsync(vehicles);                    
 
                     _context.Routes.RemoveRange(_context.Routes);
-                    _context.Routes.UpdateRange(routes);
+                    await _context.Routes.AddRangeAsync(routes);                    
 
                     _context.Trips.RemoveRange(_context.Trips);
-                    _context.Trips.UpdateRange(trips);
+                    await _context.Trips.AddRangeAsync(trips);
 
                     _context.Shapes.RemoveRange(_context.Shapes);
-                    _context.Shapes.UpdateRange(shapes);
+                    await _context.Shapes.AddRangeAsync(shapes);
 
                     _context.Stops.RemoveRange(_context.Stops);
-                    _context.Stops.UpdateRange(stops);
+                    await _context.Stops.AddRangeAsync(stops);                    
 
                     _context.StopTimes.RemoveRange(_context.StopTimes);
-                    _context.StopTimes.UpdateRange(stopTimes);
+                    await _context.StopTimes.AddRangeAsync(stopTimes);                    
 
                     await _context.SaveChangesAsync();
                 }
@@ -121,20 +128,19 @@ namespace UrbanWatchMVCWebApp.Services
             }
 
         }
-        public async Task<bool> IsDuplicateVehicle(Vehicle newVehicle, Vehicle[]? vehiclesFromDb)
+        public bool IsDuplicateVehicle(Vehicle[] oldData, Vehicle[] NewData)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            List<string> oldDataStrings = new List<string>();
+            foreach (Vehicle item in oldData)
             {
-                ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-
-                var lastVehicle = vehiclesFromDb.Where(v => v.VehicleId == newVehicle.VehicleId).OrderByDescending(v => v.Timestamp).FirstOrDefault();
-
-                if (lastVehicle != null && lastVehicle.Timestamp >= newVehicle.Timestamp)
-                {
-                    return true;
-                }
+                oldDataStrings.Add(item.Timestamp.ToString());
             }
-            return false;
+            List<string> newDataStrings = new List<string>();
+            foreach (Vehicle item in NewData)
+            {
+                newDataStrings.Add(item.Timestamp.ToString());
+            }
+            return oldDataStrings.SequenceEqual(newDataStrings);
         }
     }
 }
