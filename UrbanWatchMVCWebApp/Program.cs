@@ -22,9 +22,9 @@ builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), $"Logs/Inf
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRepository, Repository>();
 
-builder.Services.AddSingleton<ITranzyService, TranzyServiceDb>();
+builder.Services.AddSingleton<ITranzyService, TranzyServiceWebAPI>();
+builder.Services.AddSingleton<DataContext>();
 builder.Services.AddHostedService<DataIntegrationService>();
-//builder.Services.AddHostedService<DatabaseInitializerHostedService>();
 
 
 var app = builder.Build();
