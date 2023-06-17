@@ -18,25 +18,28 @@
     <p>Thank you for using our service!</p>
     <form method="post">
         <p>
-            <label for="tripId">Selectati o ruta:</label>
-            <select name="tripId" asp-for="@Model["tripId"]">
+            <label for="routeShortName">Choose a route from this list: <input list="routes" id="routeShortName" name="routeShortName" asp-for="@Model["routeShortName"]" /> </label>
+            <datalist id="routes">
                 @{
                     Route[] getRoutes = await repo.GetRoutesAsync();
                     Trip[] getTrips = await repo.GetTripsAsync();
                 }
                 @foreach (Route route in getRoutes.OrderBy(order => order.Id).ToArray())
                 {
-                    foreach (Trip trip in getTrips.Where(trip => trip.RouteId == route.RouteId).OrderBy(order => order.DirectionId).ToArray())
+                    string routeType = (Int32.Parse(route.RouteType) == 3) ? "Bus" : "Trolleybus";
+                    <option value="@route.RouteShortName">@routeType No @route.RouteShortName - @route.RouteLongName</option>
+
+
+                    @*foreach (Trip trip in getTrips.Where(trip => trip.RouteId == route.RouteId).OrderBy(order => order.DirectionId).ToArray())
                     {
-                        <text>
-                        <option value="@trip.TripId">@route.RouteShortName - Spre @trip.TripHeadsign </option>
-                        </text>
-                    }
+                        <option value="@trip.TripId">@routeType - @route.RouteShortName - Spre @trip.TripHeadsign</option>                        
+                    }*@
                 }
-            </select>
+            </datalist>
+
         </p>
         <p>
-            <input type="submit" value="Send" />
+            <input type="submit"/>
         </p>
     </form>
 
@@ -94,5 +97,11 @@
                 map.fitBounds(polyline.getBounds());
             </text>
         }
+            function setOptionValue(input) {
+                const selectedOption = input.list.options.namedItem(input.value);
+                if (selectedOption) {
+                    input.value = selectedOption.text;
+                }
+            }
     </script>
 }
