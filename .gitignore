@@ -5,7 +5,8 @@
 UrbanWatchMVCWebApp/bin/
 UrbanWatchMVCWebApp/obj/
 UrbanWatchMVCWebApp/.vscode/
-/UrbanWatchMVCWebApp/Logs/InfoLogs/
+UrbanWatchMVCWebApp/Logs/InfoLogs/
+UrbanWatchMVCWebApp/Properties/
 
 
 *.suo
