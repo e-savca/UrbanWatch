@@ -3,6 +3,7 @@ using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Routing;
+using System;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -58,6 +59,10 @@ namespace UrbanWatchMVCWebApp.Services
                 stopsList.Add(stops.SingleOrDefault(stop => stop.StopId == stopTime.StopId));
             }
             return stopsList.ToArray();
+        }
+        public async Task<StopTimes[]> GetStopTimesAsync()
+        {            
+            return await Task.FromResult(_dataContext.StopTimes);
         }
         public async Task<Vehicle[]> GetVehiclesAsync(string tripId)
         {
