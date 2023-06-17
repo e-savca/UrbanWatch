@@ -10,6 +10,7 @@ namespace UrbanWatchMVCWebApp.Services
         public Task<Models.Route> GetTheRouteAsync(string? routeId);
         public Task<Shape[]> GetShapesAsync(string? shapeId);
         public Task<Stop[]> GetStopsAsync(string? shapeId);
+        public Task<StopTimes[]> GetStopTimesAsync();
         public Task<Vehicle[]> GetVehiclesAsync(string tripId);
     }
 
