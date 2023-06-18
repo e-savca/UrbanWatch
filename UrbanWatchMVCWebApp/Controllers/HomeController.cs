@@ -28,16 +28,27 @@ namespace UrbanWatchMVCWebApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> IndexAsync(string routeShortName)
+        public async Task<IActionResult> IndexAsync(string routeName, bool tripType)
         {
             var userId = HttpContext.User.Identity.Name;
             var executionTime = DateTime.Now;
             string message = "";
 
+            string[] routeNameStrings = routeName.Split(' ');
+            string routeShortName = routeNameStrings[2];
+            string routeType = (routeNameStrings[0] == "Bus") ? "3" : "11";
+
             Models.Route[]? getRoutes = await _repository.GetRoutesAsync();
-            Models.Route? getTheRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName);
+            Models.Route? getTheRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName && r.RouteType == routeType);
+            if (routeType == "11" && routeShortName == "2")
+            {
+                tripType = false;
+            }
             Trip[]? getTrips = await _repository.GetTripsAsync();
-            Trip? getTheTrip = getTrips.FirstOrDefault(t => t.RouteId == getTheRoute.RouteId);
+            string tripTypeString = tripType ? "1" : "0";
+
+            Trip? getTheTrip = getTrips.FirstOrDefault(t => t.RouteId == getTheRoute.RouteId && t.DirectionId == tripTypeString);
+
             message = $"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Try to get Trip getTheTrip.";
             _logger.LogInformation(message);
 
@@ -46,10 +57,11 @@ namespace UrbanWatchMVCWebApp.Controllers
                 message = $"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Trip getTheTrip were retrieved successfully.";
                 _logger.LogInformation(message);
                 Dictionary<string, string> model = new Dictionary<string, string> {
-                    { "routeShortName", routeShortName },
+                    { "routeName", routeName },
                     { "tripId", getTheTrip.TripId.ToString() },
                     { "shapeId", getTheTrip.ShapeId.ToString() },
-                    { "routeId", getTheTrip.RouteId.ToString() }
+                    { "routeId", getTheTrip.RouteId.ToString() },
+                    { "tripType", tripType.ToString() }
                 };
 
                 message = $"The Index action was called by user '{userId}' at '{executionTime}'. The trip details were retrieved successfully.";
@@ -64,41 +76,7 @@ namespace UrbanWatchMVCWebApp.Controllers
 
                 return RedirectToAction("Error", "Home");
             }
-        }
-        //[HttpPost]
-        //public async Task<IActionResult> IndexAsync(string tripId)
-        //{
-        //    var userId = HttpContext.User.Identity.Name;
-        //    var executionTime = DateTime.Now;
-        //    string message = "";
-
-        //    Trip? getTheTrip = await _repository.GetTheTripAsync(tripId);
-        //    message = $"The Index action was called by user '{userId}' at '{executionTime}'. tripId = {tripId}. Try to get Trip getTheTrip.";
-        //    _logger.LogInformation(message);
-
-        //    if (getTheTrip != null)
-        //    {
-        //        message = $"The Index action was called by user '{userId}' at '{executionTime}'. tripId = {tripId}. Trip getTheTrip were retrieved successfully.";
-        //        _logger.LogInformation(message);
-        //        Dictionary<string, string> model = new Dictionary<string, string> {
-        //            { "tripId", tripId },
-        //            { "shapeId", getTheTrip.ShapeId.ToString() },
-        //            { "routeId", getTheTrip.RouteId.ToString() }
-        //        };
-
-        //        message = $"The Index action was called by user '{userId}' at '{executionTime}'. The trip details were retrieved successfully.";
-        //        _logger.LogInformation(message);
-
-        //        return View(model);
-        //    }
-        //    else
-        //    {
-        //        message = $"The Index action was called by user '{userId}' at '{executionTime}'. Failed to retrieve trip details.";
-        //        _logger.LogWarning(message);
-
-        //        return RedirectToAction("Error", "Home");
-        //    }
-        //}
+        }        
 
         public IActionResult About()
         {
