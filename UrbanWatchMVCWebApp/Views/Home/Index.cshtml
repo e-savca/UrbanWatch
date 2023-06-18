@@ -4,31 +4,25 @@
 @using UrbanWatchMVCWebApp.Models;
 @inject IRepository repo
 
-
-
 @{    
     ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Public Transport Map of Chisinau</h1>
-    <p>
-        Hello! We present to you the public transport map of Chisinau, which will help you plan your trip around the city. On the map, you will find all the trolleybus and bus routes, as well as their stops. Additionally, you can check the schedule and duration of the trip. Use this map to quickly and efficiently reach your destination.
-    </p>
-    <p>Thank you for using our service!</p>
+    <h1 class="display-4">Discover Chisinau with UrbanWatch</h1>   
+
     <form method="post">
         <p>
-            <label for="routeShortName">Choose a route from this list: <input list="routes" id="routeShortName" name="routeShortName" asp-for="@Model["routeShortName"]" /> </label>
+            <label for="routeName">Choose a route from this list: <input list="routes" id="routeName" name="routeName" asp-for="@Model["routeName"]" width="500px" /> </label>
             <datalist id="routes">
                 @{
                     Route[] getRoutes = await repo.GetRoutesAsync();
                     Trip[] getTrips = await repo.GetTripsAsync();
                 }
-                @foreach (Route route in getRoutes.OrderBy(order => order.Id).ToArray())
+                @foreach (Route route in getRoutes.OrderBy(order => order.RouteType).ToArray())
                 {
                     string routeType = (Int32.Parse(route.RouteType) == 3) ? "Bus" : "Trolleybus";
-                    <option value="@route.RouteShortName">@routeType No @route.RouteShortName - @route.RouteLongName</option>
-
+                    <option value="@routeType No @route.RouteShortName - @route.RouteLongName" style="width: 500px;"></option>
 
                     @*foreach (Trip trip in getTrips.Where(trip => trip.RouteId == route.RouteId).OrderBy(order => order.DirectionId).ToArray())
                     {
@@ -37,6 +31,19 @@
                 }
             </datalist>
 
+        </p>
+        <p>
+            <label for="tripType">Select trip type:</label>
+            @if (Model != null)
+            {
+                <input type="checkbox" id="tripType" name="tripType" value="true" asp-for="@Model["tripType"]"/>
+            }
+            else
+            {
+                <input type="checkbox" id="tripType" name="tripType" value="true" checked />
+            }
+
+            <br /><span class="helper-text">If the checkbox is checked, it means the option is "on way". If the checkbox is not checked, it means the option is "round way".</span>
         </p>
         <p>
             <input type="submit"/>
