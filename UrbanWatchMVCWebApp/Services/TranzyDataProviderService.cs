@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http;
 using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
     public class TranzyDataProviderService : IDataProviderService
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
         // links to Tranzy APIs
         private readonly Uri _vehiclesAPILink = new Uri("https://api.tranzy.dev/v1/opendata/vehicles");
         private readonly Uri _routesAPILink = new Uri("https://api.tranzy.dev/v1/opendata/routes");
@@ -15,55 +18,49 @@ namespace UrbanWatchMVCWebApp.Services
 
         private readonly string _AgencyId = "4";
         private readonly string _APIKey = "vPb5jKPyRf1AS3AWrqYRL5hUHjxViy2u202HJ3h3";
-        private async Task<string> GetDataAsync(Uri RequestUri)
+
+        public TranzyDataProviderService(IHttpClientFactory httpClientFactory)
         {
-            var client = new HttpClient();
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = RequestUri,
-                Headers =
-                {
-                    { "X-Agency-Id", _AgencyId },
-                    { "Accept", "application/json" },
-                    { "X-API-KEY", _APIKey },
-                },
-            };
-            using (var response = await client.SendAsync(request))
+            _httpClientFactory = httpClientFactory;
+        }
+        private async Task<T> GetDataAsync<T>(Uri requestUri)
+        {
+            HttpClient client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("X-Agency-Id", _AgencyId);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.DefaultRequestHeaders.Add("X-API-KEY", _APIKey);
+
+            using (var response = await client.GetAsync(requestUri))
             {
                 response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync();
+                string json = await response.Content.ReadAsStringAsync();
+                T data = JsonConvert.DeserializeObject<T>(json);
+                return data;
             }
         }
         public async Task<Vehicle[]> GetVehiclesDataAsync()
         {
-            var body = await GetDataAsync(_vehiclesAPILink);
-            return JsonConvert.DeserializeObject<Vehicle[]>(body);
+            return await GetDataAsync<Vehicle[]>(_vehiclesAPILink);
         }
         public async Task<Models.Route[]> GetRoutesDataAsync()
         {
-            var body = await GetDataAsync(_routesAPILink);
-            return JsonConvert.DeserializeObject<Models.Route[]>(body);
+            return await GetDataAsync<Models.Route[]>(_routesAPILink);
         }
         public async Task<Trip[]> GetTripsDataAsync()
         {
-            var body = await GetDataAsync(_tripsAPILink);
-            return JsonConvert.DeserializeObject<Trip[]>(body);
+            return await GetDataAsync<Trip[]>(_tripsAPILink);
         }
         public async Task<Shape[]> GetShapesDataAsync()
         {
-            var body = await GetDataAsync(_shapesAPILink);
-            return JsonConvert.DeserializeObject<Shape[]>(body);
+            return await GetDataAsync<Shape[]>(_shapesAPILink);
         }
         public async Task<Stop[]> GetStopsDataAsync()
         {
-            var body = await GetDataAsync(_stopsAPILink);
-            return JsonConvert.DeserializeObject<Stop[]>(body);
+            return await GetDataAsync<Stop[]>(_stopsAPILink);
         }
         public async Task<StopTimes[]> GetStopTimesDataAsync()
         {
-            var body = await GetDataAsync(_stopTimesAPILink);
-            return JsonConvert.DeserializeObject<StopTimes[]>(body);
+            return await GetDataAsync<StopTimes[]>(_stopTimesAPILink);
         }
     }
 }

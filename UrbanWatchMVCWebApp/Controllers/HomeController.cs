@@ -19,18 +19,12 @@ namespace UrbanWatchMVCWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            var userId = HttpContext.User.Identity.Name;
-            var executionTime = DateTime.Now;
-
-            _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'.");
+            _logger.LogInformation($"The Index action was called at {DateTime.Now}");
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> IndexAsync(string routeName, bool tripType)
         {
-            var userId = HttpContext.User.Identity.Name;
-            var executionTime = DateTime.Now;
-
             string[] routeNameStrings = routeName.Split(' ');
             string routeShortName = routeNameStrings[2];
             string routeType = (routeNameStrings[0] == "Bus") ? "3" : "11";
@@ -46,11 +40,11 @@ namespace UrbanWatchMVCWebApp.Controllers
 
             Trip? getTheTrip = getTrips.FirstOrDefault(t => t.RouteId == getTheRoute.RouteId && t.DirectionId == tripTypeString);
 
-            _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Try to get Trip getTheTrip.");
+            _logger.LogInformation($"The Index action was called at '{DateTime.Now}'. routeShortName = {routeShortName}. Try to get Trip getTheTrip.");
 
             if (getTheTrip != null)
             {
-                _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Trip getTheTrip were retrieved successfully.");
+                _logger.LogInformation($"The Index action was called at '{DateTime.Now}'. routeShortName = {routeShortName}. Trip getTheTrip were retrieved successfully.");
                 Dictionary<string, string> model = new Dictionary<string, string> {
                     { "routeName", routeName },
                     { "tripId", getTheTrip.TripId.ToString() },
@@ -59,13 +53,11 @@ namespace UrbanWatchMVCWebApp.Controllers
                     { "tripType", tripType.ToString() }
                 };
 
-                _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'. The trip details were retrieved successfully.");
-
                 return View(model);
             }
             else
             {
-                _logger.LogWarning($"The Index action was called by user '{userId}' at '{executionTime}'. Failed to retrieve trip details.");
+                _logger.LogWarning($"The Index action was called at '{DateTime.Now}'. Failed to retrieve trip details.");
 
                 return RedirectToAction("Error", "Home");
             }

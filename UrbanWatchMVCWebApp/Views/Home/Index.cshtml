@@ -3,6 +3,7 @@
 @using UrbanWatchMVCWebApp.EF;
 @using UrbanWatchMVCWebApp.Models;
 @inject IRepository repo
+@inject UrbanWatchService urbanWatchService;
 
 @{    
     ViewData["Title"] = "Home page";
@@ -22,7 +23,7 @@
                 @foreach (Route route in getRoutes.OrderBy(order => order.RouteType).ToArray())
                 {
                     string routeType = (Int32.Parse(route.RouteType) == 3) ? "Bus" : "Trolleybus";
-                    <option value="@routeType No @route.RouteShortName - @route.RouteLongName" style="width: 500px;"></option>
+                    <option value="@urbanWatchService.RouteNameCombine(routeType, route.RouteShortName, route.RouteLongName)"></option>
                 }
             </datalist>
 

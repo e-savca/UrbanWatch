@@ -6,11 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<UrbanWatchService>();
 builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddSingleton<IDataProviderService, TranzyDataProviderService>();
 builder.Services.AddSingleton<DataContext>();
 builder.Services.AddHostedService<UrbanWatchBackgroundService>();
+
+
 
 
 // Check if the database is being used based on the configuration in the configuration file
