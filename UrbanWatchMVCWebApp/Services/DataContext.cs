@@ -10,5 +10,13 @@ namespace UrbanWatchMVCWebApp.Services
         public StopTimes[] StopTimes { get; set; } = null!;
         public Trip[] Trips { get; set; } = null!;
         public Vehicle[] Vehicles { get; set; } = null!;
+        public bool AreVehiclesDuplicates(Vehicle[] NewData)
+        {
+            List<string> oldDataStrings = Vehicles.Select(item => item.ToString()).ToList();
+            List<string> newDataStrings = NewData.Select(item => item.ToString()).ToList();
+
+            return oldDataStrings.SequenceEqual(newDataStrings);
+        }
+
     }
 }

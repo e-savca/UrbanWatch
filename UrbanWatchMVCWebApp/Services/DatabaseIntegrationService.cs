@@ -6,10 +6,9 @@ namespace UrbanWatchMVCWebApp.Services
 {
     public class DatabaseIntegrationService : IDataIntegrationService
     {
-        private DataContext _dataContext;
-        ApplicationContext _dbContext;
+        private readonly DataContext _dataContext;
+        private readonly ApplicationContext _dbContext;
         private readonly IDataProviderService _dataProviderService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DatabaseIntegrationService> _logger;
         private int _executionCount;
 
@@ -26,18 +25,17 @@ namespace UrbanWatchMVCWebApp.Services
 
             _logger.LogInformation($"DataIntegrationService is working. Count: {count}");
 
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = _dbContext.Database.BeginTransaction())
             {
-                ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 try
                 {
                     Vehicle[]? vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
 
-                    if (!IsDuplicateVehicle(_dataContext.Vehicles, vehiclesFromService))
+                    if (!_dataContext.AreVehiclesDuplicates(vehiclesFromService))
                     {
                         _dataContext.Vehicles = vehiclesFromService;
-                        await _context.Vehicles.AddRangeAsync(vehiclesFromService);
-                        await _context.SaveChangesAsync();
+                        await _dbContext.Vehicles.AddRangeAsync(vehiclesFromService);
+                        await _dbContext.SaveChangesAsync();
                     }
                 }
                 catch (Exception)
@@ -51,50 +49,42 @@ namespace UrbanWatchMVCWebApp.Services
         {
             _logger.LogInformation("DataIntegrationService is initialized.");
 
-            var vehicles = await _dataProviderService.GetVehiclesDataAsync();
-            var routes = await _dataProviderService.GetRoutesDataAsync();
-            var trips = await _dataProviderService.GetTripsDataAsync();
-            var shapes = await _dataProviderService.GetShapesDataAsync();
-            var stops = await _dataProviderService.GetStopsDataAsync();
-            var stopTimes = await _dataProviderService.GetStopTimesDataAsync();
+            _dataContext.Vehicles = await _dataProviderService.GetVehiclesDataAsync();
+            _dataContext.Routes = await _dataProviderService.GetRoutesDataAsync();
+            _dataContext.Trips = await _dataProviderService.GetTripsDataAsync();
+            _dataContext.Shapes = await _dataProviderService.GetShapesDataAsync();
+            _dataContext.Stops = await _dataProviderService.GetStopsDataAsync();
+            _dataContext.StopTimes = await _dataProviderService.GetStopTimesDataAsync();
 
-            _dataContext.Vehicles = vehicles;
-            _dataContext.Routes = routes;
-            _dataContext.Trips = trips;
-            _dataContext.Shapes = shapes;
-            _dataContext.Stops = stops;
-            _dataContext.StopTimes = stopTimes;
-
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = _dbContext.Database.BeginTransaction())
             {
-                ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 try
                 {
                     //_ = await _context.Database.EnsureDeletedAsync();
-                    _ = await _context.Database.EnsureCreatedAsync();                    
+                    _ = await _dbContext.Database.EnsureCreatedAsync();                    
 
                     // Remove Yesterday's data from Vehicles
                     DateTime dateTime = DateTime.Today.AddMinutes(-10);
-                    Vehicle[] vehiclesToRemove = await _context.Vehicles.Where(vehicle => vehicle.Timestamp <= dateTime).ToArrayAsync();
-                    _context.Vehicles.RemoveRange(vehiclesToRemove);
-                    await _context.Vehicles.AddRangeAsync(vehicles);                    
+                    Vehicle[] vehiclesToRemove = await _dbContext.Vehicles.Where(vehicle => vehicle.Timestamp <= dateTime).ToArrayAsync();
+                    _dbContext.Vehicles.RemoveRange(vehiclesToRemove);
+                    await _dbContext.Vehicles.AddRangeAsync(_dataContext.Vehicles);                    
 
-                    _context.Routes.RemoveRange(_context.Routes);
-                    await _context.Routes.AddRangeAsync(routes);                    
+                    _dbContext.Routes.RemoveRange(_dbContext.Routes);
+                    await _dbContext.Routes.AddRangeAsync(_dataContext.Routes);                    
 
-                    _context.Trips.RemoveRange(_context.Trips);
-                    await _context.Trips.AddRangeAsync(trips);
+                    _dbContext.Trips.RemoveRange(_dbContext.Trips);
+                    await _dbContext.Trips.AddRangeAsync(_dataContext.Trips);
 
-                    _context.Shapes.RemoveRange(_context.Shapes);
-                    await _context.Shapes.AddRangeAsync(shapes);
+                    _dbContext.Shapes.RemoveRange(_dbContext.Shapes);
+                    await _dbContext.Shapes.AddRangeAsync(_dataContext.Shapes);
 
-                    _context.Stops.RemoveRange(_context.Stops);
-                    await _context.Stops.AddRangeAsync(stops);                    
+                    _dbContext.Stops.RemoveRange(_dbContext.Stops);
+                    await _dbContext.Stops.AddRangeAsync(_dataContext.Stops);
 
-                    _context.StopTimes.RemoveRange(_context.StopTimes);
-                    await _context.StopTimes.AddRangeAsync(stopTimes);                    
+                    _dbContext.StopTimes.RemoveRange(_dbContext.StopTimes);
+                    await _dbContext.StopTimes.AddRangeAsync(_dataContext.StopTimes);                    
 
-                    await _context.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -103,21 +93,6 @@ namespace UrbanWatchMVCWebApp.Services
                     throw;
                 }
             }
-
-        }
-        public bool IsDuplicateVehicle(Vehicle[] oldData, Vehicle[] NewData)
-        {
-            List<string?> oldDataStrings = new List<string?>();
-            foreach (Vehicle item in oldData)
-            {
-                oldDataStrings.Add(item.ToString());
-            }
-            List<string?> newDataStrings = new List<string?>();
-            foreach (Vehicle item in NewData)
-            {
-                newDataStrings.Add(item.ToString());
-            }
-            return oldDataStrings.SequenceEqual(newDataStrings);
-        }
+        }        
     }
 }
