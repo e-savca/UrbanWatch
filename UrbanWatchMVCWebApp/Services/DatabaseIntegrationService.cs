@@ -5,15 +5,15 @@ using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
-    public class DataIntegrationService : BackgroundService
+    public class DatabaseIntegrationService : BackgroundService, IDataIntegrationService
     {
         private DataContext _dataContext;
         private readonly ITranzyService _tranzyService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<DataIntegrationService> _logger;
+        private readonly ILogger<DatabaseIntegrationService> _logger;
         private int _executionCount;
 
-        public DataIntegrationService(DataContext dataContext, ITranzyService tranzyService, IServiceProvider serviceProvider, ILogger<DataIntegrationService> logger)
+        public DatabaseIntegrationService(DataContext dataContext, ITranzyService tranzyService, IServiceProvider serviceProvider, ILogger<DatabaseIntegrationService> logger)
         {
             _dataContext = dataContext;
             _tranzyService = tranzyService;
@@ -25,7 +25,7 @@ namespace UrbanWatchMVCWebApp.Services
         {
             _logger.LogInformation("DataIntegrationService running.");
 
-            await InitializeDatabase();
+            await InitializeData();
 
             using PeriodicTimer timer = new(TimeSpan.FromSeconds(10));
 
@@ -33,7 +33,7 @@ namespace UrbanWatchMVCWebApp.Services
             {
                 while (await timer.WaitForNextTickAsync(stoppingToken))
                 {
-                    await UpdateDatabase();
+                    await UpdateData();
                 }
             }
             catch (OperationCanceledException ex)
@@ -43,7 +43,7 @@ namespace UrbanWatchMVCWebApp.Services
             }
         }
 
-        public async Task UpdateDatabase()
+        public async Task UpdateData()
         {
             var count = Interlocked.Increment(ref _executionCount);
 
@@ -70,7 +70,7 @@ namespace UrbanWatchMVCWebApp.Services
             }
 
         }
-        public async Task InitializeDatabase()
+        public async Task InitializeData()
         {
             _logger.LogInformation("DataIntegrationService is initialized.");
 

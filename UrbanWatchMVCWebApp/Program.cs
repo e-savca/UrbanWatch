@@ -4,26 +4,40 @@ using UrbanWatchMVCWebApp.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
-bool useDatabase = builder.Configuration.GetSection("DatabaseSettings")?.GetValue<bool>("UseDatabase") ?? false;
-if (useDatabase)
-{
-    string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-    builder.Services.AddDbContext<ApplicationContext>(options =>
-    {
-        options.UseSqlServer(connection);
-        options.EnableDetailedErrors();
-        options.EnableSensitiveDataLogging();
-
-    });
-}
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddSingleton<ITranzyService, TranzyServiceWebAPI>();
 builder.Services.AddSingleton<DataContext>();
-builder.Services.AddHostedService<DataIntegrationService>();
+
+
+// Check if the database is being used based on the configuration in the configuration file
+bool useDatabase = builder.Configuration.GetSection("DatabaseSettings")?.GetValue<bool>("UseDatabase") ?? false;
+if (useDatabase)
+{
+    // Database is being used
+
+    // Get the connection string from the configuration file
+    string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    // Add the database context service to the dependency container
+    builder.Services.AddDbContext<ApplicationContext>(options =>
+    {
+        options.UseSqlServer(connection);
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
+    });
+
+    // Add the data integration service as a hosted service
+    builder.Services.AddHostedService<DatabaseIntegrationService>();
+}
+else
+{
+    // No database is being used
+
+    builder.Services.AddHostedService<MemoryIntegrationService>();
+}
 
 
 var app = builder.Build();
