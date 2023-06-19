@@ -1,48 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
-    public class DatabaseIntegrationService : BackgroundService, IDataIntegrationService
+    public class DatabaseIntegrationService : IDataIntegrationService
     {
         private DataContext _dataContext;
-        private readonly ITranzyService _tranzyService;
+        ApplicationContext _dbContext;
+        private readonly IDataProviderService _dataProviderService;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DatabaseIntegrationService> _logger;
         private int _executionCount;
 
-        public DatabaseIntegrationService(DataContext dataContext, ITranzyService tranzyService, IServiceProvider serviceProvider, ILogger<DatabaseIntegrationService> logger)
+        public DatabaseIntegrationService(DataContext dataContext, IDataProviderService dataProviderService, ApplicationContext dbContext, ILogger<DatabaseIntegrationService> logger)
         {
             _dataContext = dataContext;
-            _tranzyService = tranzyService;
-            _serviceProvider = serviceProvider;
+            _dataProviderService = dataProviderService;
+            _dbContext = dbContext;
             _logger = logger;
         }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            _logger.LogInformation("DataIntegrationService running.");
-
-            await InitializeData();
-
-            using PeriodicTimer timer = new(TimeSpan.FromSeconds(10));
-
-            try
-            {
-                while (await timer.WaitForNextTickAsync(stoppingToken))
-                {
-                    await UpdateData();
-                }
-            }
-            catch (OperationCanceledException ex)
-            {
-                _logger.LogInformation("DataIntegrationService is stopping.");
-                _logger.LogInformation($"OperationCanceledException ex.Message:\n{ex.Message}.");
-            }
-        }
-
         public async Task UpdateData()
         {
             var count = Interlocked.Increment(ref _executionCount);
@@ -54,7 +31,7 @@ namespace UrbanWatchMVCWebApp.Services
                 ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 try
                 {
-                    Vehicle[]? vehiclesFromService = await _tranzyService.GetVehiclesDataAsync();
+                    Vehicle[]? vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
 
                     if (!IsDuplicateVehicle(_dataContext.Vehicles, vehiclesFromService))
                     {
@@ -74,12 +51,12 @@ namespace UrbanWatchMVCWebApp.Services
         {
             _logger.LogInformation("DataIntegrationService is initialized.");
 
-            var vehicles = await _tranzyService.GetVehiclesDataAsync();
-            var routes = await _tranzyService.GetRoutesDataAsync();
-            var trips = await _tranzyService.GetTripsDataAsync();
-            var shapes = await _tranzyService.GetShapesDataAsync();
-            var stops = await _tranzyService.GetStopsDataAsync();
-            var stopTimes = await _tranzyService.GetStopTimesDataAsync();
+            var vehicles = await _dataProviderService.GetVehiclesDataAsync();
+            var routes = await _dataProviderService.GetRoutesDataAsync();
+            var trips = await _dataProviderService.GetTripsDataAsync();
+            var shapes = await _dataProviderService.GetShapesDataAsync();
+            var stops = await _dataProviderService.GetStopsDataAsync();
+            var stopTimes = await _dataProviderService.GetStopTimesDataAsync();
 
             _dataContext.Vehicles = vehicles;
             _dataContext.Routes = routes;
@@ -130,15 +107,15 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public bool IsDuplicateVehicle(Vehicle[] oldData, Vehicle[] NewData)
         {
-            List<string> oldDataStrings = new List<string>();
+            List<string?> oldDataStrings = new List<string?>();
             foreach (Vehicle item in oldData)
             {
-                oldDataStrings.Add(item.Timestamp.ToString());
+                oldDataStrings.Add(item.ToString());
             }
-            List<string> newDataStrings = new List<string>();
+            List<string?> newDataStrings = new List<string?>();
             foreach (Vehicle item in NewData)
             {
-                newDataStrings.Add(item.Timestamp.ToString());
+                newDataStrings.Add(item.ToString());
             }
             return oldDataStrings.SequenceEqual(newDataStrings);
         }
