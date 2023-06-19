@@ -1,22 +1,21 @@
 using UrbanWatchMVCWebApp.Services;
-using UrbanWatchMVCWebApp.Logging;
 using Microsoft.EntityFrameworkCore;
 using UrbanWatchMVCWebApp.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationContext>(options =>
+bool useDatabase = builder.Configuration.GetSection("DatabaseSettings")?.GetValue<bool>("UseDatabase") ?? false;
+if (useDatabase)
 {
-    options.UseSqlServer(connection);
-    options.EnableDetailedErrors();
-    options.EnableSensitiveDataLogging();
+    string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<ApplicationContext>(options =>
+    {
+        options.UseSqlServer(connection);
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
 
-});
-
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddFile(Path.Combine(Directory.GetCurrentDirectory(), $"Logs/InfoLogs/{DateTime.Now.ToString("yyyy-MM-dd")}.log"));
+    });
+}
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -28,6 +27,9 @@ builder.Services.AddHostedService<DataIntegrationService>();
 
 
 var app = builder.Build();
+
+var loggerFactory = app.Services.GetService<ILoggerFactory>();
+loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

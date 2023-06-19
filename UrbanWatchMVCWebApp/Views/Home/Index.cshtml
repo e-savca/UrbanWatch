@@ -23,11 +23,6 @@
                 {
                     string routeType = (Int32.Parse(route.RouteType) == 3) ? "Bus" : "Trolleybus";
                     <option value="@routeType No @route.RouteShortName - @route.RouteLongName" style="width: 500px;"></option>
-
-                    @*foreach (Trip trip in getTrips.Where(trip => trip.RouteId == route.RouteId).OrderBy(order => order.DirectionId).ToArray())
-                    {
-                        <option value="@trip.TripId">@routeType - @route.RouteShortName - Spre @trip.TripHeadsign</option>                        
-                    }*@
                 }
             </datalist>
 

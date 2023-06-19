@@ -1,7 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
-using NuGet.Packaging.Licenses;
-using System.Drawing.Text;
+﻿using Newtonsoft.Json;
 using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
