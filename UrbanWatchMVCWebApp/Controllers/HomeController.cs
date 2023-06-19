@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
@@ -22,9 +21,8 @@ namespace UrbanWatchMVCWebApp.Controllers
         {
             var userId = HttpContext.User.Identity.Name;
             var executionTime = DateTime.Now;
-            var message = $"The Index action was called by user '{userId}' at '{executionTime}'.";
 
-            _logger.LogInformation(message);
+            _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'.");
             return View();
         }
         [HttpPost]
@@ -32,7 +30,6 @@ namespace UrbanWatchMVCWebApp.Controllers
         {
             var userId = HttpContext.User.Identity.Name;
             var executionTime = DateTime.Now;
-            string message = "";
 
             string[] routeNameStrings = routeName.Split(' ');
             string routeShortName = routeNameStrings[2];
@@ -49,13 +46,11 @@ namespace UrbanWatchMVCWebApp.Controllers
 
             Trip? getTheTrip = getTrips.FirstOrDefault(t => t.RouteId == getTheRoute.RouteId && t.DirectionId == tripTypeString);
 
-            message = $"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Try to get Trip getTheTrip.";
-            _logger.LogInformation(message);
+            _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Try to get Trip getTheTrip.");
 
             if (getTheTrip != null)
             {
-                message = $"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Trip getTheTrip were retrieved successfully.";
-                _logger.LogInformation(message);
+                _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'. routeShortName = {routeShortName}. Trip getTheTrip were retrieved successfully.");
                 Dictionary<string, string> model = new Dictionary<string, string> {
                     { "routeName", routeName },
                     { "tripId", getTheTrip.TripId.ToString() },
@@ -64,15 +59,13 @@ namespace UrbanWatchMVCWebApp.Controllers
                     { "tripType", tripType.ToString() }
                 };
 
-                message = $"The Index action was called by user '{userId}' at '{executionTime}'. The trip details were retrieved successfully.";
-                _logger.LogInformation(message);
+                _logger.LogInformation($"The Index action was called by user '{userId}' at '{executionTime}'. The trip details were retrieved successfully.");
 
                 return View(model);
             }
             else
             {
-                message = $"The Index action was called by user '{userId}' at '{executionTime}'. Failed to retrieve trip details.";
-                _logger.LogWarning(message);
+                _logger.LogWarning($"The Index action was called by user '{userId}' at '{executionTime}'. Failed to retrieve trip details.");
 
                 return RedirectToAction("Error", "Home");
             }

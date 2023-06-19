@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UrbanWatchMVCWebApp.Models;
+﻿using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {

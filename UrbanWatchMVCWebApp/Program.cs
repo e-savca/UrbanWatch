@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRepository, Repository>();
 
-builder.Services.AddSingleton<ITranzyService, TranzyServiceWebAPI>();
+builder.Services.AddSingleton<IDataProviderService, TranzyDataProviderService>();
 builder.Services.AddSingleton<DataContext>();
+builder.Services.AddHostedService<UrbanWatchBackgroundService>();
 
 
 // Check if the database is being used based on the configuration in the configuration file
@@ -29,14 +30,13 @@ if (useDatabase)
         options.EnableSensitiveDataLogging();
     });
 
-    // Add the data integration service as a hosted service
-    builder.Services.AddHostedService<DatabaseIntegrationService>();
+    // Add the data integration service
+    builder.Services.AddSingleton<IDataIntegrationService, DatabaseIntegrationService>();    
 }
 else
 {
     // No database is being used
-
-    builder.Services.AddHostedService<MemoryIntegrationService>();
+    builder.Services.AddSingleton<IDataIntegrationService, MemoryIntegrationService>();
 }
 
 

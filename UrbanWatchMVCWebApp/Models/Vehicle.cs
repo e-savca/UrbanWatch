@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 
 namespace UrbanWatchMVCWebApp.Models
 {
@@ -19,5 +18,10 @@ namespace UrbanWatchMVCWebApp.Models
         [JsonProperty("speed")] public string? Speed { get; set; }
         [JsonProperty("route_id")] public string? RouteId { get; set; }
         [JsonProperty("trip_id")] public string? TripId { get; set; }
+
+        public override string ToString()
+        {
+            return $"VehicleId: {VehicleId}, Label: {Label}, Latitude: {Latitude}, Longitude: {Longitude}, Timestamp: {Timestamp}, VehicleType: {VehicleType}, BikeAccessible: {BikeAccessible}, WheelchairAccessible: {WheelchairAccessible}, XProvider: {XProvider}, XRand: {XRand}, Speed: {Speed}, RouteId: {RouteId}, TripId: {TripId}";
+        }
     }
 }

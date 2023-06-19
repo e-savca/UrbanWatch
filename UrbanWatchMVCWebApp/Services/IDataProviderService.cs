@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
-using UrbanWatchMVCWebApp.Models;
+﻿using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
-    public interface ITranzyService
+    public interface IDataProviderService
     {
         public Task<Vehicle[]> GetVehiclesDataAsync();
         public Task<Models.Route[]> GetRoutesDataAsync();
