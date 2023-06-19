@@ -31,6 +31,7 @@ namespace UrbanWatchMVCWebApp.Services
                 {
                     Vehicle[]? vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
 
+                    _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
                     if (!_dataContext.AreVehiclesDuplicates(vehiclesFromService))
                     {
                         _dataContext.Vehicles = vehiclesFromService;

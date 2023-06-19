@@ -27,7 +27,6 @@ namespace UrbanWatchMVCWebApp.Services
                 _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
                 if (!_dataContext.AreVehiclesDuplicates(vehiclesFromService))
                 {
-                    _logger.LogInformation($"Add data from DataProviderService to DataContext. Count: {count} {DateTime.Now}");
                     _dataContext.Vehicles = vehiclesFromService;
 
                 }
