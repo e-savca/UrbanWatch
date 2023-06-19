@@ -23,12 +23,15 @@ if (useDatabase)
     string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
     // Add the database context service to the dependency container
-    builder.Services.AddDbContext<ApplicationContext>(options =>
+    builder.Services.AddSingleton<ApplicationContext>(provider =>
     {
-        options.UseSqlServer(connection);
-        options.EnableDetailedErrors();
-        options.EnableSensitiveDataLogging();
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+        optionsBuilder.UseSqlServer(connection);
+        optionsBuilder.EnableDetailedErrors();
+        optionsBuilder.EnableSensitiveDataLogging();
+        return new ApplicationContext(optionsBuilder.Options);
     });
+
 
     // Add the data integration service
     builder.Services.AddSingleton<IDataIntegrationService, DatabaseIntegrationService>();    

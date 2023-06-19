@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using UrbanWatchMVCWebApp.EF;
-using UrbanWatchMVCWebApp.Models;
-
-namespace UrbanWatchMVCWebApp.Services
+﻿namespace UrbanWatchMVCWebApp.Services
 {
     public class UrbanWatchBackgroundService : BackgroundService
     {

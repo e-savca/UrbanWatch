@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using UrbanWatchMVCWebApp.EF;
-using UrbanWatchMVCWebApp.Models;
+﻿using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -28,7 +25,7 @@ namespace UrbanWatchMVCWebApp.Services
                 Vehicle[]? vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
 
                 _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
-                if (!IsDuplicateVehicle(_dataContext.Vehicles, vehiclesFromService))
+                if (!_dataContext.AreVehiclesDuplicates(vehiclesFromService))
                 {
                     _logger.LogInformation($"Add data from DataProviderService to DataContext. Count: {count} {DateTime.Now}");
                     _dataContext.Vehicles = vehiclesFromService;
@@ -51,20 +48,6 @@ namespace UrbanWatchMVCWebApp.Services
             _dataContext.Shapes = await _dataProviderService.GetShapesDataAsync();
             _dataContext.Stops = await _dataProviderService.GetStopsDataAsync();
             _dataContext.StopTimes = await _dataProviderService.GetStopTimesDataAsync();
-        }
-        public bool IsDuplicateVehicle(Vehicle[] oldData, Vehicle[] NewData)
-        {
-            List<string?> oldDataStrings = new List<string?>();
-            foreach (Vehicle item in oldData)
-            {
-                oldDataStrings.Add(item.ToString());
-            }
-            List<string?> newDataStrings = new List<string?>();
-            foreach (Vehicle item in NewData)
-            {
-                newDataStrings.Add(item.ToString());
-            }
-            return oldDataStrings.SequenceEqual(newDataStrings);
         }
     }
 }
