@@ -1,110 +1,34 @@
 ﻿@model Dictionary<string, string>
 @using UrbanWatchMVCWebApp.Services;
-@using UrbanWatchMVCWebApp.EF;
-@using UrbanWatchMVCWebApp.Models;
-@inject IRepository repo
-@inject UrbanWatchService urbanWatchService;
+@inject LeafletJSService leafletJSService
 
 @{    
     ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Discover Chisinau with UrbanWatch</h1>   
+    <h1 class="display-4">Discover Chisinau with UrbanWatch</h1>
+</div>
 
-    <form method="post">
-        <p>
-            <label for="routeName">Choose a route from this list: <input list="routes" id="routeName" name="routeName" asp-for="@Model["routeName"]" width="500px" /> </label>
-            <datalist id="routes">
-                @{
-                    Route[] getRoutes = await repo.GetRoutesAsync();
-                    Trip[] getTrips = await repo.GetTripsAsync();
-                }
-                @foreach (Route route in getRoutes.OrderBy(order => order.RouteType).ToArray())
-                {
-                    string routeType = (Int32.Parse(route.RouteType) == 3) ? "Bus" : "Trolleybus";
-                    <option value="@urbanWatchService.RouteNameCombine(routeType, route.RouteShortName, route.RouteLongName)"></option>
-                }
-            </datalist>
+@await Html.PartialAsync("_FormPartialView", Model)
 
-        </p>
-        <p>
-            <label for="tripType">Select trip type:</label>
-            @if (Model != null)
-            {
-                <input type="checkbox" id="tripType" name="tripType" value="true" asp-for="@Model["tripType"]"/>
-            }
-            else
-            {
-                <input type="checkbox" id="tripType" name="tripType" value="true" checked />
-            }
-
-            <br /><span class="helper-text">If the checkbox is checked, it means the option is "on way". If the checkbox is not checked, it means the option is "round way".</span>
-        </p>
-        <p>
-            <input type="submit"/>
-        </p>
-    </form>
-
+<div class="text-center">
     <div id="map" style="height: 500px;"></div>
 </div>
 
+<script>
+    @if (Model != null)
+    {
+        @Html.Raw(await leafletJSService.GenerateMapScriptAsync(Model));
+    }
+    else
+    {
+        @Html.Raw(leafletJSService.GenerateMapScript());
+    }
+</script>
 
 @section Scripts {
     <script>
-        var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
 
-        @if (Model != null)
-        {
-            Stop[] getStops = await repo.GetStopsAsync(Model["shapeId"]);
-            Vehicle[] getVehicles = await repo.GetVehiclesAsync(Model["tripId"]);
-            Shape[] getShapes = await repo.GetShapesAsync(Model["shapeId"]);
-            Route? routeObject = await repo.GetTheRouteAsync(Model["routeId"]);
-            string? routeColor = routeObject.RouteColor;
-            foreach (Stop stop in getStops)
-            {
-                <text>
-                    var busStopIcon = L.divIcon({ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) });
-                    var marker = L.marker([@stop.Latitude, @stop.Longitude], { icon: busStopIcon }).addTo(map);
-                    marker.bindPopup('Statia: @stop.Name');
-                </text>
-            }
-            foreach (Vehicle vehicle in getVehicles)
-            {
-                int diffSeconds = (int)DateTime.Now.AddHours(-3).Subtract(vehicle.Timestamp).TotalSeconds;
-                <text>
-                    var busIcon = L.divIcon({ className: 'bus-div-icon', iconSize: new L.Point(20, 20) });
-                    var marker = L.marker([@vehicle.Latitude, @vehicle.Longitude], { icon: busIcon }).addTo(map);
-                marker.bindPopup('Vehicul: @vehicle.Label<br />Speed:@vehicle.Speed<br />De acum : @diffSeconds secunde');
-                </text>
-            }
-
-            List<string[]> shapesArray = new List<string[]>();
-
-            foreach (Shape shape in getShapes)
-            {
-                string[] point = new string[2];
-                point[0] = shape.Latitude;
-                point[1] = shape.Longitude;
-                shapesArray.Add(point);
-            }
-            <text>
-                var shapes = @Html.Raw(Json.Serialize(shapesArray));
-                var polyline = L.polyline(shapes, { color: '@routeColor' }).addTo(map);
-
-                // zoom the map to the polyline
-                map.fitBounds(polyline.getBounds());
-            </text>
-        }
-            function setOptionValue(input) {
-                const selectedOption = input.list.options.namedItem(input.value);
-                if (selectedOption) {
-                    input.value = selectedOption.text;
-                }
-            }
     </script>
 }

@@ -10,6 +10,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<UrbanWatchService>();
+builder.Services.AddScoped<LeafletJSService>();
 builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddSingleton<IDataProviderService, TranzyDataProviderService>();
