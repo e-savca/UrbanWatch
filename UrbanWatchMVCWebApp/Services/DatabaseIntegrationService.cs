@@ -61,7 +61,7 @@ namespace UrbanWatchMVCWebApp.Services
             {
                 try
                 {
-                    _ = await _context.Database.EnsureDeletedAsync();
+                    _ = await _dbContext.Database.EnsureDeletedAsync();
                     _ = await _dbContext.Database.EnsureCreatedAsync();                    
 
                     // Remove Yesterday's data from Vehicles
