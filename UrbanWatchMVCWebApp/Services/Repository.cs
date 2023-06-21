@@ -56,7 +56,7 @@ namespace UrbanWatchMVCWebApp.Services
             Stop[] stops = await Task.FromResult(_dataContext.Stops.ToArray());
             foreach (StopTimes stopTime in stopTimes)
             {
-                stopsList.Add(stops.SingleOrDefault(stop => stop.StopId == stopTime.StopId));
+                stopsList.Add(stops.FirstOrDefault(stop => stop.StopId == stopTime.StopId));
             }
             return stopsList.ToArray();
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.Diagnostics;
 using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
@@ -8,12 +9,15 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
         private readonly IRepository _repository;
+        private readonly UrbanWatchService _urbanWatchService;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IRepository repository, ILogger<HomeController> logger)
+        public HomeController(IRepository repository, UrbanWatchService urbanWatchService, ILogger<HomeController> logger)
         {
             _repository = repository;
+            _urbanWatchService = urbanWatchService;
             _logger = logger;
         }
         [HttpGet]
@@ -25,22 +29,18 @@ namespace UrbanWatchMVCWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> IndexAsync(string routeName, bool tripType)
         {
-            string[] routeNameStrings = routeName.Split(' ');
-            string routeShortName = routeNameStrings[2];
-            string routeType = (routeNameStrings[0] == "Bus") ? "3" : "11";
+            _logger.LogInformation($"The Index action was called at '{DateTime.Now}'. routeName = {routeName}. Try to get Trip getTheTrip.");
 
-            Models.Route[]? getRoutes = await _repository.GetRoutesAsync();
-            Models.Route? getTheRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName && r.RouteType == routeType);
-            if (routeType == "11" && routeShortName == "2")
-            {
-                tripType = false;
-            }
-            Trip[]? getTrips = await _repository.GetTripsAsync();
-            string tripTypeString = tripType ? "1" : "0";
+            Dictionary<string, string> routeNameStrings = _urbanWatchService.RouteNameSplit(routeName);
 
-            Trip? getTheTrip = getTrips.FirstOrDefault(t => t.RouteId == getTheRoute.RouteId && t.DirectionId == tripTypeString);
+            string routeShortName = routeNameStrings["routeShortName"];            
+            RouteType routeType = (RouteType)Enum.Parse(typeof(RouteType), routeNameStrings["routeType"]);
 
-            _logger.LogInformation($"The Index action was called at '{DateTime.Now}'. routeShortName = {routeShortName}. Try to get Trip getTheTrip.");
+            _urbanWatchService.SetTripTypeForExceptionVehicles(routeType, routeShortName, tripType);
+            string tripTypeString = _urbanWatchService.TripTypeToString(tripType);
+
+            string? theRouteId = await _urbanWatchService.GetTheRouteIdAsync(routeShortName, routeType);
+            Trip? getTheTrip = await _urbanWatchService.GetTheTripAsync(theRouteId, tripTypeString);
 
             if (getTheTrip != null)
             {

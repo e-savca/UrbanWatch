@@ -12,6 +12,7 @@ namespace UrbanWatchMVCWebApp.Services
         public LeafletJSService(IRepository repository)
         {
             repo = repository;
+            script = new StringBuilder();
         }
         public string GenerateMapScript()
         {            
@@ -73,8 +74,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         private void InitializeMap()
         {
-            //script.Clear();
-            script = new StringBuilder();
+            script.Clear();
 
             script.AppendLine("var map = L.map('map').setView([47.02543731466161, 28.830271935332686], 12);");
             script.AppendLine("L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {");

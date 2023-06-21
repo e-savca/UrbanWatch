@@ -11,7 +11,7 @@ namespace UrbanWatchMVCWebApp.Models
         [JsonProperty("route_short_name")] public string? RouteShortName { get; set; }
         [JsonProperty("route_long_name")] public string? RouteLongName { get; set; }
         [JsonProperty("route_color")] public string? RouteColor { get; set; }
-        [JsonProperty("route_type")] public string? RouteType { get; set; }
+        [JsonProperty("route_type")] public RouteType? RouteType { get; set; }
     }
 
 }

@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using System.Linq;
 using UrbanWatchMVCWebApp.Controllers;
+using UrbanWatchMVCWebApp.Models;
 
 namespace UrbanWatchMVCWebApp.Services
 {
     public class UrbanWatchService
     {
         private readonly IRepository _repository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<UrbanWatchService> _logger;
 
-        public UrbanWatchService(IRepository repository, IHttpContextAccessor httpContextAccessor, ILogger<UrbanWatchService> logger)
+        public UrbanWatchService(IRepository repository, ILogger<UrbanWatchService> logger)
         {
             _repository = repository;
-            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
         }
 
-        public string RouteNameCombine(string routeType, string RouteShortName, string RouteLongName)
+        public string RouteNameCombine(RouteType? routeType, string RouteShortName, string RouteLongName)
         {
             return $"{routeType} No {RouteShortName} - {RouteLongName}";
         }
@@ -28,11 +27,36 @@ namespace UrbanWatchMVCWebApp.Services
             return new Dictionary<string, string>
             {
                 { "routeType", routeNameStringsList[0] },
-                { "RouteShortName", routeNameStringsList[2] },
-                { "RouteLongName", routeNameStringsList[3] }
+                { "routeShortName", routeNameStringsList[2] }
             };
         }
+        public bool SetTripTypeForExceptionVehicles(RouteType routeType, string routeShortName, bool tripType)
+        {
+            if (routeType == RouteType.Trolleybus && routeShortName == "2")
+            {
+                return false;
+            }
+            else
+            {
+                return tripType;
+            }
+        }
+        public string TripTypeToString(bool tripType)
+        {
+            return tripType ? "1" : "0";
+        }
 
+        public async Task<string?> GetTheRouteIdAsync(string routeShortName, RouteType routeType)
+        {
+            Models.Route[]? getRoutes = await _repository.GetRoutesAsync();
+            Models.Route? theRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName && r.RouteType == routeType);
+            return theRoute.RouteId;
+        }
+        public async Task<Trip?> GetTheTripAsync(string? theRouteId, string tripTypeString)
+        {
+            Trip[]? getTrips = await _repository.GetTripsAsync();
+            return getTrips.FirstOrDefault(t => t.RouteId == theRouteId && t.DirectionId == tripTypeString);
+        }
 
 
     }
