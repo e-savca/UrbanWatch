@@ -1,6 +1,7 @@
-﻿namespace UrbanWatchMVCWebApp.Models;
+﻿namespace UrbanWatchMVCWebApp.Models.DataModels;
 public class Trip
 {
+    public int Id { get; set; }
     public string? TripId { get; set; }
     public string? RouteId { get; set; }
     public string? TripHeadsign { get; set; }

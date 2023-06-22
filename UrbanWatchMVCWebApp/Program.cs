@@ -1,11 +1,14 @@
 using UrbanWatchMVCWebApp.Services;
 using Microsoft.EntityFrameworkCore;
 using UrbanWatchMVCWebApp.EF;
+using UrbanWatchMVCWebApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
@@ -15,6 +18,7 @@ builder.Services.AddScoped<IRepository, Repository>();
 
 builder.Services.AddSingleton<IDataProviderService, TranzyDataProviderService>();
 builder.Services.AddSingleton<DataContext>();
+builder.Services.AddSingleton<MappingService>();
 builder.Services.AddHostedService<UrbanWatchBackgroundService>();
 
 
@@ -41,7 +45,7 @@ if (useDatabase)
 
 
     // Add the data integration service
-    builder.Services.AddSingleton<IDataIntegrationService, DatabaseIntegrationService>();    
+    //builder.Services.AddSingleton<IDataIntegrationService, DatabaseIntegrationService>();    
 }
 else
 {

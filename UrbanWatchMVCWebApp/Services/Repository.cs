@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UrbanWatchMVCWebApp.EF;
-using UrbanWatchMVCWebApp.Models;
-using System.Linq;
-using Microsoft.AspNetCore.Routing;
-using System;
+﻿using UrbanWatchMVCWebApp.Models;
+using Microsoft.EntityFrameworkCore;
+using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -14,62 +11,62 @@ namespace UrbanWatchMVCWebApp.Services
         {
             _dataContext = dataContext;
         }
-        public async Task<Trip[]> GetTripsAsync()
+        public async Task<List<Trip>> GetTripsAsync()
         {
-            return await Task.FromResult(_dataContext.Trips);
+            return await _dataContext.Trips.AsQueryable().ToListAsync();
         }
         public async Task<Trip> GetTheTripAsync(string? tripId)
         {
-            Trip? trip = await Task.FromResult(_dataContext.Trips.FirstOrDefault(trip => trip.TripId == tripId));
+            Trip? trip = await _dataContext.Trips.AsQueryable().FirstOrDefaultAsync(trip => trip.TripId == tripId);
             if (trip == null)
             {
                 throw new Exception("Trip not found");
             }
             return trip;
         }
-        public async Task<Models.Route[]> GetRoutesAsync()
+        public async Task<List<Models.Route>> GetRoutesAsync()
         {
-            return await Task.FromResult(_dataContext.Routes.OrderBy(item => item.RouteShortName).ToArray());
+            return await _dataContext.Routes.AsQueryable().OrderBy(item => item.RouteShortName).ToListAsync();
         }
         public async Task<Models.Route> GetTheRouteAsync(string? routeId)
         {
-            Models.Route? route = await Task.FromResult(_dataContext.Routes.FirstOrDefault(route => route.RouteId == routeId));
+            Models.Route? route = await _dataContext.Routes.AsQueryable().FirstOrDefaultAsync(route => route.RouteId == routeId);
             if (route == null)
             {
                 throw new Exception("Route not found");
             }
             return route;
         }
-        public async Task<Shape[]> GetShapesAsync(string? shapeId)
+        public async Task<List<Shape>> GetShapesAsync(string? shapeId)
         {
-            Shape[]? shapes = await Task.FromResult(_dataContext.Shapes.Where(shape => shape.ShapeId == shapeId).ToArray());
+            var shapes = await _dataContext.Shapes.Where(shape => shape.ShapeId == shapeId).AsQueryable().ToListAsync();
             if (shapes == null)
             {
                 throw new Exception("Shapes not found");
             }
             return shapes;
         }
-        public async Task<Stop[]> GetStopsAsync(string? shapeId)
+        public async Task<List<Stop>> GetStopsAsync(string? shapeId)
         {
             List<Stop> stopsList = new List<Stop>();
-            StopTimes[] stopTimes = await Task.FromResult(_dataContext.StopTimes.Where(stoptime => stoptime.TripId == shapeId).ToArray());
-            Stop[] stops = await Task.FromResult(_dataContext.Stops.ToArray());
+            var stopTimes = await _dataContext.StopTimes.Where(stoptime => stoptime.TripId == shapeId).AsQueryable().ToListAsync();
+            var stops = await _dataContext.Stops.AsQueryable().ToListAsync();
             foreach (StopTimes stopTime in stopTimes)
             {
                 stopsList.Add(stops.FirstOrDefault(stop => stop.StopId == stopTime.StopId));
             }
-            return stopsList.ToArray();
+            return stopsList;
         }
-        public async Task<StopTimes[]> GetStopTimesAsync()
+        public async Task<List<StopTimes>> GetStopTimesAsync()
         {            
-            return await Task.FromResult(_dataContext.StopTimes);
+            return await _dataContext.StopTimes.AsQueryable().ToListAsync();
         }
-        public async Task<Vehicle[]> GetVehiclesAsync(string tripId)
+        public async Task<List<Vehicle>> GetVehiclesAsync(string tripId)
         {
             DateTime dateTime = DateTime.Now.AddHours(-3).AddMinutes(-3);            
-            List<Vehicle> vehiclesByTripId = await Task.FromResult(_dataContext.Vehicles.Where(vehicle => vehicle.TripId == tripId && dateTime <= vehicle.Timestamp).ToList());
+            List<Vehicle> vehiclesByTripId = await _dataContext.Vehicles.Where(vehicle => vehicle.TripId == tripId && dateTime <= vehicle.Timestamp).AsQueryable().ToListAsync();
             
-            return vehiclesByTripId.ToArray();
+            return vehiclesByTripId;
         }
     }
 }

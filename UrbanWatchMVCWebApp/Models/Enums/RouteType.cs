@@ -1,4 +1,4 @@
-﻿namespace UrbanWatchMVCWebApp.Models
+﻿namespace UrbanWatchMVCWebApp.Models.Enums
 {
     public enum RouteType
     {

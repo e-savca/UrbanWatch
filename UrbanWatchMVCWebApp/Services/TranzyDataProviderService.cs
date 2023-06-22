@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System.Net.Http;
-using UrbanWatchMVCWebApp.Models;
+using System.Collections.Generic;
+using UrbanWatchMVCWebApp.Models.ApiModels.TranzyV1Models;
+using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -38,29 +39,29 @@ namespace UrbanWatchMVCWebApp.Services
                 return data;
             }
         }
-        public async Task<Vehicle[]> GetVehiclesDataAsync()
+        public async Task<List<Vehicle>> GetVehiclesDataAsync()
         {
-            return await GetDataAsync<Vehicle[]>(_vehiclesAPILink);
+            return await GetDataAsync<List<Vehicle>>(_vehiclesAPILink);
         }
-        public async Task<Models.Route[]> GetRoutesDataAsync()
+        public async Task<List<Models.ApiModels.TranzyV1Models.Route>> GetRoutesDataAsync()
         {
-            return await GetDataAsync<Models.Route[]>(_routesAPILink);
+            return await GetDataAsync<List<Models.ApiModels.TranzyV1Models.Route>>(_routesAPILink);
         }
-        public async Task<Trip[]> GetTripsDataAsync()
+        public async Task<List<Trip>> GetTripsDataAsync()
         {
-            return await GetDataAsync<Trip[]>(_tripsAPILink);
+            return await GetDataAsync<List<Trip>>(_tripsAPILink);
         }
-        public async Task<Shape[]> GetShapesDataAsync()
+        public async Task<List<Shape>> GetShapesDataAsync()
         {
-            return await GetDataAsync<Shape[]>(_shapesAPILink);
+            return await GetDataAsync<List<Shape>>(_shapesAPILink);
         }
-        public async Task<Stop[]> GetStopsDataAsync()
+        public async Task<List<Stop>> GetStopsDataAsync()
         {
-            return await GetDataAsync<Stop[]>(_stopsAPILink);
+            return await GetDataAsync<List<Stop>>(_stopsAPILink);
         }
-        public async Task<StopTimes[]> GetStopTimesDataAsync()
+        public async Task<List<StopTimes>> GetStopTimesDataAsync()
         {
-            return await GetDataAsync<StopTimes[]>(_stopTimesAPILink);
+            return await GetDataAsync<List<StopTimes>>(_stopTimesAPILink);
         }
     }
 }

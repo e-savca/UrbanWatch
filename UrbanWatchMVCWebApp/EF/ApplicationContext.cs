@@ -1,30 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UrbanWatchMVCWebApp.Models;
-using UrbanWatchMVCWebApp.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using UrbanWatchMVCWebApp.Models.DataModels;
 
-namespace UrbanWatchMVCWebApp.EF
+namespace UrbanWatchMVCWebApp.EF;
+public class ApplicationContext : DbContext
 {
-    public class ApplicationContext : DbContext
+    public DbSet<Vehicle> Vehicles { get; set; } = null!;
+    public DbSet<Trip> Trips { get; set; } = null!;
+    public DbSet<StopTimes> StopTimes { get; set; } = null!;
+    public DbSet<Stop> Stops { get; set; } = null!;
+    public DbSet<Shape> Shapes { get; set; } = null!;
+    public DbSet<Models.DataModels.Route> Routes { get; set; } = null!;
+
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DbSet<Vehicle> Vehicles { get; set; } = null!;
-        public DbSet<Trip> Trips { get; set; } = null!;
-        public DbSet<StopTimes> StopTimes { get; set; } = null!;
-        public DbSet<Stop> Stops { get; set; } = null!;
-        public DbSet<Shape> Shapes { get; set; } = null!;
-        public DbSet<Models.Route> Routes { get; set; } = null!;
+        modelBuilder.Entity<Models.DataModels.Route>().HasKey(k => k.Id);
+        modelBuilder.Entity<Shape>().HasKey(k => k.Id);
+        modelBuilder.Entity<Stop>().HasKey(k => k.Id);
+        modelBuilder.Entity<StopTimes>().HasKey(k => k.Id);
+        modelBuilder.Entity<Trip>().HasKey(k => k.Id);
+        modelBuilder.Entity<Vehicle>().HasKey(k => k.Id);
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Models.Route>().HasKey(k => k.Id);
-            modelBuilder.Entity<Shape>().HasKey(k => k.Id);
-            modelBuilder.Entity<Stop>().HasKey(k => k.Id);
-            modelBuilder.Entity<StopTimes>().HasKey(k => k.Id);
-            modelBuilder.Entity<Trip>().HasKey(k => k.Id);
-            modelBuilder.Entity<Vehicle>().HasKey(k => k.Id);
-
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

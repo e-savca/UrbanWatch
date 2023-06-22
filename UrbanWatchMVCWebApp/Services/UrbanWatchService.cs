@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Routing;
-using System.Linq;
-using UrbanWatchMVCWebApp.Controllers;
-using UrbanWatchMVCWebApp.Models;
+﻿using UrbanWatchMVCWebApp.Models;
+using UrbanWatchMVCWebApp.Models.Enums;
+using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -48,16 +47,14 @@ namespace UrbanWatchMVCWebApp.Services
 
         public async Task<string?> GetTheRouteIdAsync(string routeShortName, RouteType routeType)
         {
-            Models.Route[]? getRoutes = await _repository.GetRoutesAsync();
-            Models.Route? theRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName && r.RouteType == routeType);
+            var getRoutes = await _repository.GetRoutesAsync();
+            var theRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName && r.RouteType == routeType);
             return theRoute.RouteId;
         }
         public async Task<Trip?> GetTheTripAsync(string? theRouteId, string tripTypeString)
         {
-            Trip[]? getTrips = await _repository.GetTripsAsync();
+            var getTrips = await _repository.GetTripsAsync();
             return getTrips.FirstOrDefault(t => t.RouteId == theRouteId && t.DirectionId == tripTypeString);
-        }
-
-
+        }   
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
 using UrbanWatchMVCWebApp.Models;
+using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -34,7 +35,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         private async Task AddStopsAsync(string shapeId)
         {
-            Stop[] getStops = await repo.GetStopsAsync(shapeId);
+            var getStops = await repo.GetStopsAsync(shapeId);
             foreach (Stop stop in getStops)
             {
                 script.AppendLine($"var busStopIcon = L.divIcon({{ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) }});");
@@ -44,7 +45,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         private async Task AddVehiclesAsync(string tripId)
         {
-            Vehicle[] getVehicles = await repo.GetVehiclesAsync(tripId);
+            var getVehicles = await repo.GetVehiclesAsync(tripId);
             foreach (Vehicle vehicle in getVehicles)
             {
                 int diffSeconds = (int)DateTime.Now.AddHours(-3).Subtract(vehicle.Timestamp).TotalSeconds;
@@ -55,8 +56,8 @@ namespace UrbanWatchMVCWebApp.Services
         }
         private async Task AddPolylineAsync(string shapeId, string routeId)
         {
-            Shape[] getShapes = await repo.GetShapesAsync(shapeId);
-            Models.Route? routeObject = await repo.GetTheRouteAsync(routeId);
+            var getShapes = await repo.GetShapesAsync(shapeId);
+            var routeObject = await repo.GetTheRouteAsync(routeId);
             string? routeColor = routeObject.RouteColor;
 
             List<string[]> shapesArray = new List<string[]>();

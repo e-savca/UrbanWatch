@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
+using UrbanWatchMVCWebApp.Models.Enums;
 using UrbanWatchMVCWebApp.Services;
+using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Controllers
 {
@@ -33,7 +35,7 @@ namespace UrbanWatchMVCWebApp.Controllers
 
             Dictionary<string, string> routeNameStrings = _urbanWatchService.RouteNameSplit(routeName);
 
-            string routeShortName = routeNameStrings["routeShortName"];            
+            string routeShortName = routeNameStrings["routeShortName"];
             RouteType routeType = (RouteType)Enum.Parse(typeof(RouteType), routeNameStrings["routeType"]);
 
             _urbanWatchService.SetTripTypeForExceptionVehicles(routeType, routeShortName, tripType);

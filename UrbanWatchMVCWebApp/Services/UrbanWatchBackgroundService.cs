@@ -1,4 +1,6 @@
-﻿namespace UrbanWatchMVCWebApp.Services
+﻿using UrbanWatchMVCWebApp.Services.Interfaces;
+
+namespace UrbanWatchMVCWebApp.Services
 {
     public class UrbanWatchBackgroundService : BackgroundService
     {

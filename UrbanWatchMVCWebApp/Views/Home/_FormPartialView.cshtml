@@ -1,7 +1,7 @@
 ﻿@model Dictionary<string, string>
 @using UrbanWatchMVCWebApp.Services;
-@using UrbanWatchMVCWebApp.EF;
 @using UrbanWatchMVCWebApp.Models;
+@using UrbanWatchMVCWebApp.Services.Interfaces;
 @inject IRepository repo
 @inject UrbanWatchService urbanWatchService
 
@@ -11,8 +11,8 @@
             <label for="routeName">Choose a route from this list: <input list="routes" id="routeName" name="routeName" asp-for="@Model["routeName"]" width="500px" /> </label>
             <datalist id="routes">
                 @{
-                    Route[] getRoutes = await repo.GetRoutesAsync();
-                    Trip[] getTrips = await repo.GetTripsAsync();
+                    var getRoutes = await repo.GetRoutesAsync();
+                    var getTrips = await repo.GetTripsAsync();
                 }
                 @foreach (Route route in getRoutes.OrderByDescending(o => o.RouteType).ToArray())
                 {

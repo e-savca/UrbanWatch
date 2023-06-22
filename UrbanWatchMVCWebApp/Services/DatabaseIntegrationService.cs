@@ -1,99 +1,113 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UrbanWatchMVCWebApp.EF;
-using UrbanWatchMVCWebApp.Models;
+﻿//using Microsoft.EntityFrameworkCore;
+//using UrbanWatchMVCWebApp.EF;
+//using UrbanWatchMVCWebApp.Models;
+//using UrbanWatchMVCWebApp.Models.DataModels;
+//using UrbanWatchMVCWebApp.Models.ApiModels.TranzyV1Models;
+//using UrbanWatchMVCWebApp.Services.Interfaces;
 
-namespace UrbanWatchMVCWebApp.Services
-{
-    public class DatabaseIntegrationService : IDataIntegrationService
-    {
-        private readonly DataContext _dataContext;
-        private readonly ApplicationContext _dbContext;
-        private readonly IDataProviderService _dataProviderService;
-        private readonly ILogger<DatabaseIntegrationService> _logger;
-        private int _executionCount;
+//namespace UrbanWatchMVCWebApp.Services
+//{
+//    public class DatabaseIntegrationService : IDataIntegrationService
+//    {
+//        private readonly DataContext _dataContext;
+//        private readonly ApplicationContext _dbContext;
+//        private readonly IDataProviderService _dataProviderService;
+//        private readonly UrbanWatchService _urbanWatchService;
+//        private readonly ILogger<DatabaseIntegrationService> _logger;
+//        private int _executionCount;
 
-        public DatabaseIntegrationService(DataContext dataContext, IDataProviderService dataProviderService, ApplicationContext dbContext, ILogger<DatabaseIntegrationService> logger)
-        {
-            _dataContext = dataContext;
-            _dataProviderService = dataProviderService;
-            _dbContext = dbContext;
-            _logger = logger;
-        }
-        public async Task UpdateData()
-        {
-            var count = Interlocked.Increment(ref _executionCount);
+//        public DatabaseIntegrationService(DataContext dataContext, IDataProviderService dataProviderService, ApplicationContext dbContext, UrbanWatchService urbanWatchService, ILogger<DatabaseIntegrationService> logger)
+//        {
+//            _dataContext = dataContext;
+//            _dataProviderService = dataProviderService;
+//            _dbContext = dbContext;
+//            _urbanWatchService = urbanWatchService;
+//            _logger = logger;
+//        }
+//        public async Task UpdateData()
+//        {
+//            var count = Interlocked.Increment(ref _executionCount);
 
-            _logger.LogInformation($"DataIntegrationService is working. Count: {count}");
+//            _logger.LogInformation($"DataIntegrationService is working. Count: {count}");
 
-            using (var scope = _dbContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    Vehicle[]? vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
+//            using (var scope = _dbContext.Database.BeginTransaction())
+//            {
+//                try
+//                {
+//                    IQueryable<Models.ApiModels.TranzyV1Models.Vehicle> vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
 
-                    _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
-                    if (!_dataContext.AreVehiclesDuplicates(vehiclesFromService))
-                    {
-                        _dataContext.Vehicles = vehiclesFromService;
-                        await _dbContext.Vehicles.AddRangeAsync(vehiclesFromService);
-                        await _dbContext.SaveChangesAsync();
-                    }
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            }
+//                    _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
 
-        }
-        public async Task InitializeData()
-        {
-            _logger.LogInformation("DataIntegrationService is initialized.");
+//                    var vehiclesFromServiceMapped = _urbanWatchService.DoMapping<IQueryable<Models.ApiModels.TranzyV1Models.Vehicle>, IQueryable <Models.Vehicle>>(vehiclesFromService);
+//                    if (!await _dataContext.AreVehiclesDuplicatesAsync(vehiclesFromServiceMapped))
+//                    {
+//                        _dataContext.Vehicles = vehiclesFromServiceMapped;
+//                        var vehiclesFromServiceMappedToEF = _urbanWatchService.DoMapping<IQueryable<Models.Vehicle>, IQueryable<Models.DataModels.Vehicle>>(vehiclesFromServiceMapped);
+//                        await _dbContext.Vehicles.AddRangeAsync(vehiclesFromServiceMappedToEF);
+//                        await _dbContext.SaveChangesAsync();
+//                    }
+//                }
+//                catch (Exception)
+//                {
+//                    throw;
+//                }
+//            }
 
-            _dataContext.Vehicles = await _dataProviderService.GetVehiclesDataAsync();
-            _dataContext.Routes = await _dataProviderService.GetRoutesDataAsync();
-            _dataContext.Trips = await _dataProviderService.GetTripsDataAsync();
-            _dataContext.Shapes = await _dataProviderService.GetShapesDataAsync();
-            _dataContext.Stops = await _dataProviderService.GetStopsDataAsync();
-            _dataContext.StopTimes = await _dataProviderService.GetStopTimesDataAsync();
+//        }
+//        public async Task InitializeData()
+//        {
+//            _logger.LogInformation("DataIntegrationService is initialized.");
 
-            using (var scope = _dbContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    _ = await _dbContext.Database.EnsureDeletedAsync();
-                    _ = await _dbContext.Database.EnsureCreatedAsync();                    
+//            var vehicleAsAPIModel =  await _dataProviderService.GetVehiclesDataAsync();
+//            _dataContext.Vehicles = _urbanWatchService.DoMapping<IQueryable<Models.ApiModels.TranzyV1Models.Vehicle>, IQueryable<Models.Vehicle>>(vehicleAsAPIModel);
+//            var vehicleAsDataModel = _urbanWatchService.DoMapping<IQueryable<Models.ApiModels.TranzyV1Models.Vehicle>, IQueryable<Models.DataModels.Vehicle>>(vehicleAsAPIModel);
 
-                    // Remove Yesterday's data from Vehicles
-                    DateTime dateTime = DateTime.Today.AddMinutes(-10);
-                    Vehicle[] vehiclesToRemove = await _dbContext.Vehicles.Where(vehicle => vehicle.Timestamp <= dateTime).ToArrayAsync();
-                    _dbContext.Vehicles.RemoveRange(vehiclesToRemove);
-                    await _dbContext.Vehicles.AddRangeAsync(_dataContext.Vehicles);                    
+//            var routesAsAPIModel = await _dataProviderService.GetRoutesDataAsync();
+//            _dataContext.Routes = _urbanWatchService.DoMapping<IQueryable<Models.ApiModels.TranzyV1Models.Route>, IQueryable<Models.Route>>(routesAsAPIModel);
+//            var routesAsDataModel = _urbanWatchService.DoMapping<IQueryable<Models.ApiModels.TranzyV1Models.Route>, IQueryable<Models.DataModels.Route>>(routesAsAPIModel);
 
-                    _dbContext.Routes.RemoveRange(_dbContext.Routes);
-                    await _dbContext.Routes.AddRangeAsync(_dataContext.Routes);                    
+//            _dataContext.Trips = await _dataProviderService.GetTripsDataAsync();
+//            _dataContext.Shapes = await _dataProviderService.GetShapesDataAsync();
+//            _dataContext.Stops = await _dataProviderService.GetStopsDataAsync();
+//            _dataContext.StopTimes = await _dataProviderService.GetStopTimesDataAsync();
 
-                    _dbContext.Trips.RemoveRange(_dbContext.Trips);
-                    await _dbContext.Trips.AddRangeAsync(_dataContext.Trips);
+//            using (var scope = _dbContext.Database.BeginTransaction())
+//            {
+//                try
+//                {
+//                    _ = await _dbContext.Database.EnsureDeletedAsync();
+//                    _ = await _dbContext.Database.EnsureCreatedAsync();                    
 
-                    _dbContext.Shapes.RemoveRange(_dbContext.Shapes);
-                    await _dbContext.Shapes.AddRangeAsync(_dataContext.Shapes);
+//                    // Remove Yesterday's data from Vehicles
+//                    DateTime dateTime = DateTime.Today.AddMinutes(-10);
+//                    List<Models.DataModels.Vehicle> vehiclesToRemove = await _dbContext.Vehicles.Where(vehicle => vehicle.Timestamp <= dateTime).ToListAsync();
+//                    _dbContext.Vehicles.RemoveRange(vehiclesToRemove);
+//                    await _dbContext.Vehicles.AddRangeAsync(_dataContext.Vehicles);                    
 
-                    _dbContext.Stops.RemoveRange(_dbContext.Stops);
-                    await _dbContext.Stops.AddRangeAsync(_dataContext.Stops);
+//                    _dbContext.Routes.RemoveRange(_dbContext.Routes);
+//                    await _dbContext.Routes.AddRangeAsync(_dataContext.Routes);                    
 
-                    _dbContext.StopTimes.RemoveRange(_dbContext.StopTimes);
-                    await _dbContext.StopTimes.AddRangeAsync(_dataContext.StopTimes);                    
+//                    _dbContext.Trips.RemoveRange(_dbContext.Trips);
+//                    await _dbContext.Trips.AddRangeAsync(_dataContext.Trips);
 
-                    await _dbContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
-                    throw;
-                }
-            }
-        }        
-    }
-}
+//                    _dbContext.Shapes.RemoveRange(_dbContext.Shapes);
+//                    await _dbContext.Shapes.AddRangeAsync(_dataContext.Shapes);
+
+//                    _dbContext.Stops.RemoveRange(_dbContext.Stops);
+//                    await _dbContext.Stops.AddRangeAsync(_dataContext.Stops);
+
+//                    _dbContext.StopTimes.RemoveRange(_dbContext.StopTimes);
+//                    await _dbContext.StopTimes.AddRangeAsync(_dataContext.StopTimes);                    
+
+//                    await _dbContext.SaveChangesAsync();
+//                }
+//                catch (Exception ex)
+//                {
+//                    Console.WriteLine(ex.Message);
+//                    Console.WriteLine(ex.StackTrace);
+//                    throw;
+//                }
+//            }
+//        }        
+//    }
+//}

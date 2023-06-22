@@ -1,8 +1,9 @@
 ﻿using UrbanWatchMVCWebApp.Models.Enums;
 
-namespace UrbanWatchMVCWebApp.Models;
+namespace UrbanWatchMVCWebApp.Models.DataModels;
 public class Vehicle
 {
+    public int Id { get; set; }
     public string? VehicleId { get; set; }
     public string? Label { get; set; }
     public string? Latitude { get; set; }
@@ -16,9 +17,4 @@ public class Vehicle
     public string? Speed { get; set; }
     public string? RouteId { get; set; }
     public string? TripId { get; set; }
-
-    public override string ToString()
-    {
-        return $"VehicleId: {VehicleId}, Label: {Label}, Latitude: {Latitude}, Longitude: {Longitude}, Timestamp: {Timestamp}, VehicleType: {VehicleType}, BikeAccessible: {BikeAccessible}, WheelchairAccessible: {WheelchairAccessible}, XProvider: {XProvider}, XRand: {XRand}, Speed: {Speed}, RouteId: {RouteId}, TripId: {TripId}";
-    }
 }
