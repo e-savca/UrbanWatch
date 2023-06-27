@@ -1,5 +1,4 @@
-﻿
-namespace UrbanWatchMVCWebApp.Models;
+﻿namespace UrbanWatchMVCWebApp.Models.UiModels;
 public class StopTimes
 {
     public string? TripId { get; set; }

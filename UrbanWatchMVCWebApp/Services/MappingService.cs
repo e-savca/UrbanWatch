@@ -9,16 +9,14 @@ public class MappingService
     {
         _mapper = mapper;
     }
-    public TDestination DoMapping<TSource, TDestination>(TSource source)
-            where TSource : class
+    public TDestination DoMapping<TDestination>(object source)
             where TDestination : class
     {
         TDestination mappedObject = _mapper.Map<TDestination>(source);
         return mappedObject;
     }
 
-    public IQueryable<TDestination> DoMapping<TSource, TDestination>(IQueryable<TSource> source)
-        where TSource : class
+    public IQueryable<TDestination> DoMapping<TDestination>(IQueryable<object> source)
         where TDestination : class
     {
         IQueryable<TDestination> mappedQuery = source.ProjectTo<TDestination>(_mapper.ConfigurationProvider);

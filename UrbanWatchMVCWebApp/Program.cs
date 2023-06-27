@@ -26,6 +26,8 @@ builder.Services.AddHostedService<UrbanWatchBackgroundService>();
 
 // Check if the database is being used based on the configuration in the configuration file
 bool useDatabase = builder.Configuration.GetSection("DatabaseSettings")?.GetValue<bool>("UseDatabase") ?? false;
+Extensions.UseDatabase = useDatabase;
+
 if (useDatabase)
 {
     // Database is being used
@@ -34,18 +36,10 @@ if (useDatabase)
     string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
     // Add the database context service to the dependency container
-    builder.Services.AddSingleton<ApplicationContext>(provider =>
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
-        optionsBuilder.UseSqlServer(connection);
-        optionsBuilder.EnableDetailedErrors();
-        optionsBuilder.EnableSensitiveDataLogging();
-        return new ApplicationContext(optionsBuilder.Options);
-    });
-
+    builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
 
     // Add the data integration service
-    //builder.Services.AddSingleton<IDataIntegrationService, DatabaseIntegrationService>();    
+    builder.Services.AddSingleton<IDataIntegrationService, DatabaseIntegrationService>();
 }
 else
 {

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
 using System.Diagnostics;
-using UrbanWatchMVCWebApp.EF;
 using UrbanWatchMVCWebApp.Models;
 using UrbanWatchMVCWebApp.Models.Enums;
+using UrbanWatchMVCWebApp.Models.UiModels;
 using UrbanWatchMVCWebApp.Services;
 using UrbanWatchMVCWebApp.Services.Interfaces;
 
@@ -14,17 +13,20 @@ namespace UrbanWatchMVCWebApp.Controllers
         
         private readonly IRepository _repository;
         private readonly UrbanWatchService _urbanWatchService;
+        private readonly IDataIntegrationService _dataIntegrationService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IRepository repository, UrbanWatchService urbanWatchService, ILogger<HomeController> logger)
+        public HomeController(IRepository repository, UrbanWatchService urbanWatchService, IDataIntegrationService dataIntegrationService, ILogger<HomeController> logger)
         {
             _repository = repository;
             _urbanWatchService = urbanWatchService;
-            _logger = logger;
+            _dataIntegrationService = dataIntegrationService;
+            _logger = logger;            
         }
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
+            await _dataIntegrationService.InitializeData();
             _logger.LogInformation($"The Index action was called at {DateTime.Now}");
             return View();
         }
@@ -63,7 +65,7 @@ namespace UrbanWatchMVCWebApp.Controllers
 
                 return RedirectToAction("Error", "Home");
             }
-        }        
+        }
 
         public IActionResult About()
         {

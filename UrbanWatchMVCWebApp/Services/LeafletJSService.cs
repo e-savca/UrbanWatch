@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using UrbanWatchMVCWebApp.Models;
+using UrbanWatchMVCWebApp.Models.UiModels;
 using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
@@ -36,22 +36,25 @@ namespace UrbanWatchMVCWebApp.Services
         private async Task AddStopsAsync(string shapeId)
         {
             var getStops = await repo.GetStopsAsync(shapeId);
+            script.AppendLine($"var busStopIcon = L.divIcon({{ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) }});");
             foreach (Stop stop in getStops)
             {
-                script.AppendLine($"var busStopIcon = L.divIcon({{ className: 'bus-stop-div-icon', iconSize: new L.Point(10, 10) }});");
-                script.AppendLine($"var marker = L.marker([{stop.Latitude}, {stop.Longitude}], {{ icon: busStopIcon }}).addTo(map);");
-                script.AppendLine($"marker.bindPopup('Statia: {stop.Name}');");
+                script.AppendLine($"var marker_{stop.StopId} = L.marker([{stop.Latitude}, {stop.Longitude}], {{ icon: busStopIcon }}).addTo(map);");
+                script.AppendLine($"marker_{stop.StopId}.bindPopup('Statia: {stop.Name}');");
+                script.AppendLine();
             }
         }
         private async Task AddVehiclesAsync(string tripId)
         {
             var getVehicles = await repo.GetVehiclesAsync(tripId);
+            script.AppendLine($"var busIcon = L.divIcon({{ className: 'bus-div-icon', iconSize: new L.Point(20, 20) }});");
+
             foreach (Vehicle vehicle in getVehicles)
             {
-                int diffSeconds = (int)DateTime.Now.AddHours(-3).Subtract(vehicle.Timestamp).TotalSeconds;
-                script.AppendLine($"var busIcon = L.divIcon({{ className: 'bus-div-icon', iconSize: new L.Point(20, 20) }});");
-                script.AppendLine($"var marker = L.marker([{vehicle.Latitude}, {vehicle.Longitude}], {{ icon: busIcon }}).addTo(map);");
-                script.AppendLine($"marker.bindPopup('Vehicul: {vehicle.Label}<br />Speed: {vehicle.Speed}<br />De acum: {diffSeconds} secunde');");
+                int diffSeconds = (int)DateTime.Now.AddHours(-3).Subtract(vehicle.Timestamp).TotalSeconds;                
+                script.AppendLine($"var marker_{vehicle.VehicleId} = L.marker([{vehicle.Latitude}, {vehicle.Longitude}], {{ icon: busIcon }}).addTo(map);");
+                script.AppendLine($"marker_{vehicle.VehicleId}.bindPopup('Vehicul: {vehicle.Label}<br />Speed: {vehicle.Speed}<br />De acum: {diffSeconds} secunde');");
+                script.AppendLine();
             }
         }
         private async Task AddPolylineAsync(string shapeId, string routeId)
@@ -72,6 +75,7 @@ namespace UrbanWatchMVCWebApp.Services
 
             script.AppendLine($"var shapes = {JsonConvert.SerializeObject(shapesArray)};");
             script.AppendLine($"var polyline = L.polyline(shapes, {{ color: '{routeColor}' }}).addTo(map);");
+            script.AppendLine();
         }
         private void InitializeMap()
         {
@@ -82,6 +86,7 @@ namespace UrbanWatchMVCWebApp.Services
             script.AppendLine("    maxZoom: 19,");
             script.AppendLine("    attribution: '&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>'");
             script.AppendLine("}).addTo(map);");
+            script.AppendLine();
         }
         private void FinalizeMap()
         {

@@ -26,7 +26,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         private async Task<T> GetDataAsync<T>(Uri requestUri)
         {
-            HttpClient client = _httpClientFactory.CreateClient();
+            HttpClient client = _httpClientFactory.CreateClient("trazy-api-client");
             client.DefaultRequestHeaders.Add("X-Agency-Id", _AgencyId);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.DefaultRequestHeaders.Add("X-API-KEY", _APIKey);

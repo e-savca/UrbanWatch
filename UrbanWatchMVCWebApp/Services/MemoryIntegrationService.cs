@@ -24,7 +24,8 @@ public class MemoryIntegrationService : IDataIntegrationService
         try
         {
             var vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
-            var vehiclesFromServiceMapped = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.Vehicle>, List<Models.Vehicle>>(vehiclesFromService);
+            var vehiclesFromServiceMapped = _mappingService
+                    .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehiclesFromService).AsQueryable();
 
 
             _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
@@ -41,24 +42,34 @@ public class MemoryIntegrationService : IDataIntegrationService
     }
     public async Task InitializeData()
     {
+        if (_dataContext.StopTimes is not null && _dataContext.StopTimes.Any())
+        {
+            return;
+        }
         _logger.LogInformation("MemoryIntegrationService is initialized.");
+
         var vehicleAsAPIModel = await _dataProviderService.GetVehiclesDataAsync();
-        _dataContext.Vehicles = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.Vehicle>, List<Models.Vehicle>>(vehicleAsAPIModel);
+        _dataContext.Vehicles = _mappingService
+            .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehicleAsAPIModel).AsQueryable();
 
         var routesAsAPIModel = await _dataProviderService.GetRoutesDataAsync();
-        _dataContext.Routes = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.Route>, List<Models.Route>>(routesAsAPIModel);
+        _dataContext.Routes = _mappingService
+            .DoMapping<IEnumerable<Models.UiModels.Route>>(routesAsAPIModel).AsQueryable();
 
         var tripsAsAPIModel = await _dataProviderService.GetTripsDataAsync();
-        _dataContext.Trips = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.Trip>, List<Models.Trip>>(tripsAsAPIModel);
+        _dataContext.Trips = _mappingService
+            .DoMapping<IEnumerable<Models.UiModels.Trip>>(tripsAsAPIModel).AsQueryable();
 
         var shapesAsAPIModel = await _dataProviderService.GetShapesDataAsync();
-        _dataContext.Shapes = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.Shape>, List<Models.Shape>>(shapesAsAPIModel);
-
+        _dataContext.Shapes = _mappingService
+            .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapesAsAPIModel).AsQueryable();
 
         var stopsAsAPIModel = await _dataProviderService.GetStopsDataAsync();
-        _dataContext.Stops = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.Stop>, List<Models.Stop>>(stopsAsAPIModel);
+        _dataContext.Stops = _mappingService
+            .DoMapping<IEnumerable<Models.UiModels.Stop>>(stopsAsAPIModel).AsQueryable();
 
         var stopTimesAsAPIModel = await _dataProviderService.GetStopTimesDataAsync();
-        _dataContext.StopTimes = _mappingService.DoMapping<List<Models.ApiModels.TranzyV1Models.StopTimes>, List<Models.StopTimes>>(stopTimesAsAPIModel);
+        _dataContext.StopTimes = _mappingService
+            .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsAPIModel).AsQueryable();
     }
 }

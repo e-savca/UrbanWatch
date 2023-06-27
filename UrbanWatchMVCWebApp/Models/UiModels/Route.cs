@@ -1,6 +1,6 @@
 ﻿using UrbanWatchMVCWebApp.Models.Enums;
 
-namespace UrbanWatchMVCWebApp.Models;
+namespace UrbanWatchMVCWebApp.Models.UiModels;
 public class Route
 {
     public string? RouteId { get; set; }

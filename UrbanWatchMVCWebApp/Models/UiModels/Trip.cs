@@ -1,4 +1,4 @@
-﻿namespace UrbanWatchMVCWebApp.Models;
+﻿namespace UrbanWatchMVCWebApp.Models.UiModels;
 public class Trip
 {
     public string? TripId { get; set; }
