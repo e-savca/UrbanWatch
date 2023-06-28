@@ -1,6 +1,6 @@
-using UrbanWatchMVCWebApp.Services;
 using Microsoft.EntityFrameworkCore;
 using UrbanWatchMVCWebApp.EF;
+using UrbanWatchMVCWebApp.Services;
 using UrbanWatchMVCWebApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,10 +22,8 @@ builder.Services.AddSingleton<MappingService>();
 builder.Services.AddHostedService<UrbanWatchBackgroundService>();
 
 
-
-
 // Check if the database is being used based on the configuration in the configuration file
-bool useDatabase = builder.Configuration.GetSection("DatabaseSettings")?.GetValue<bool>("UseDatabase") ?? false;
+var useDatabase = builder.Configuration.GetSection("DatabaseSettings")?.GetValue<bool>("UseDatabase") ?? false;
 Extensions.UseDatabase = useDatabase;
 
 if (useDatabase)
@@ -33,7 +31,7 @@ if (useDatabase)
     // Database is being used
 
     // Get the connection string from the configuration file
-    string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+    var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
     // Add the database context service to the dependency container
     builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
@@ -47,7 +45,6 @@ else
     builder.Services.AddSingleton<IDataIntegrationService, MemoryIntegrationService>();
 }
 
-
 var app = builder.Build();
 
 var loggerFactory = app.Services.GetService<ILoggerFactory>();
@@ -55,7 +52,7 @@ loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{
+{   
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();

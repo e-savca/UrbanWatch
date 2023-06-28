@@ -15,13 +15,13 @@ namespace UrbanWatchMVCWebApp.Services
             _logger = logger;
         }
 
-        public string RouteNameCombine(RouteType? routeType, string RouteShortName, string RouteLongName)
+        public string RouteNameCombine(RouteType? routeType, string routeShortName, string routeLongName)
         {
-            return $"{routeType} No {RouteShortName} - {RouteLongName}";
+            return $"{routeType} No {routeShortName} - {routeLongName}";
         }
-        public Dictionary<string, string> RouteNameSplit(string CombinedRouteName)
+        public Dictionary<string, string> RouteNameSplit(string combinedRouteName)
         {
-            List<string> routeNameStringsList = CombinedRouteName.Split(' ').ToList();
+            List<string> routeNameStringsList = combinedRouteName.Split(' ').ToList();
 
             return new Dictionary<string, string>
             {
@@ -49,7 +49,7 @@ namespace UrbanWatchMVCWebApp.Services
         {
             var getRoutes = await _repository.GetRoutesAsync();
             var theRoute = getRoutes.FirstOrDefault(r => r.RouteShortName == routeShortName && r.RouteType == routeType);
-            return theRoute.RouteId;
+            return theRoute?.RouteId;
         }
         public async Task<Trip?> GetTheTripAsync(string? theRouteId, string tripTypeString)
         {

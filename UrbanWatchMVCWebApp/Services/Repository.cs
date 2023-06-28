@@ -17,7 +17,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<Trip> GetTheTripAsync(string? tripId)
         {
-            Trip? trip = await _dataContext.Trips.FirstOrDefaultAsync(trip => trip.TripId == tripId);
+            var trip = await _dataContext.Trips.FirstOrDefaultAsync(trip => trip.TripId == tripId);
             if (trip == null)
             {
                 throw new Exception("Trip not found");
@@ -30,7 +30,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<Models.UiModels.Route> GetTheRouteAsync(string? routeId)
         {
-            Models.UiModels.Route? route = await _dataContext.Routes.FirstOrDefaultAsync(route => route.RouteId == routeId);
+            var route = await _dataContext.Routes.FirstOrDefaultAsync(route => route.RouteId == routeId);
             if (route == null)
             {
                 throw new Exception("Route not found");
@@ -51,7 +51,7 @@ namespace UrbanWatchMVCWebApp.Services
             var stopTimes =  _dataContext.StopTimes.Where(stoptime => stoptime.TripId == shapeId);//.ToListAsync();
             var stops = _dataContext.Stops;//.ToListAsync();
 
-            List<Stop?> stopsList = await stopTimes.Select(stopTime => stops.FirstOrDefault(stop => stop.StopId == stopTime.StopId))
+            var stopsList = await stopTimes.Select(stopTime => stops.FirstOrDefault(stop => stop.StopId == stopTime.StopId))
                 .ToListAsync();
 
             return stopsList.Where(r => r is not null).ToList();
@@ -62,9 +62,9 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<List<Vehicle>> GetVehiclesAsync(string tripId)
         {
-            DateTime dateTime = DateTime.Now.AddHours(-3).AddMinutes(-3);            
-            // todo: review to use datetimeoffset
-            List<Vehicle> vehiclesByTripId = await _dataContext.Vehicles
+            var dateTime = DateTime.Now.AddHours(-3).AddMinutes(-3);
+            //todo: review to use datetimeoffset
+            var vehiclesByTripId = await _dataContext.Vehicles
                 .Where(vehicle => vehicle.TripId == tripId && dateTime <= vehicle.Timestamp).ToListAsync();
             
             return vehiclesByTripId;

@@ -10,15 +10,12 @@ namespace UrbanWatchMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        
-        private readonly IRepository _repository;
         private readonly UrbanWatchService _urbanWatchService;
         private readonly IDataIntegrationService _dataIntegrationService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(IRepository repository, UrbanWatchService urbanWatchService, IDataIntegrationService dataIntegrationService, ILogger<HomeController> logger)
+        public HomeController(UrbanWatchService urbanWatchService, IDataIntegrationService dataIntegrationService, ILogger<HomeController> logger)
         {
-            _repository = repository;
             _urbanWatchService = urbanWatchService;
             _dataIntegrationService = dataIntegrationService;
             _logger = logger;            

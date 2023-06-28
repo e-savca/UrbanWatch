@@ -3,7 +3,7 @@
 namespace UrbanWatchMVCWebApp.Services;
 public class MemoryIntegrationService : IDataIntegrationService
 {
-    private DataContext _dataContext;
+    private readonly DataContext _dataContext;
     private readonly IDataProviderService _dataProviderService;
     private readonly MappingService _mappingService;
     private readonly ILogger<MemoryIntegrationService> _logger;
@@ -48,28 +48,28 @@ public class MemoryIntegrationService : IDataIntegrationService
         }
         _logger.LogInformation("MemoryIntegrationService is initialized.");
 
-        var vehicleAsAPIModel = await _dataProviderService.GetVehiclesDataAsync();
+        var vehicleAsApiModel = await _dataProviderService.GetVehiclesDataAsync();
         _dataContext.Vehicles = _mappingService
-            .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehicleAsAPIModel).AsQueryable();
+            .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehicleAsApiModel).AsQueryable();
 
-        var routesAsAPIModel = await _dataProviderService.GetRoutesDataAsync();
+        var routesAsApiModel = await _dataProviderService.GetRoutesDataAsync();
         _dataContext.Routes = _mappingService
-            .DoMapping<IEnumerable<Models.UiModels.Route>>(routesAsAPIModel).AsQueryable();
+            .DoMapping<IEnumerable<Models.UiModels.Route>>(routesAsApiModel).AsQueryable();
 
-        var tripsAsAPIModel = await _dataProviderService.GetTripsDataAsync();
+        var tripsAsApiModel = await _dataProviderService.GetTripsDataAsync();
         _dataContext.Trips = _mappingService
-            .DoMapping<IEnumerable<Models.UiModels.Trip>>(tripsAsAPIModel).AsQueryable();
+            .DoMapping<IEnumerable<Models.UiModels.Trip>>(tripsAsApiModel).AsQueryable();
 
-        var shapesAsAPIModel = await _dataProviderService.GetShapesDataAsync();
+        var shapesAsApiModel = await _dataProviderService.GetShapesDataAsync();
         _dataContext.Shapes = _mappingService
-            .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapesAsAPIModel).AsQueryable();
+            .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapesAsApiModel).AsQueryable();
 
-        var stopsAsAPIModel = await _dataProviderService.GetStopsDataAsync();
+        var stopsAsApiModel = await _dataProviderService.GetStopsDataAsync();
         _dataContext.Stops = _mappingService
-            .DoMapping<IEnumerable<Models.UiModels.Stop>>(stopsAsAPIModel).AsQueryable();
+            .DoMapping<IEnumerable<Models.UiModels.Stop>>(stopsAsApiModel).AsQueryable();
 
-        var stopTimesAsAPIModel = await _dataProviderService.GetStopTimesDataAsync();
+        var stopTimesAsApiModel = await _dataProviderService.GetStopTimesDataAsync();
         _dataContext.StopTimes = _mappingService
-            .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsAPIModel).AsQueryable();
+            .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsApiModel).AsQueryable();
     }
 }

@@ -21,6 +21,11 @@ namespace UrbanWatchMVCWebApp.Services
             _dbContext = dbContext;
             _mappingService = mappingService;
             _logger = logger;
+
+            if (!_dbContext.Database.CanConnect())
+            {
+                throw new Exception("Database connection error.");
+            }
         }
         public async Task UpdateData()
         {
@@ -29,105 +34,104 @@ namespace UrbanWatchMVCWebApp.Services
             _logger.LogInformation($"IDataProviderService is working. Count: {count}");
 
             var vehiclesFromService = await _dataProviderService.GetVehiclesDataAsync();
-            var vehiclesFromServiceMappedToUI = _mappingService
+            var vehiclesFromServiceMappedToUi = _mappingService
                 .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehiclesFromService).AsQueryable();
 
-            _dataContext.Vehicles = vehiclesFromServiceMappedToUI;
+            _dataContext.Vehicles = vehiclesFromServiceMappedToUi;
 
 
-            using (var scope = _dbContext.Database.BeginTransaction())
+            await using var scope = await _dbContext.Database.BeginTransactionAsync();
+            try
             {
-                try
+
+                _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
+                if (!await _dataContext.AreVehiclesDuplicatesAsync(vehiclesFromServiceMappedToUi))
                 {
+                    _logger.LogInformation($"Add data to EF. Count: {count} {DateTime.Now}");
 
-                    _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
-                    if (!await _dataContext.AreVehiclesDuplicatesAsync(vehiclesFromServiceMappedToUI))
-                    {
-                        _logger.LogInformation($"Add data to EF. Count: {count} {DateTime.Now}");
+                    var vehiclesFromServiceMappedToEf = _mappingService
+                        .DoMapping<IEnumerable<Models.DataModels.Vehicle>>(vehiclesFromService).AsQueryable();
 
-                        var vehiclesFromServiceMappedToEF = _mappingService
-                            .DoMapping<IEnumerable<Models.DataModels.Vehicle>>(vehiclesFromService).AsQueryable();
-
-                        await _dbContext.Vehicles.AddRangeAsync(vehiclesFromServiceMappedToEF);
-                        await _dbContext.SaveChangesAsync();
-                    }
+                    await _dbContext.Vehicles.AddRangeAsync(vehiclesFromServiceMappedToEf);
+                    await _dbContext.SaveChangesAsync();
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
         }
         public async Task InitializeData()
         {
-            if (_dataContext.StopTimes is not null && _dataContext.StopTimes.Any())
-            {
-                return;
-            }
 
             _logger.LogInformation("IDataProviderService is initialized.");
 
             // Mapping data and add to DataContext
-            var vehicleAsAPIModel = await _dataProviderService.GetVehiclesDataAsync();
+            var vehicleAsApiModel = await _dataProviderService.GetVehiclesDataAsync();
             var vehicleAsDataModel = _mappingService
-                .DoMapping<IEnumerable<Models.DataModels.Vehicle>>(vehicleAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.DataModels.Vehicle>>(vehicleAsApiModel).AsQueryable();
             _dataContext.Vehicles = _mappingService
-                .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehicleAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehicleAsApiModel).AsQueryable();
 
-            var routesAsAPIModel = await _dataProviderService.GetRoutesDataAsync();
+            var routesAsApiModel = await _dataProviderService.GetRoutesDataAsync();
             var routesAsDataModel = _mappingService
-                .DoMapping<IEnumerable<Models.DataModels.Route>>(routesAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.DataModels.Route>>(routesAsApiModel).AsQueryable();
             _dataContext.Routes = _mappingService
-                .DoMapping<IEnumerable<Models.UiModels.Route>>(routesAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.UiModels.Route>>(routesAsApiModel).AsQueryable();
 
-            var tripsAsAPIModel = await _dataProviderService.GetTripsDataAsync();
+            var tripsAsApiModel = await _dataProviderService.GetTripsDataAsync();
             var tripsAsDataModel = _mappingService
-                .DoMapping<IEnumerable<Models.DataModels.Trip>>(tripsAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.DataModels.Trip>>(tripsAsApiModel).AsQueryable();
             _dataContext.Trips = _mappingService
-                .DoMapping<IEnumerable<Models.UiModels.Trip>>(tripsAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.UiModels.Trip>>(tripsAsApiModel).AsQueryable();
 
-            var shapesAsAPIModel = await _dataProviderService.GetShapesDataAsync();
+            var shapesAsApiModel = await _dataProviderService.GetShapesDataAsync();
             var shapesAsDataModel = _mappingService
-                .DoMapping<IEnumerable<Models.DataModels.Shape>>(shapesAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.DataModels.Shape>>(shapesAsApiModel).AsQueryable();
             _dataContext.Shapes = _mappingService
-                .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapesAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapesAsApiModel).AsQueryable();
 
-            var stopsAsAPIModel = await _dataProviderService.GetStopsDataAsync();
+            var stopsAsApiModel = await _dataProviderService.GetStopsDataAsync();
             var stopsAsDataModel = _mappingService
-                .DoMapping<IEnumerable<Models.DataModels.Stop>>(stopsAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.DataModels.Stop>>(stopsAsApiModel).AsQueryable();
             _dataContext.Stops = _mappingService
-                .DoMapping<IEnumerable<Models.UiModels.Stop>>(stopsAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.UiModels.Stop>>(stopsAsApiModel).AsQueryable();
 
-            var stopTimesAsAPIModel = await _dataProviderService.GetStopTimesDataAsync();
+            var stopTimesAsApiModel = await _dataProviderService.GetStopTimesDataAsync();
             var stopTimesAsDataModel = _mappingService
-                .DoMapping<IEnumerable<Models.DataModels.StopTimes>>(stopTimesAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.DataModels.StopTimes>>(stopTimesAsApiModel).AsQueryable();
             _dataContext.StopTimes = _mappingService
-                .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsAPIModel).AsQueryable();
+                .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsApiModel).AsQueryable();
 
             // Add data to EF
-            using (var scope = _dbContext.Database.BeginTransaction())
+            await using var scope = await _dbContext.Database.BeginTransactionAsync();
+            try
             {
-                try
-                {
-                    _ = await _dbContext.Database.EnsureDeletedAsync();
-                    _ = await _dbContext.Database.EnsureCreatedAsync();
+                //_ = await _dbContext.Database.EnsureDeletedAsync();
+                _ = await _dbContext.Database.EnsureCreatedAsync();
 
-                    await _dbContext.Vehicles.AddRangeAsync(vehicleAsDataModel);
-                    await _dbContext.Routes.AddRangeAsync(routesAsDataModel);
-                    await _dbContext.Trips.AddRangeAsync(tripsAsDataModel);
-                    await _dbContext.Shapes.AddRangeAsync(shapesAsDataModel);
-                    await _dbContext.Stops.AddRangeAsync(stopsAsDataModel);
-                    await _dbContext.StopTimes.AddRangeAsync(stopTimesAsDataModel);
+                _dbContext.RemoveRange(_dbContext.Vehicles);
+                _dbContext.RemoveRange(_dbContext.Routes);
+                _dbContext.RemoveRange(_dbContext.Trips);
+                _dbContext.RemoveRange(_dbContext.Shapes);
+                _dbContext.RemoveRange(_dbContext.Stops);
+                _dbContext.RemoveRange(_dbContext.StopTimes);
 
-                    await _dbContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                    _logger.LogError(ex.StackTrace);
-                    throw;
-                }
+                await _dbContext.Vehicles.AddRangeAsync(vehicleAsDataModel);
+                await _dbContext.Routes.AddRangeAsync(routesAsDataModel);
+                await _dbContext.Trips.AddRangeAsync(tripsAsDataModel);
+                await _dbContext.Shapes.AddRangeAsync(shapesAsDataModel);
+                await _dbContext.Stops.AddRangeAsync(stopsAsDataModel);
+                await _dbContext.StopTimes.AddRangeAsync(stopTimesAsDataModel);
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                throw;
             }
         }
     }
