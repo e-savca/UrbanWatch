@@ -23,7 +23,7 @@ namespace UrbanWatchMVCWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            await _dataIntegrationService.InitializeData();
+            await _dataIntegrationService.InitializeDataAsync();
             _logger.LogInformation($"The Index action was called at {DateTime.Now}");
             return View();
         }

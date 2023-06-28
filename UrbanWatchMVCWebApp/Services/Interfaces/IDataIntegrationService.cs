@@ -2,7 +2,7 @@
 {
     public interface IDataIntegrationService
     {
-        public Task UpdateData();
-        public Task InitializeData();
+        public Task UpdateDataAsync();
+        public Task InitializeDataAsync();
     }
 }

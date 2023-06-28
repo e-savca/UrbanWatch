@@ -4,7 +4,7 @@ namespace UrbanWatchMVCWebApp.Services
 {
     public class UrbanWatchBackgroundService : BackgroundService
     {
-        private IDataIntegrationService _dataIntegrationService;
+        private readonly IDataIntegrationService _dataIntegrationService;
         private readonly ILogger<UrbanWatchBackgroundService> _logger;
 
         public UrbanWatchBackgroundService(IDataIntegrationService dataIntegrationService, ILogger<UrbanWatchBackgroundService> logger)
@@ -17,7 +17,7 @@ namespace UrbanWatchMVCWebApp.Services
         {
             _logger.LogInformation("UrbanWatchBackgroundService is running.");
 
-            await _dataIntegrationService.InitializeData();
+            await _dataIntegrationService.InitializeDataAsync();
 
             using PeriodicTimer timer = new(TimeSpan.FromSeconds(10));
 
@@ -25,7 +25,7 @@ namespace UrbanWatchMVCWebApp.Services
             {
                 while (await timer.WaitForNextTickAsync(stoppingToken))
                 {
-                    await _dataIntegrationService.UpdateData();
+                   await _dataIntegrationService.UpdateDataAsync();
                 }
             }
             catch (OperationCanceledException ex)

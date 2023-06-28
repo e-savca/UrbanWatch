@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace UrbanWatchMVCWebApp.Services
 {
@@ -7,15 +8,14 @@ namespace UrbanWatchMVCWebApp.Services
         public static bool UseDatabase { get; set; }
         public static async Task<List<T>> ToListAsync<T>(this IQueryable<T> source)
         {
+
             if (UseDatabase)
             {
-                return await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(source);
+                return await source.ToListAsync();
             }
             else
             {
-                // in memory
-                var result = source.ToList();
-                return result;
+                return source.ToList();
             }
         }
 
@@ -25,13 +25,12 @@ namespace UrbanWatchMVCWebApp.Services
         {
             if (UseDatabase)
             {
-                return await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(source, predicate);
+                return await source.FirstOrDefaultAsync(predicate);
             }
             else
             {
                 // in memory
-                var result = source.ToList().FirstOrDefault(predicate.Compile());
-                return result;
+                return source.ToList().FirstOrDefault(predicate.Compile());
 
             }
         }

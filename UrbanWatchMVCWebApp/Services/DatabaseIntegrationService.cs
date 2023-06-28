@@ -27,7 +27,7 @@ namespace UrbanWatchMVCWebApp.Services
                 throw new Exception("Database connection error.");
             }
         }
-        public async Task UpdateData()
+        public async Task UpdateDataAsync()
         {
             var count = Interlocked.Increment(ref _executionCount);
 
@@ -62,9 +62,16 @@ namespace UrbanWatchMVCWebApp.Services
             }
 
         }
-        public async Task InitializeData()
-        {
 
+        private SemaphoreSlim r = new SemaphoreSlim(1, 1);
+        private bool init = false;
+
+        public async Task InitializeDataAsync()
+        {
+            if (init) return;
+            await r.WaitAsync();
+
+            if (init) return;
             _logger.LogInformation("IDataProviderService is initialized.");
 
             // Mapping data and add to DataContext
@@ -105,11 +112,11 @@ namespace UrbanWatchMVCWebApp.Services
                 .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsApiModel).AsQueryable();
 
             // Add data to EF
-            await using var scope = await _dbContext.Database.BeginTransactionAsync();
+           // await using var scope = await _dbContext.Database.BeginTransactionAsync();
             try
             {
                 //_ = await _dbContext.Database.EnsureDeletedAsync();
-                _ = await _dbContext.Database.EnsureCreatedAsync();
+                // _ = await _dbContext.Database.EnsureCreatedAsync();
 
                 _dbContext.RemoveRange(_dbContext.Vehicles);
                 _dbContext.RemoveRange(_dbContext.Routes);
@@ -126,9 +133,12 @@ namespace UrbanWatchMVCWebApp.Services
                 await _dbContext.StopTimes.AddRangeAsync(stopTimesAsDataModel);
 
                 await _dbContext.SaveChangesAsync();
+                init = true;
+                r.Release();
             }
             catch (Exception ex)
             {
+                r.Release();
                 _logger.LogError(ex.Message);
                 _logger.LogError(ex.StackTrace);
                 throw;

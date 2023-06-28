@@ -11,10 +11,10 @@ public class DataContext
     public IQueryable<StopTimes> StopTimes { get; set; } = null!;
     public IQueryable<Trip> Trips { get; set; } = null!;
     public IQueryable<Vehicle> Vehicles { get; set; } = null!;
-    public async Task<bool> AreVehiclesDuplicatesAsync(IQueryable<Vehicle> NewData)
+    public async Task<bool> AreVehiclesDuplicatesAsync(IQueryable<Vehicle> newData)
     {
         IEnumerable<string> oldDataStrings = Vehicles.Select(item => item.ToString());
-        IEnumerable<string> newDataStrings = NewData.Select(item => item.ToString());
+        IEnumerable<string> newDataStrings = newData.Select(item => item.ToString());
 
         return oldDataStrings.SequenceEqual(newDataStrings);
     }

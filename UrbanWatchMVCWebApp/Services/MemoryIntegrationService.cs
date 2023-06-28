@@ -16,7 +16,7 @@ public class MemoryIntegrationService : IDataIntegrationService
         _mappingService = mappingService;
         _logger = logger;
     }
-    public async Task UpdateData()
+    public async Task UpdateDataAsync()
     {
         var count = Interlocked.Increment(ref _executionCount);
         _logger.LogInformation($"MemoryIntegrationService is working. Count: {count}");
@@ -40,7 +40,7 @@ public class MemoryIntegrationService : IDataIntegrationService
         }
 
     }
-    public async Task InitializeData()
+    public async Task InitializeDataAsync()
     {
         if (_dataContext.StopTimes is not null && _dataContext.StopTimes.Any())
         {
