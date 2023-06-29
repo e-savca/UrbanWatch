@@ -32,25 +32,25 @@ namespace UrbanWatchMVCWebApp.Controllers
         {
             _logger.LogInformation($"The Index action was called at '{DateTime.Now}'. routeName = {routeName}. Try to get Trip getTheTrip.");
 
-            Dictionary<string, string> routeNameStrings = _urbanWatchService.RouteNameSplit(routeName);
+            var routeNameStrings = _urbanWatchService.RouteNameSplit(routeName);
 
-            string routeShortName = routeNameStrings["routeShortName"];
-            RouteType routeType = (RouteType)Enum.Parse(typeof(RouteType), routeNameStrings["routeType"]);
+            var routeShortName = routeNameStrings["routeShortName"];
+            var routeType = (RouteType)Enum.Parse(typeof(RouteType), routeNameStrings["routeType"]);
 
             _urbanWatchService.SetTripTypeForExceptionVehicles(routeType, routeShortName, tripType);
-            string tripTypeString = _urbanWatchService.TripTypeToString(tripType);
+            var tripTypeString = _urbanWatchService.TripTypeToString(tripType);
 
-            string? theRouteId = await _urbanWatchService.GetTheRouteIdAsync(routeShortName, routeType);
-            Trip? getTheTrip = await _urbanWatchService.GetTheTripAsync(theRouteId, tripTypeString);
+            var theRouteId = await _urbanWatchService.GetTheRouteIdAsync(routeShortName, routeType);
+            var getTheTrip = await _urbanWatchService.GetTheTripAsync(theRouteId, tripTypeString);
 
             if (getTheTrip != null)
             {
                 _logger.LogInformation($"The Index action was called at '{DateTime.Now}'. routeShortName = {routeShortName}. Trip getTheTrip were retrieved successfully.");
-                Dictionary<string, string> model = new Dictionary<string, string> {
+                var model = new Dictionary<string, string> {
                     { "routeName", routeName },
-                    { "tripId", getTheTrip.TripId.ToString() },
-                    { "shapeId", getTheTrip.ShapeId.ToString() },
-                    { "routeId", getTheTrip.RouteId.ToString() },
+                    { "tripId", getTheTrip.TripId },
+                    { "shapeId", getTheTrip.ShapeId },
+                    { "routeId", getTheTrip.RouteId },
                     { "tripType", tripType.ToString() }
                 };
 

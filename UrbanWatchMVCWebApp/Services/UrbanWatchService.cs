@@ -53,8 +53,7 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<Trip?> GetTheTripAsync(string? theRouteId, string tripTypeString)
         {
-            var getTrips = await _repository.GetTripsAsync();
-            return getTrips.FirstOrDefault(t => t.RouteId == theRouteId && t.DirectionId == tripTypeString);
+            return await _repository.GetTheTripAsync(theRouteId, tripTypeString);
         }   
     }
 }

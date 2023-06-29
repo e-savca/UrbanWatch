@@ -3,15 +3,19 @@
 namespace UrbanWatchMVCWebApp.Services;
 public class MemoryIntegrationService : IDataIntegrationService
 {
-    private readonly DataContext _dataContext;
+    private readonly FullDataSnapshot _fullDataSnapshot;
     private readonly IDataProviderService _dataProviderService;
     private readonly MappingService _mappingService;
     private readonly ILogger<MemoryIntegrationService> _logger;
     private int _executionCount;
 
-    public MemoryIntegrationService(DataContext dataContext, IDataProviderService dataProviderService, MappingService mappingService, ILogger<MemoryIntegrationService> logger)
+    public MemoryIntegrationService(
+        FullDataSnapshot fullDataSnapshot,
+        IDataProviderService dataProviderService, 
+        MappingService mappingService,
+        ILogger<MemoryIntegrationService> logger)
     {
-        _dataContext = dataContext;
+        _fullDataSnapshot = fullDataSnapshot;
         _dataProviderService = dataProviderService;
         _mappingService = mappingService;
         _logger = logger;
@@ -29,9 +33,9 @@ public class MemoryIntegrationService : IDataIntegrationService
 
 
             _logger.LogInformation($"Call IsDuplicateVehicle. Count: {count} {DateTime.Now}");
-            if (!await _dataContext.AreVehiclesDuplicatesAsync(vehiclesFromServiceMapped))
-            {                    
-                _dataContext.Vehicles = vehiclesFromServiceMapped;
+            if (!await _fullDataSnapshot.AreVehiclesDuplicatesAsync(vehiclesFromServiceMapped))
+            {
+                _fullDataSnapshot.Vehicles = vehiclesFromServiceMapped;
             }
         }
         catch (Exception)
@@ -40,36 +44,41 @@ public class MemoryIntegrationService : IDataIntegrationService
         }
 
     }
+    private SemaphoreSlim r = new SemaphoreSlim(1, 1);
+    private bool init = false;
     public async Task InitializeDataAsync()
     {
-        if (_dataContext.StopTimes is not null && _dataContext.StopTimes.Any())
-        {
-            return;
-        }
+        if (init) return;
+        await r.WaitAsync();
+
+        if (init) return;
         _logger.LogInformation("MemoryIntegrationService is initialized.");
 
         var vehicleAsApiModel = await _dataProviderService.GetVehiclesDataAsync();
-        _dataContext.Vehicles = _mappingService
+        _fullDataSnapshot.Vehicles = _mappingService
             .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehicleAsApiModel).AsQueryable();
 
         var routesAsApiModel = await _dataProviderService.GetRoutesDataAsync();
-        _dataContext.Routes = _mappingService
+        _fullDataSnapshot.Routes = _mappingService
             .DoMapping<IEnumerable<Models.UiModels.Route>>(routesAsApiModel).AsQueryable();
 
         var tripsAsApiModel = await _dataProviderService.GetTripsDataAsync();
-        _dataContext.Trips = _mappingService
+        _fullDataSnapshot.Trips = _mappingService
             .DoMapping<IEnumerable<Models.UiModels.Trip>>(tripsAsApiModel).AsQueryable();
 
         var shapesAsApiModel = await _dataProviderService.GetShapesDataAsync();
-        _dataContext.Shapes = _mappingService
+        _fullDataSnapshot.Shapes = _mappingService
             .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapesAsApiModel).AsQueryable();
 
         var stopsAsApiModel = await _dataProviderService.GetStopsDataAsync();
-        _dataContext.Stops = _mappingService
+        _fullDataSnapshot.Stops = _mappingService
             .DoMapping<IEnumerable<Models.UiModels.Stop>>(stopsAsApiModel).AsQueryable();
 
         var stopTimesAsApiModel = await _dataProviderService.GetStopTimesDataAsync();
-        _dataContext.StopTimes = _mappingService
+        _fullDataSnapshot.StopTimes = _mappingService
             .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimesAsApiModel).AsQueryable();
+
+        init = true;
+        r.Release();
     }
 }
