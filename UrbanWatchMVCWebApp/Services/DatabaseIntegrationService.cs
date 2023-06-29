@@ -46,7 +46,6 @@ namespace UrbanWatchMVCWebApp.Services
             _routesDataSnapshot.Vehicles = vehiclesFromServiceMappedToUi;
 
 
-            await using var scope = await _dbContext.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
             {
 
