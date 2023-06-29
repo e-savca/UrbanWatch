@@ -6,6 +6,8 @@ This is a pet-project that allows users to view the position of public transport
 - ASP.NET Core MVC
 - LeafletJS
 - HTML/CSS/JavaScript
+![Type Dependencies Diagram for UseDatabase False](./docs/img/Type Dependencies Diagram for UseDatabase False.png)
+
 
 ## How it works
 
