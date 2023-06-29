@@ -11,7 +11,7 @@ namespace UrbanWatchMVCWebApp.Services
 
             if (UseDatabase)
             {
-                return await source.ToListAsync();
+                return await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(source);
             }
             else
             {
@@ -25,7 +25,7 @@ namespace UrbanWatchMVCWebApp.Services
         {
             if (UseDatabase)
             {
-                return await source.FirstOrDefaultAsync(predicate);
+                return await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(source, predicate);
             }
             else
             {
