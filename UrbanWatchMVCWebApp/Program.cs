@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UrbanWatchMVCWebApp.EF;
+using UrbanWatchMVCWebApp.IServices;
 using UrbanWatchMVCWebApp.Services;
-using UrbanWatchMVCWebApp.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

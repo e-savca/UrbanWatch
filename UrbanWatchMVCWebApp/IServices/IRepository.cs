@@ -1,6 +1,6 @@
 ﻿using UrbanWatchMVCWebApp.Models.UiModels;
 
-namespace UrbanWatchMVCWebApp.Services.Interfaces
+namespace UrbanWatchMVCWebApp.IServices
 {
     public interface IRepository
     {

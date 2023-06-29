@@ -1,6 +1,6 @@
 ﻿using UrbanWatchMVCWebApp.Models.ApiModels.TranzyV1Models;
 
-namespace UrbanWatchMVCWebApp.Services.Interfaces
+namespace UrbanWatchMVCWebApp.IServices
 {
     public interface IDataProviderService
     {

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using UrbanWatchMVCWebApp.IServices;
 using UrbanWatchMVCWebApp.Models;
 using UrbanWatchMVCWebApp.Models.Enums;
 using UrbanWatchMVCWebApp.Models.UiModels;
 using UrbanWatchMVCWebApp.Services;
-using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Controllers
 {

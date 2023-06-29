@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UrbanWatchMVCWebApp.Services.Interfaces;
 using UrbanWatchMVCWebApp.Models.UiModels;
+using UrbanWatchMVCWebApp.IServices;
 
 namespace UrbanWatchMVCWebApp.Services
 {

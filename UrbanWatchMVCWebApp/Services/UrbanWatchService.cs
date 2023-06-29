@@ -1,6 +1,6 @@
-﻿using UrbanWatchMVCWebApp.Models.Enums;
+﻿using UrbanWatchMVCWebApp.IServices;
+using UrbanWatchMVCWebApp.Models.Enums;
 using UrbanWatchMVCWebApp.Models.UiModels;
-using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {

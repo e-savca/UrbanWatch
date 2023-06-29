@@ -1,4 +1,4 @@
-﻿using UrbanWatchMVCWebApp.Services.Interfaces;
+﻿using UrbanWatchMVCWebApp.IServices;
 
 namespace UrbanWatchMVCWebApp.Services;
 public class MemoryIntegrationService : IDataIntegrationService

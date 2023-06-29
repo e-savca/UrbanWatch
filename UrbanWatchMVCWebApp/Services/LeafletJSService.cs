@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using UrbanWatchMVCWebApp.IServices;
 using UrbanWatchMVCWebApp.Models.UiModels;
-using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {

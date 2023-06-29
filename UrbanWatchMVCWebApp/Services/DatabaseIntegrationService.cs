@@ -1,5 +1,5 @@
 ﻿using UrbanWatchMVCWebApp.EF;
-using UrbanWatchMVCWebApp.Services.Interfaces;
+using UrbanWatchMVCWebApp.IServices;
 
 namespace UrbanWatchMVCWebApp.Services
 {

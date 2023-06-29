@@ -1,4 +1,4 @@
-﻿namespace UrbanWatchMVCWebApp.Services.Interfaces
+﻿namespace UrbanWatchMVCWebApp.IServices
 {
     public interface IDataIntegrationService
     {

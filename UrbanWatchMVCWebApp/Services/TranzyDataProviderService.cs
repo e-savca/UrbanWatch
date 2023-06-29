@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using UrbanWatchMVCWebApp.IServices;
 using UrbanWatchMVCWebApp.Models.ApiModels.TranzyV1Models;
-using UrbanWatchMVCWebApp.Services.Interfaces;
 
 namespace UrbanWatchMVCWebApp.Services
 {
