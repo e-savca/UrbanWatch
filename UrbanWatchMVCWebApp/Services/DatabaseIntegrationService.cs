@@ -56,7 +56,7 @@ namespace UrbanWatchMVCWebApp.Services
 
                     var vehiclesFromServiceMappedToEf = _mappingService
                         .DoMapping<IEnumerable<Models.DataModels.Vehicle>>(vehiclesFromService).AsQueryable();
-
+                    _dbContext.RemoveRange(_dbContext.Vehicles);
                     await _dbContext.Vehicles.AddRangeAsync(vehiclesFromServiceMappedToEf);
                     await _dbContext.SaveChangesAsync();
                 }

@@ -67,9 +67,8 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<List<Models.UiModels.Vehicle>> GetVehiclesAsync(string tripId)
         {
-            DateTimeOffset utcTime = DateTimeOffset.UtcNow.AddMinutes(-3);
             var vehiclesByTripId = _dbContext.Vehicles
-                .Where(vehicle => vehicle.TripId == tripId && utcTime <= vehicle.Timestamp)
+                .Where(vehicle => vehicle.TripId == tripId)
                 .AsQueryable();
             return await _mappingService
                 .DoMapping<Models.UiModels.Vehicle>(vehiclesByTripId)
