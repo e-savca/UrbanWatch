@@ -26,27 +26,31 @@ The application offers the following key features and functionalities:
 
 Moreover, the project can be configured to use an Entity Framework (EF) database or work solely with in-memory data.
 
-## **Architecture**
+## Architecture
 
-The UrbanWatch project has a flexible architecture that supports different data storage options. It can be configured to use either an Entity Framework (EF) database or work exclusively with in-memory data.
+The UrbanWatch project has a flexible architecture that supports different data storage options. The configuration of the project can be adjusted through the `appsettings.json` file, specifically in the "DatabaseSettings" section.
+![Architecture Configuration image](https://github.com/e-savca/UrbanWatch/blob/65c86e8486cfcd19cbfe865a8c70c9df3607a8a4/docs/img/architectureConfig.jpg)
 
-### **With Database**
+### With Database
 
-When set to use a database, the project utilizes Entity Framework (EF) to connect to a database backend. This enables efficient storage, retrieval, and querying of data. The database can store essential information like routes, stops, and real-time vehicle positions.
+When the "UseDatabase" setting is set to true in the `appsettings.json` file, the project utilizes Entity Framework (EF) to connect to a database backend. This enables efficient storage, retrieval, and querying of data. The database can store essential information like routes, stops, and real-time vehicle positions.
 
 This approach offers benefits such as persistent data storage, scalability, and advanced querying capabilities. It ensures data integrity and allows for smooth integration with existing database systems.
 ![Type Dependencies Diagram for UseDatabase True](https://github.com/e-savca/UrbanWatch/blob/dfd820bf62e7b0879abd17a7af6f4ad2d900143c/docs/img/Type%20Dependencies%20Diagram%20for%20UseDatabase%20True.png)
-### **In-Memory Data**
 
-Alternatively, the project can be configured to work solely with in-memory data. In this mode, data is stored and managed within the application's memory during runtime. This option is suitable for scenarios where data persistence is not required, or when quick prototyping or testing is the main focus.
+### In-Memory Data
+
+Alternatively, when the "UseDatabase" setting is set to false in the `appsettings.json` file, the project works solely with in-memory data. In this mode, data is stored and managed within the application's memory during runtime. This option is suitable for scenarios where data persistence is not required or when quick prototyping or testing is the main focus.
 
 Using in-memory data provides faster access and eliminates the need for external database dependencies. However, please note that any changes made to the data will not persist beyond the application's runtime.
 
-By offering the flexibility to choose between a database-driven approach and in-memory data, the UrbanWatch project empowers developers to adapt the architecture to their specific requirements and limitations.
+By offering the flexibility to configure the project's data storage through the `appsettings.json` file, the UrbanWatch project empowers developers to adapt the architecture to their specific requirements and limitations.
 ![Type Dependencies Diagram for UseDatabase False](https://github.com/e-savca/UrbanWatch/blob/dfd820bf62e7b0879abd17a7af6f4ad2d900143c/docs/img/Type%20Dependencies%20Diagram%20for%20UseDatabase%20False.png)
+
 ## Screenshots
 
-Include some representative screenshots of the application here.
+Here are some representative screenshots of the app.
+
 Screen 1
 ![Screen 1](https://github.com/e-savca/UrbanWatch/blob/dfd820bf62e7b0879abd17a7af6f4ad2d900143c/docs/img/screen1.jpg)
 Screen 2
