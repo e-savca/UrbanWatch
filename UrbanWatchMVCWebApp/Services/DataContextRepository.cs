@@ -49,7 +49,7 @@ namespace UrbanWatchMVCWebApp.Services
             var stopsList = await stopTimes.Select(stopTime => stops.FirstOrDefault(stop => stop.StopId == stopTime.StopId))
                 .AsQueryable().ToListAsync();
 
-            return stopsList.Where(r => r is not null).ToList();
+            return stopsList;
         }
         public async Task<List<StopTimes>> GetStopTimesAsync()
         {

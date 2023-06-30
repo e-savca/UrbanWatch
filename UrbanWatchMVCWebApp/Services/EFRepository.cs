@@ -15,10 +15,11 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<List<Models.UiModels.Trip>> GetTripsAsync()
         {
-            var trips =  _dbContext.Trips.AsQueryable();
+            var trips =  await _dbContext.Trips
+                .AsQueryable().ToListAsync();
             return await _mappingService
-                .DoMapping<Models.UiModels.Trip>(trips)
-                .ToListAsync();
+                .DoMapping<IEnumerable<Models.UiModels.Trip>>(trips)
+                .AsQueryable().ToListAsync();
         }
         public async Task<Models.UiModels.Trip?> GetTheTripAsync(string? theRouteId, string tripTypeString)
         {
@@ -29,10 +30,10 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<List<Models.UiModels.Route>> GetRoutesAsync()
         {
-            var routes =  _dbContext.Routes.OrderBy(item => item.RouteShortName).AsQueryable();
+            var routes =  await _dbContext.Routes.OrderBy(item => item.RouteShortName).AsQueryable().ToListAsync();
             return await _mappingService
-                .DoMapping<Models.UiModels.Route>(routes)
-                .ToListAsync();
+                .DoMapping<IEnumerable<Models.UiModels.Route>>(routes)
+                .AsQueryable().ToListAsync();
         }
         public async Task<Models.UiModels.Route?> GetTheRouteAsync(string? routeId)
         {
@@ -42,10 +43,11 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<List<Models.UiModels.Shape>> GetShapesAsync(string? shapeId)
         {
-            var shapes = _dbContext.Shapes.Where(item => item.ShapeId == shapeId).AsQueryable();
+            var shapes = await _dbContext.Shapes.Where(item => item.ShapeId == shapeId)
+                .AsQueryable().ToListAsync();
             return await _mappingService
-                .DoMapping<Models.UiModels.Shape>(shapes)
-                .ToListAsync();
+                .DoMapping<IEnumerable<Models.UiModels.Shape>>(shapes)
+                .AsQueryable().ToListAsync();
         }
         public async Task<List<Models.UiModels.Stop>> GetStopsAsync(string? shapeId)
         {
@@ -60,19 +62,20 @@ namespace UrbanWatchMVCWebApp.Services
         }
         public async Task<List<Models.UiModels.StopTimes>> GetStopTimesAsync()
         {
-            var stopTimes = _dbContext.StopTimes.AsQueryable();
+            var stopTimes = await _dbContext.StopTimes
+                .AsQueryable().ToListAsync();
             return await _mappingService
-                .DoMapping<Models.UiModels.StopTimes>(stopTimes)
-                .ToListAsync();
+                .DoMapping<IEnumerable<Models.UiModels.StopTimes>>(stopTimes)
+                .AsQueryable().ToListAsync();
         }
         public async Task<List<Models.UiModels.Vehicle>> GetVehiclesAsync(string tripId)
         {
-            var vehiclesByTripId = _dbContext.Vehicles
+            var vehiclesByTripId = await _dbContext.Vehicles
                 .Where(vehicle => vehicle.TripId == tripId)
-                .AsQueryable();
+                .AsQueryable().ToListAsync();
             return await _mappingService
-                .DoMapping<Models.UiModels.Vehicle>(vehiclesByTripId)
-                .ToListAsync();
+                .DoMapping<IEnumerable<Models.UiModels.Vehicle>>(vehiclesByTripId)
+                .AsQueryable().ToListAsync();
         }
     }
 }

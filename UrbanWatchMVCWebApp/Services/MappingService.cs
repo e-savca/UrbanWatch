@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using UrbanWatchMVCWebApp.Models.DataModels;
 
 namespace UrbanWatchMVCWebApp.Services;
 public class MappingService
@@ -9,14 +10,14 @@ public class MappingService
     {
         _mapper = mapper;
     }
-    public TDestination DoMapping<TDestination>(object source)
+    public TDestination DoMapping<TDestination>(object? source)
             where TDestination : class
     {
         var mappedObject = _mapper.Map<TDestination>(source);
         return mappedObject;
     }
 
-    public IQueryable<TDestination> DoMapping<TDestination>(IQueryable<object> source)
+    public IQueryable<TDestination> DoMapping<TDestination>(IQueryable<Stop?> source)
         where TDestination : class
     {
         var mappedQuery = source.ProjectTo<TDestination>(_mapper.ConfigurationProvider);
