@@ -65,11 +65,14 @@ Screen 2
 - JavaScript
 
 ## Installation and Usage
+1. Clone this repository: **`git clone https://github.com/e-savca/UrbanWatch.git`**
+2. Navigate to the project directory: **`cd UrbanWatch`**
+3. Install dependencies: **`dotnet restore`**
+4. Run the project:
+    - Using .NET Core CLI: Execute the command **`dotnet run`** to start the application.
+    - Using Visual Studio: Press F5 or select "Start" to run the application.
 
-1. Clone this repository: `git clone https://github.com/e-savca/UrbanWatch.git`
-2. Navigate to the project directory: `cd UrbanWatch`
-3. Install dependencies: `npm install`
-4. Run the project: `npm start`
+
 
 ## License
 
