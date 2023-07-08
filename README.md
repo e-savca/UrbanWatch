@@ -65,6 +65,9 @@ Screen 2
 - JavaScript
 
 ## Installation and Usage
+
+### ****Using**** .NET Core CLI or ****Visual Studio****
+
 1. Clone this repository: **`git clone https://github.com/e-savca/UrbanWatch.git`**
 2. Navigate to the project directory: **`cd UrbanWatch`**
 3. Install dependencies: **`dotnet restore`**
@@ -72,7 +75,19 @@ Screen 2
     - Using .NET Core CLI: Execute the command **`dotnet run`** to start the application.
     - Using Visual Studio: Press F5 or select "Start" to run the application.
 
+### ****Using Docker container****
 
+To run the application in a Docker container, follow these steps:
+
+1. Download the Docker image from Docker Hub: [eusavca/urbanwatch](https://hub.docker.com/r/eusavca/urbanwatch)    
+    ```
+    docker pull eusavca/urbanwatch    
+    ```    
+2. Start the Docker container:    
+    ```
+    docker run -p 80:80 eusavca/urbanwatch    
+    ```
+    This will start the UrbanWatch application in a Docker container and link the container's port 80 to the host's port 80. You can then access the application in your browser at **`http://localhost`**.
 
 ## License
 
