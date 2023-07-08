@@ -7,6 +7,8 @@
 ## Description
 The main purpose of this project is to demonstrate my software development skills and explore new technologies and concepts.
 
+Please check out the live demo of the project at **[urbanwatch.azurewebsites.net](https://urbanwatch.azurewebsites.net/)** to see it in action.
+
 ### **Inspiration**
 I was inspired to create this project to test my abilities in ASP.NET Core and learn new technologies. The challenge was to integrate real-time data, like the positions of public transportation, into an application and display them to users. Additionally, this project helps me quickly find the real-time locations of public transportation, which is personally beneficial.
 
