@@ -1,11 +1,11 @@
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
-import Routes from './data/Routes.js'
-import VehicleRepository from './repositories/VechicleRepository.js'
-import BusIcon from './components/leaflet-components/BusIcon.js'
-import TripRepository from './repositories/TripRepository.js'
-import ShapeRepository from './repositories/ShapeRepository.js'
+import Routes from './data/Routes'
+import VehicleRepository from './repositories/VechicleRepository'
+import BusIcon from './components/leaflet-components/BusIcon'
+import TripRepository from './repositories/TripRepository'
+import ShapeRepository from './repositories/ShapeRepository'
 
 const vehicleRepository = new VehicleRepository()
 const shapeReposity = new ShapeRepository()
