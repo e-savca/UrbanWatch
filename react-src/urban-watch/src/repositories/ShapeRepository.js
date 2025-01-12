@@ -1,5 +1,4 @@
-import API_KEY from '../data/ApiKey.js'
-
+const API_KEY = import.meta.env.VITE_TRANZY_API_KEY
 const BASE_URL = 'https://api.tranzy.ai/v1/opendata'
 function getUrl(shapeId) {
   return `${BASE_URL}/shapes?shape_id=${shapeId}`
