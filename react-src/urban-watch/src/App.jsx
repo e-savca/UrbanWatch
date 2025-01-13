@@ -45,7 +45,7 @@ function App() {
   useEffect(function () {
     async function getLocation() {
       const result = await GetUserGeoLocation()
-      setUserGeolocation(result)
+      setUserGeolocation((ug) => (ug !== result ? result : ug))
     }
     getLocation()
   }, [])
@@ -68,6 +68,7 @@ function App() {
     setSelectedRoute(selectedRoute)
     setTripWayOrRoundWay(0)
   }
+
   return (
     <>
       <header>
@@ -97,10 +98,11 @@ function App() {
 
       <section>
         <MapContainer
+          key={userGeolocation}
           center={userGeolocation}
           zoom={18}
           scrollWheelZoom={false}
-          style={{ height: '80vh', width: '100%' }} // Reduced height
+          style={{ height: '80vh', width: '100%' }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -112,7 +114,7 @@ function App() {
             position={userGeolocation}
             icon={UserIcon}
           >
-            <Popup>
+            <Popup key={userGeolocation}>
               <div>
                 <p>UserLocation</p>
               </div>
