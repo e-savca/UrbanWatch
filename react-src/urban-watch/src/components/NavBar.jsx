@@ -4,7 +4,7 @@ function NavBar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <h1 className="navbar-logo">MyApp</h1>
+                <h1 className="navbar-logo">UrbanWatch</h1>
                 <ul className="navbar-list">
                     <li className="navbar-item">
                         <NavLink className="navbar-link" to={"/"}>

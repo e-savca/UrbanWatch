@@ -238,3 +238,61 @@ footer a:hover {
     font-size: 12px;
   }
 }
+
+
+/* Home Page Styles */
+.home-container {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.home-title {
+  font-size: 28px;
+  color: #2a7ed3;
+  margin-bottom: 10px;
+}
+
+.home-description {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.home-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.home-button {
+  background-color: #2a7ed3;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.home-button:hover {
+  background-color: #1a5ba4;
+  transform: scale(1.05);
+}
+
+.home-button.secondary {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.home-button.secondary:hover {
+  background-color: #e6e6e6;
+}
