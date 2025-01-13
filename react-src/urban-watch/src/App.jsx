@@ -11,12 +11,44 @@ const vehicleRepository = new VehicleRepository()
 const shapeReposity = new ShapeRepository()
 const tripRepository = new TripRepository()
 
+const defaultCenterPositionOnMap = [47.024371640335254, 28.832034417468275]
+
+async function GetUserGeoLocation() {
+  if ('geolocation' in navigator) {
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (p) => {
+          resolve([p.coords.latitude, p.coords.longitude])
+        },
+        () => {
+          resolve(defaultCenterPositionOnMap)
+        }
+      )
+    })
+  } else {
+    return defaultCenterPositionOnMap
+  }
+}
+
 function App() {
   const [selectedRoute, setSelectedRoute] = useState(Routes[15])
   const [tripWayOrRoundWay, setTripWayOrRoundWay] = useState(0)
   const tripId = `${selectedRoute.route_id}_${tripWayOrRoundWay}`
   const trip = tripRepository.GetTripById(tripId)
   const [shapes, setShapes] = useState([])
+  const vehiclesArray = vehicleRepository.GetVehiclesByTripId(tripId)
+  const [userGeolocation, setUserGeolocation] = useState(
+    defaultCenterPositionOnMap
+  )
+
+  useEffect(function () {
+    async function getLocation() {
+      const result = await GetUserGeoLocation()
+      setUserGeolocation(result)
+    }
+    getLocation()
+  }, [])
+
   useEffect(
     function () {
       async function getData() {
@@ -28,8 +60,6 @@ function App() {
     },
     [trip.shape_id]
   )
-  console.log(shapes)
-  const vehiclesArray = vehicleRepository.GetVehiclesByTripId(tripId)
 
   function HandleSelectRoute(e) {
     const id = Number(e.target.value)
@@ -58,15 +88,23 @@ function App() {
 
       <section>
         <MapContainer
-          center={[47.024371640335254, 28.832034417468275]}
+          center={userGeolocation}
           zoom={11}
-          // scrollWheelZoom={false}
+          scrollWheelZoom={false}
           style={{ height: '80vh', width: '100%' }} // Reduced height
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+
+          <Marker key={userGeolocation} position={userGeolocation}>
+            <Popup>
+              <div>
+                <p>UserLocation</p>
+              </div>
+            </Popup>
+          </Marker>
           {vehiclesArray.map((vehicle) => (
             <Marker
               key={vehicle.id}
