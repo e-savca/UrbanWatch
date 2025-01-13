@@ -1,3 +1,103 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Stiluri generale */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2a7ed3;
+  color: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header select {
+  margin: 0 10px;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+}
+
+header select:focus {
+  outline: 2px solid #1a5ba4;
+}
+
+section {
+  padding: 20px;
+}
+
+/* Stiluri pentru hartă */
+.leaflet-container {
+  height: 80vh;
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Stiluri pentru marker și popup */
+.leaflet-popup-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.leaflet-marker-icon {
+  transition: transform 0.3s ease;
+}
+
+.leaflet-marker-icon:hover {
+  transform: scale(1.2);
+}
+
+/* Stiluri pentru footer */
+footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+footer a {
+  color: #2a7ed3;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Media queries pentru dispozitive mici */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  header select {
+    margin: 5px 0;
+    width: 90%;
+  }
+
+  .leaflet-container {
+    height: 70vh;
+  }
+
+  footer {
+    font-size: 12px;
+  }
+}

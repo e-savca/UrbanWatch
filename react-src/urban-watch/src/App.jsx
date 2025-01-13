@@ -35,6 +35,7 @@ function App() {
   const [tripWayOrRoundWay, setTripWayOrRoundWay] = useState(0)
   const tripId = `${selectedRoute.route_id}_${tripWayOrRoundWay}`
   const trip = tripRepository.GetTripById(tripId)
+  const tripsOnRoute = tripRepository.GetTripsByRouteId(selectedRoute.route_id)
   const [shapes, setShapes] = useState([])
   const vehiclesArray = vehicleRepository.GetVehiclesByTripId(tripId)
   const [userGeolocation, setUserGeolocation] = useState(
@@ -65,6 +66,7 @@ function App() {
     const id = Number(e.target.value)
     const selectedRoute = Routes.find((x) => x.route_id === id)
     setSelectedRoute(selectedRoute)
+    setTripWayOrRoundWay(0)
   }
   return (
     <>
@@ -81,15 +83,22 @@ function App() {
           value={tripWayOrRoundWay}
           onChange={(e) => setTripWayOrRoundWay(e.target.value)}
         >
-          <option value={0}>Way</option>
-          <option value={1}>Round Way</option>
+          {tripsOnRoute.map((t) => (
+            <option
+              key={t.trip_id}
+              value={t.direction_id}
+              onChange={(e) => setTripWayOrRoundWay(e.target.value)}
+            >
+              to {t.trip_headsign}
+            </option>
+          ))}
         </select>
       </header>
 
       <section>
         <MapContainer
           center={userGeolocation}
-          zoom={11}
+          zoom={18}
           scrollWheelZoom={false}
           style={{ height: '80vh', width: '100%' }} // Reduced height
         >
