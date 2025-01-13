@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Routes from './data/Routes'
 import VehicleRepository from './repositories/VechicleRepository'
 import BusIcon from './components/leaflet-components/BusIcon'
+import UserIcon from './components/leaflet-components/UserIcon'
 import TripRepository from './repositories/TripRepository'
 import ShapeRepository from './repositories/ShapeRepository'
 
@@ -29,7 +30,6 @@ async function GetUserGeoLocation() {
     return defaultCenterPositionOnMap
   }
 }
-
 function App() {
   const [selectedRoute, setSelectedRoute] = useState(Routes[15])
   const [tripWayOrRoundWay, setTripWayOrRoundWay] = useState(0)
@@ -98,7 +98,11 @@ function App() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          <Marker key={userGeolocation} position={userGeolocation}>
+          <Marker
+            key={userGeolocation}
+            position={userGeolocation}
+            icon={UserIcon}
+          >
             <Popup>
               <div>
                 <p>UserLocation</p>
