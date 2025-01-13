@@ -7,6 +7,7 @@ import BusIcon from './components/leaflet-components/BusIcon'
 import UserIcon from './components/leaflet-components/UserIcon'
 import TripRepository from './repositories/TripRepository'
 import ShapeRepository from './repositories/ShapeRepository'
+import Footer from './components/Footer'
 
 const vehicleRepository = new VehicleRepository()
 const shapeReposity = new ShapeRepository()
@@ -140,9 +141,7 @@ function App() {
         </MapContainer>
       </section>
 
-      <footer style={{ textAlign: 'center' }}>
-        &copy; {new Date().getFullYear()} Urban Watch
-      </footer>
+      <Footer />
     </>
   )
 }
