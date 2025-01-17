@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import BusIcon from '../components/leaflet-components/BusIcon'
 import UserIcon from '../components/leaflet-components/UserIcon'
 import RoutesData from '../data/Routes.jsx'
-import VehicleRepository from '../repositories/VechicleRepository'
+import VehicleRepository from '../repositories/VehicleRepository'
 import TripRepository from '../repositories/TripRepository'
 import ShapeRepository from '../repositories/ShapeRepository'
 
@@ -10,7 +10,7 @@ import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
 
 const vehicleRepository = new VehicleRepository()
-const shapeReposity = new ShapeRepository()
+const shapeRepository = new ShapeRepository()
 const tripRepository = new TripRepository()
 
 const defaultCenterPositionOnMap = [47.024371640335254, 28.832034417468275]
@@ -55,7 +55,7 @@ function RoutesPage() {
   useEffect(
     function () {
       async function getData() {
-        const shapes = await shapeReposity.GetShapeById(trip.shape_id)
+        const shapes = await shapeRepository.GetShapeById(trip.shape_id)
         setShapes(shapes)
       }
 
@@ -71,9 +71,13 @@ function RoutesPage() {
     setTripWayOrRoundWay(0)
   }
   return (
-    <>
-      <header>
-        <select value={selectedRoute.route_id} onChange={HandleSelectRoute}>
+    <div className="flex flex-col space-y-4">
+      <header className="flex flex-wrap sm:flex-nowrap flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 p-4 bg-gray-100 shadow">
+        <select
+          className="p-2 rounded border border-gray-300 bg-white"
+          value={selectedRoute.route_id}
+          onChange={HandleSelectRoute}
+        >
           {RoutesData.map((r) => (
             <option key={r.route_id} value={r.route_id}>
               {vehicleRepository.GetVehicleType(r.route_type)}{' '}
@@ -82,28 +86,25 @@ function RoutesPage() {
           ))}
         </select>
         <select
+          className="p-2 rounded border border-gray-300 bg-white"
           value={tripWayOrRoundWay}
           onChange={(e) => setTripWayOrRoundWay(e.target.value)}
         >
           {tripsOnRoute.map((t) => (
-            <option
-              key={t.trip_id}
-              value={t.direction_id}
-              onChange={(e) => setTripWayOrRoundWay(e.target.value)}
-            >
+            <option key={t.trip_id} value={t.direction_id}>
               to {t.trip_headsign}
             </option>
           ))}
         </select>
       </header>
 
-      <section>
+      <section className="flex-grow">
         <MapContainer
           key={userGeolocation}
           center={userGeolocation}
           zoom={18}
           scrollWheelZoom={false}
-          style={{ height: '80vh', width: '100%' }}
+          className="h-[80vh] w-full"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -140,7 +141,7 @@ function RoutesPage() {
           />
         </MapContainer>
       </section>
-    </>
+    </div>
   )
 }
 
