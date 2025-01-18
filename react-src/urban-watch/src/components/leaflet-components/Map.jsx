@@ -25,7 +25,7 @@ function Map({
           center={centerPosition}
           zoom={zoom}
           scrollWheelZoom={scrollWheelZoom}
-          className="z-10 h-[calc(100vh-7rem)] w-full"
+          className="z-10 h-[calc(100vh-15rem)] w-full"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
