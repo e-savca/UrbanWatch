@@ -33,9 +33,13 @@ function reducer(state, action) {
         route: RoutesData.find(
           (route) => route.route_id === Number(action.payload)
         ),
+        tripDirection: 0,
       }
     case 'SET_DIRECTION':
-      return { ...state, tripDirection: Number(action.payload) }
+      return {
+        ...state,
+        tripDirection: Number(action.payload),
+      }
     case 'SET_STOPS':
       return { ...state, stops: action.payload }
     default:
