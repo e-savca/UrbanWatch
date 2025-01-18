@@ -1,10 +1,10 @@
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
-import BusIcon from '../components/leaflet-components/BusIcon'
-import UserIcon from '../components/leaflet-components/UserIcon'
-import RoutesData from '../data/Routes.jsx'
-import VehicleRepository from '../repositories/VehicleRepository'
-import TripRepository from '../repositories/TripRepository'
-import ShapeRepository from '../repositories/ShapeRepository'
+import BusIcon from '../../components/leaflet-components/BusIcon.jsx'
+import UserIcon from '../../components/leaflet-components/UserIcon.jsx'
+import RoutesData from '../../data/Routes.jsx'
+import VehicleRepository from '../../repositories/VehicleRepository.jsx'
+import TripRepository from '../../repositories/TripRepository.jsx'
+import ShapeRepository from '../../repositories/ShapeRepository.jsx'
 
 import 'leaflet/dist/leaflet.css'
 import { useEffect, useState } from 'react'
@@ -36,9 +36,11 @@ function RoutesPage() {
   const [selectedRoute, setSelectedRoute] = useState(RoutesData[15])
   const [tripWayOrRoundWay, setTripWayOrRoundWay] = useState(0)
   const tripId = `${selectedRoute.route_id}_${tripWayOrRoundWay}`
-  const trip = tripRepository.GetTripById(tripId)
+
   const tripsOnRoute = tripRepository.GetTripsByRouteId(selectedRoute.route_id)
   const [shapes, setShapes] = useState([])
+
+  const trip = tripRepository.GetTripById(tripId)
   const vehiclesArray = vehicleRepository.GetVehiclesByTripId(tripId)
   const [userGeolocation, setUserGeolocation] = useState(
     defaultCenterPositionOnMap
@@ -71,7 +73,7 @@ function RoutesPage() {
     setTripWayOrRoundWay(0)
   }
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4 z-0">
       <header className="flex flex-wrap sm:flex-nowrap flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 p-4 bg-gray-100 shadow">
         <select
           className="p-2 rounded border border-gray-300 bg-white"
@@ -104,7 +106,7 @@ function RoutesPage() {
           center={userGeolocation}
           zoom={18}
           scrollWheelZoom={false}
-          className="h-[80vh] w-full"
+          className="absolute top-0 left-0 z-10 h-[calc(100vh-4rem)] w-full"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

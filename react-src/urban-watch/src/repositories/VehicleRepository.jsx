@@ -1,8 +1,36 @@
 import Vehicles from '../data/Vehicles'
+const API_KEY = import.meta.env.VITE_TRANZY_API_KEY
+
 export default class VehicleRepository {
-  constructor() {}
-  GetVehiclesByTripId(tripId) {
-    return Vehicles.filter((v) => v.trip_id === tripId)
+  constructor(fakeDate) {
+    this.fakeDate = fakeDate
+  }
+  async GetVehiclesByTripId(tripId) {
+    if (this.fakeDate) return Vehicles.filter((v) => v.trip_id === tripId)
+
+    const url = 'https://api.tranzy.ai/v1/opendata/vehicles'
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-Agency-Id': '4',
+        Accept: 'application/json',
+        'X-API-KEY': `${API_KEY}`,
+      },
+    }
+
+    try {
+      const response = await fetch(url, options)
+      const data = await response.json()
+      const filteredData = data.filter((item) => item.trip_id === tripId)
+      // const filteredData = data.filter((item) =>
+      //   Object.values(item).every((value) => value !== null)
+      // )
+
+      return filteredData
+    } catch (error) {
+      console.error(error)
+    }
+    return ''
   }
 
   GetVehicleType(id) {
