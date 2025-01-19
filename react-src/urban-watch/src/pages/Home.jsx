@@ -11,7 +11,7 @@ function Home() {
         easier and more efficient. Start exploring today!
       </p>
       <div className="flex space-x-4">
-        <NavLink to={'/map'}>
+        <NavLink to={'/map/routes'}>
           <button className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
             Explore the Map
           </button>

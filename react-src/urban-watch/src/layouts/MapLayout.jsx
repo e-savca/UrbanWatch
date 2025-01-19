@@ -1,10 +1,7 @@
-import PropTypes from 'prop-types'
+import { Outlet } from 'react-router'
 
-MapLayout.propTypes = {
-  children: PropTypes.element,
-}
-function MapLayout({ children }) {
-  return <>{children}</>
+function MapLayout() {
+  return <Outlet />
 }
 
 export default MapLayout

@@ -9,14 +9,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route
-          index
-          element={
-            <MainLayout>
-              <Home />
-            </MainLayout>
-          }
-        />
-        <Route
           path="/"
           element={
             <MainLayout>
@@ -24,14 +16,10 @@ function App() {
             </MainLayout>
           }
         ></Route>
-        <Route
-          path="/map"
-          element={
-            <MapLayout>
-              <RoutesPage />
-            </MapLayout>
-          }
-        />
+        <Route path="/map" element={<MapLayout />}>
+          <Route index element={<RoutesPage />} />
+          <Route path="routes" element={<RoutesPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
