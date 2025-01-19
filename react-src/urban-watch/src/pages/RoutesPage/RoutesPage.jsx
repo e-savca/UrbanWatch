@@ -9,6 +9,9 @@ import { Marker, Polyline, Popup } from 'react-leaflet'
 import BusIcon from '../../components/leaflet-components/BusIcon.jsx'
 import TranzyUtils from '../../utils/TranzyUtils.jsx'
 import ShapeRepository from '../../repositories/ShapeRepository.jsx'
+import { defaultCenterPositionOnMap } from '../../data/AppData.jsx'
+import { GetUserGeoLocation } from '../../utils/GetUserGeoLocation'
+import UserIcon from '../../components/leaflet-components/UserIcon'
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils()
@@ -48,6 +51,28 @@ function reducer(state, action) {
 
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  const [userGeolocation, setUserGeolocation] = useState(
+    defaultCenterPositionOnMap
+  )
+
+  useEffect(() => {
+    const getLocation = async () => {
+      try {
+        const result = await GetUserGeoLocation()
+        setUserGeolocation((prevLocation) =>
+          JSON.stringify(prevLocation) !== JSON.stringify(result)
+            ? result
+            : prevLocation
+        )
+      } catch (error) {
+        console.error('Error fetching geolocation:', error)
+      }
+    }
+
+    getLocation()
+  }, [])
+
   const { route, tripDirection, stops } = state
 
   const location = useLocation()
@@ -104,7 +129,21 @@ function RoutesPage() {
         tripDirection={tripDirection}
         dispatch={dispatch}
       />
-      <Map zoom={13}>
+      <Map
+        zoom={13}
+        centerPosition={userGeolocation}
+        key={userGeolocation[0] + userGeolocation[1]}
+      >
+        {userGeolocation !== defaultCenterPositionOnMap ? (
+          <Marker
+            key={userGeolocation[0] + userGeolocation[1]}
+            position={userGeolocation}
+            icon={UserIcon}
+          />
+        ) : (
+          ''
+        )}
+
         {vehicles.map((vehicle) => (
           <Marker
             key={vehicle.id}
@@ -112,11 +151,8 @@ function RoutesPage() {
             icon={BusIcon}
           >
             <Popup>
-              <div>
-                <strong>Route: </strong> {vehicle.label}
-                <br />
-                <strong>Speed: </strong> {vehicle.speed}
-              </div>
+              <strong>Speed: </strong>
+              {vehicle.speed}
             </Popup>
           </Marker>
         ))}
