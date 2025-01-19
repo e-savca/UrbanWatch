@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { HashRouter, Route, Routes } from 'react-router'
 import Home from './pages/Home.jsx'
 import RoutesPage from './pages/RoutesPage'
 import MainLayout from './layouts/MainLayout.jsx'
@@ -6,7 +6,7 @@ import MapLayout from './layouts/MapLayout'
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route
           path="/"
@@ -21,7 +21,7 @@ function App() {
           <Route path="routes" element={<RoutesPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
