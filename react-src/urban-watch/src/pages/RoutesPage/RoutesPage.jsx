@@ -14,7 +14,7 @@ import ShapeRepository from '../../repositories/ShapeRepository.jsx'
 const tranzyUtils = new TranzyUtils()
 const shapeRepository = new ShapeRepository()
 const tripRepository = new TripRepository()
-const vehicleRepository = new VehicleRepository(false)
+const vehicleRepository = new VehicleRepository(true)
 
 // Initial state
 const initialState = {

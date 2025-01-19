@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css' // IMPORTANT for map to work properly
 
-import { MapContainer, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
 import PropTypes from 'prop-types'
 
 const defaultCenterPositionOnMap = [47.024371640335254, 28.832034417468275]
@@ -28,12 +28,17 @@ function Map({
           className="z-0 h-[100vh] w-full"
           zoomControl={false}
         >
-          <TileLayer
+          {/* <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          /> */}
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           />
 
           {children}
+          <ZoomControl position="bottomright" />
         </MapContainer>
       </section>
     </div>
