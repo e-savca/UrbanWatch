@@ -14,7 +14,7 @@ MapSelect.propTypes = {
 
 function MapSelect({ route, tripDirection, tripsOnRoute, dispatch }) {
   return (
-    <div className="flex flex-wrap sm:flex-nowrap flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 p-4 bg-gray-100 shadow">
+    <div className="absolute z-10 flex flex-wrap sm:flex-nowrap flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 p-4 bg-gray-100 shadow">
       <select
         className="p-2 rounded border border-gray-300 bg-white w-full sm:w-1/2 flex-grow"
         value={route.route_id}
