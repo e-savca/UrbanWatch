@@ -17,7 +17,7 @@ import UserIcon from '../../components/leaflet-components/UserIcon'
 const tranzyUtils = new TranzyUtils()
 const shapeRepository = new ShapeRepository()
 const tripRepository = new TripRepository()
-const vehicleRepository = new VehicleRepository(true)
+const vehicleRepository = new VehicleRepository(false)
 
 // Initial state
 const initialState = {
