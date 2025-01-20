@@ -37,7 +37,7 @@ function Map({
           center={centerPosition}
           zoom={zoom}
           scrollWheelZoom={scrollWheelZoom}
-          className="z-0 h-[100vh] w-full"
+          className="z-0 h-[100dvh] w-full"
           zoomControl={false}
         >
           <TileLayer
