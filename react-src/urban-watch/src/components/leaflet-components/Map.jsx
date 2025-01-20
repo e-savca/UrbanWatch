@@ -5,17 +5,11 @@ import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
 import PropTypes from 'prop-types'
 
 // source: https://leaflet-extras.github.io/leaflet-providers/preview/
-const tileLayers = [
-  {
-    name: 'default',
-    value: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  },
-  {
-    name: 'voyager',
-    value:
-      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-  },
-]
+const tileLayers = {
+  default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  voyager:
+    'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+}
 
 Map.propTypes = {
   children: PropTypes.any,
@@ -42,7 +36,7 @@ function Map({
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url={tileLayers.find((tile) => tile.name === 'voyager').value}
+            url={tileLayers.voyager}
           />
 
           {children}
