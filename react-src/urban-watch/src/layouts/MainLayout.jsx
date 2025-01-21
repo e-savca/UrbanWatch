@@ -8,11 +8,11 @@ MainLayout.propTypes = {
 
 function MainLayout({ children }) {
   return (
-    <>
+    <div className="flex flex-col min-h-dvh">
       <Header />
-      {children}
+      <main className="grow">{children}</main>
       <Footer />
-    </>
+    </div>
   )
 }
 
