@@ -132,7 +132,7 @@ function RoutesPage() {
         dispatch={dispatch}
       />
       <Map
-        zoom={13}
+        zoom={16}
         centerPosition={userGeolocation}
         key={userGeolocation[0] + userGeolocation[1]}
       >
