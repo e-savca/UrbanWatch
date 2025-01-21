@@ -81,7 +81,7 @@ function ShowBusStops() {
       console.log(filtered.length)
       setStations(filtered)
     }
-  }, [corners, zoom, center, map, index])
+  }, [corners, zoom, center, map])
 
   useEffect(() => {
     const updateCorners = () => {
