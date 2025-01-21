@@ -1,8 +1,8 @@
 import 'leaflet/dist/leaflet.css' // IMPORTANT for map to work properly
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Marker, Popup, useMap } from 'react-leaflet'
 import BusStopIcon from './icons/BusStopIcon'
-import busStops from '../../data/Stops'
+import PropTypes from 'prop-types'
 
 const getNumberMultiplyiedByHundred = (num) => Number(num) * 100
 const getKeyBasedOnLatAndLon = (lat, lon) => `${lat}_${lon}`
@@ -61,15 +61,15 @@ const filterStations = (index, truncatedBounds, exactBounds) => {
   return visibleStations
 }
 
-const index = preprocessAndIndexStations(busStops)
-
-function ShowBusStops() {
+ShowBusStops.propTypes = {
+  busStops: PropTypes.array,
+}
+function ShowBusStops({ busStops }) {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
-  const [center, setCenter] = useState(map.getCenter())
   const [corners, setCorners] = useState(null)
   const [stations, setStations] = useState([])
-
+  const index = useRef(preprocessAndIndexStations(busStops))
   useEffect(() => {
     if (zoom < 16) {
       setStations([])
@@ -77,17 +77,15 @@ function ShowBusStops() {
       const bounds = map.getBounds()
       const truncatedBounds = getTruncatedBounds(bounds)
 
-      const filtered = filterStations(index, truncatedBounds, bounds)
-      console.log(filtered.length)
+      const filtered = filterStations(index.current, truncatedBounds, bounds)
       setStations(filtered)
     }
-  }, [corners, zoom, center, map])
+  }, [corners, zoom, map])
 
   useEffect(() => {
     const updateCorners = () => {
-      setCenter(map.getCenter())
       setZoom(map.getZoom())
-      console.log('zoom ->' + map.getZoom())
+      // console.log('zoom ->' + map.getZoom())
       const bounds = map.getBounds()
       const ne = bounds.getNorthEast()
       const sw = bounds.getSouthWest()

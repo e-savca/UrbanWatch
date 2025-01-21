@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import Map from '../../components/leaflet-components/Map.jsx'
 import RoutesData from '../../data/Routes.jsx'
 import TripRepository from '../../repositories/TripRepository.jsx'
@@ -14,6 +14,7 @@ import UserIcon from '../../components/leaflet-components/icons/UserIcon.jsx'
 import BusIcon from '../../components/leaflet-components/icons/BusIcon.jsx'
 import Stops from '../../data/Stops'
 import ShowBusStops from '../../components/leaflet-components/ShowBusStops'
+import MapTools from '../../components/leaflet-components/MapTools.jsx'
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils()
@@ -26,6 +27,9 @@ const initialState = {
   route: RoutesData[0],
   tripDirection: 0,
   stops: null,
+  mapCenter: defaultCenterPositionOnMap,
+  mapKey: 0,
+  userGeolocation: defaultCenterPositionOnMap,
 }
 
 // Reducer function
@@ -46,6 +50,12 @@ function reducer(state, action) {
       }
     case 'SET_STOPS':
       return { ...state, stops: action.payload }
+    case 'SET_CENTER':
+      return { ...state, mapCenter: action.payload }
+    case 'INCREASE_MAP_KEY':
+      return { ...state, mapKey: state.mapKey + 1 }
+    case 'SET_USER_GEOLOCATION':
+      return { ...state, userGeolocation: action.payload }
     default:
       return state
   }
@@ -54,19 +64,23 @@ function reducer(state, action) {
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const [userGeolocation, setUserGeolocation] = useState(
-    defaultCenterPositionOnMap
-  )
+  const { route, tripDirection, stops, mapCenter, mapKey, userGeolocation } =
+    state
+
+  const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     const getLocation = async () => {
       try {
         const result = await GetUserGeoLocation()
-        setUserGeolocation((prevLocation) =>
-          JSON.stringify(prevLocation) !== JSON.stringify(result)
-            ? result
-            : prevLocation
-        )
+        if (
+          userGeolocation[0] !== result[0] ||
+          userGeolocation[1] !== result[1]
+        ) {
+          console.log('increaseMapKey')
+          dispatch({ type: 'SET_USER_GEOLOCATION', payload: result })
+          dispatch({ type: 'INCREASE_MAP_KEY' })
+        }
       } catch (error) {
         console.error('Error fetching geolocation:', error)
       }
@@ -75,15 +89,10 @@ function RoutesPage() {
     getLocation()
   }, [])
 
-  const { route, tripDirection, stops } = state
-
-  const location = useLocation()
-  const navigate = useNavigate()
-
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search)
     const routeId = searchParams.get('route')
     const direction = searchParams.get('direction')
+    const center = searchParams.get('mapCenter')
 
     if (routeId) {
       dispatch({ type: 'SET_ROUTE', payload: routeId })
@@ -91,14 +100,23 @@ function RoutesPage() {
     if (direction) {
       dispatch({ type: 'SET_DIRECTION', payload: direction })
     }
-  }, [location.search])
+    if (center) {
+      try {
+        const parsedCenter = JSON.parse(center)
+        dispatch({ type: 'SET_CENTER', payload: parsedCenter })
+      } catch (e) {
+        console.error('Invalid mapCenter parameter:', e)
+      }
+    }
+  }, [searchParams])
 
   useEffect(() => {
-    const searchParams = new URLSearchParams()
-    searchParams.set('route', route.route_id)
-    searchParams.set('direction', tripDirection)
-    navigate(`?${searchParams.toString()}`, { replace: true })
-  }, [route, tripDirection, navigate])
+    const params = {}
+    params.route = route.route_id
+    params.direction = tripDirection
+    params.mapCenter = JSON.stringify(mapCenter)
+    setSearchParams(params, { replace: true })
+  }, [route, tripDirection, mapCenter, setSearchParams])
 
   const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id)
   const tripId = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
@@ -131,11 +149,7 @@ function RoutesPage() {
         tripDirection={tripDirection}
         dispatch={dispatch}
       />
-      <Map
-        zoom={16}
-        centerPosition={userGeolocation}
-        key={userGeolocation[0] + userGeolocation[1]}
-      >
+      <Map zoom={16} centerPosition={mapCenter} key={mapKey}>
         {userGeolocation !== defaultCenterPositionOnMap ? (
           <Marker
             key={userGeolocation[0] + userGeolocation[1]}
@@ -168,7 +182,8 @@ function RoutesPage() {
           />
         ) : null}
 
-        <ShowBusStops />
+        <ShowBusStops busStops={Stops} />
+        <MapTools dispatch={dispatch} />
       </Map>
     </>
   )
