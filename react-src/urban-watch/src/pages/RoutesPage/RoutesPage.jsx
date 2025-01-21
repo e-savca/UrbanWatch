@@ -6,13 +6,14 @@ import TripRepository from '../../repositories/TripRepository.jsx'
 import MapSelect from './MapSelect.jsx'
 import VehicleRepository from '../../repositories/VehicleRepository.jsx'
 import { Marker, Polyline, Popup } from 'react-leaflet'
-import BusIcon from '../../components/leaflet-components/BusIcon.jsx'
 import TranzyUtils from '../../utils/TranzyUtils.jsx'
 import ShapeRepository from '../../repositories/ShapeRepository.jsx'
 import { defaultCenterPositionOnMap } from '../../data/AppData.jsx'
 import { GetUserGeoLocation } from '../../utils/GetUserGeoLocation'
-import UserIcon from '../../components/leaflet-components/UserIcon'
-import BusStopIcon from '../../components/leaflet-components/BusStopIcon.jsx'
+import UserIcon from '../../components/leaflet-components/icons/UserIcon.jsx'
+import BusIcon from '../../components/leaflet-components/icons/BusIcon.jsx'
+import Stops from '../../data/Stops'
+import ShowBusStops from '../../components/leaflet-components/ShowBusStops'
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils()
@@ -149,7 +150,7 @@ function RoutesPage() {
           <Marker
             key={vehicle.id}
             position={[vehicle.latitude, vehicle.longitude]}
-            icon={BusStopIcon}
+            icon={BusIcon}
           >
             <Popup>
               <strong>Speed: </strong>
@@ -166,6 +167,8 @@ function RoutesPage() {
             ])}
           />
         ) : null}
+
+        <ShowBusStops />
       </Map>
     </>
   )

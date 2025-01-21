@@ -7,8 +7,8 @@ const BusStopIcon = L.divIcon({
       <span class="text-2xl">🚌</span>
     </div>
   `,
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
   popupAnchor: [7, -20],
 })
 

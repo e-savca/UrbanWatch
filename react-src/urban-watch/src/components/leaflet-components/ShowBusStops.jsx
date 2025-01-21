@@ -1,9 +1,8 @@
 import 'leaflet/dist/leaflet.css' // IMPORTANT for map to work properly
 import { useEffect, useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
-import { defaultCenterPositionOnMap } from '../../data/AppData'
-import Stops from '../../data/Stops'
-import BusIcon from './BusIcon'
+import { Marker, Popup, useMap } from 'react-leaflet'
+import BusStopIcon from './icons/BusStopIcon'
+import busStops from '../../data/Stops'
 
 const getNumberMultiplyiedByHundred = (num) => Number(num) * 100
 const getKeyBasedOnLatAndLon = (lat, lon) => `${lat}_${lon}`
@@ -62,9 +61,9 @@ const filterStations = (index, truncatedBounds, exactBounds) => {
   return visibleStations
 }
 
-const index = preprocessAndIndexStations(Stops)
+const index = preprocessAndIndexStations(busStops)
 
-const MapInfo = () => {
+function ShowBusStops() {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
   const [center, setCenter] = useState(map.getCenter())
@@ -72,19 +71,17 @@ const MapInfo = () => {
   const [stations, setStations] = useState([])
 
   useEffect(() => {
-    if (zoom < 14) {
+    if (zoom < 16) {
       setStations([])
     } else {
       const bounds = map.getBounds()
-      // console.log(bounds)
       const truncatedBounds = getTruncatedBounds(bounds)
-      // console.log(truncatedBounds)
 
       const filtered = filterStations(index, truncatedBounds, bounds)
       console.log(filtered.length)
       setStations(filtered)
     }
-  }, [corners, zoom, center, map])
+  }, [corners, zoom, center, map, index])
 
   useEffect(() => {
     const updateCorners = () => {
@@ -95,7 +92,6 @@ const MapInfo = () => {
       const ne = bounds.getNorthEast()
       const sw = bounds.getSouthWest()
 
-      // console.log(`ne ${ne} sw ${sw}`)
       setCorners({
         northEast: ne,
         southWest: sw,
@@ -115,27 +111,15 @@ const MapInfo = () => {
         <Marker
           key={station.stop_id}
           position={[station.stop_lat, station.stop_lon]}
-          icon={BusIcon}
+          icon={BusStopIcon}
         >
-          <Popup>{station.stop_name}</Popup>
+          <Popup>
+            <strong>{station.stop_name}</strong>
+          </Popup>
         </Marker>
       ))}
     </>
   )
 }
 
-const TestMap = () => (
-  <MapContainer
-    center={defaultCenterPositionOnMap}
-    zoom={13}
-    style={{ height: '100vh', width: '100%' }}
-  >
-    <TileLayer
-      attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <MapInfo />
-  </MapContainer>
-)
-
-export default TestMap
+export default ShowBusStops
