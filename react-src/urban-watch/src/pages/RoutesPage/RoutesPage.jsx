@@ -12,6 +12,7 @@ import ShapeRepository from '../../repositories/ShapeRepository.jsx'
 import { defaultCenterPositionOnMap } from '../../data/AppData.jsx'
 import { GetUserGeoLocation } from '../../utils/GetUserGeoLocation'
 import UserIcon from '../../components/leaflet-components/UserIcon'
+import BusStopIcon from '../../components/leaflet-components/BusStopIcon.jsx'
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils()
@@ -148,7 +149,7 @@ function RoutesPage() {
           <Marker
             key={vehicle.id}
             position={[vehicle.latitude, vehicle.longitude]}
-            icon={BusIcon}
+            icon={BusStopIcon}
           >
             <Popup>
               <strong>Speed: </strong>
