@@ -72,7 +72,7 @@ const MapInfo = () => {
   const [stations, setStations] = useState([])
 
   useEffect(() => {
-    if (zoom < 15) {
+    if (zoom < 14) {
       setStations([])
     } else {
       const bounds = map.getBounds()
