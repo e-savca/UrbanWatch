@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { useEffect, useState } from 'react'
 
 MapTools.propTypes = {
-  dispatch: PropTypes.func,
+  dispatchHelper: PropTypes.object,
 }
-function MapTools({ dispatch }) {
+function MapTools({ dispatchHelper }) {
   const map = useMap()
   const [center, setCenter] = useState(() => {
     const gps = map.getCenter()
@@ -26,13 +26,11 @@ function MapTools({ dispatch }) {
 
   useEffect(() => {
     function handleMapCenter() {
-      //   console.log(`type ${typeof center} value ${center}`)
-
-      dispatch({ type: 'SET_CENTER', payload: center })
+      dispatchHelper.setCenter(center)
     }
 
     handleMapCenter()
-  }, [center, dispatch])
+  }, [center, dispatchHelper])
 
   return <></>
 }

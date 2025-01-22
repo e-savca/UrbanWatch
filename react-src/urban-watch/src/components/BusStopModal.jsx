@@ -5,9 +5,16 @@ BusStopModal.propTypes = {
   onClose: PropTypes.func,
   station: PropTypes.object,
   afiliateRoutes: PropTypes.array,
+  onRouteSelected: PropTypes.func,
 }
 
-function BusStopModal({ isOpen, onClose, station, afiliateRoutes }) {
+function BusStopModal({
+  isOpen,
+  onClose,
+  station,
+  afiliateRoutes,
+  onRouteSelected,
+}) {
   return (
     <>
       {isOpen && (
@@ -15,7 +22,7 @@ function BusStopModal({ isOpen, onClose, station, afiliateRoutes }) {
           <div
             className="relative bg-white rounded-lg shadow-2xl p-6 
                        w-full max-w-md md:max-w-lg lg:max-w-xl 
-                       sm:w-11/12 sm:mx-4 md:w-auto animate-fade-in"
+                       sm:w-11/12 sm:mx-4 md:w-auto animate-fade-in m-3"
           >
             <button
               className="absolute top-4 right-4 text-gray-700 text-2xl font-bold hover:text-gray-900 transition-all"
@@ -33,6 +40,7 @@ function BusStopModal({ isOpen, onClose, station, afiliateRoutes }) {
                   <div
                     key={route.route_id}
                     className="flex items-center p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-all"
+                    onClick={() => onRouteSelected(route.route_id)}
                   >
                     <div
                       className="h-10 w-10 flex items-center justify-center 

@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import Map from '../../components/leaflet-components/Map.jsx'
 import RoutesData from '../../data/Routes.jsx'
@@ -34,6 +34,9 @@ const initialState = {
   stops: null,
   mapKey: 0,
   userGeolocation: defaultCenterPositionOnMap,
+  modalIsOpen: false,
+  selectedStation: null,
+  routesAffiliatedToSelectedStation: [],
 }
 
 // Reducer function
@@ -60,6 +63,12 @@ function reducer(state, action) {
       return { ...state, mapKey: state.mapKey + 1 }
     case 'SET_USER_GEOLOCATION':
       return { ...state, userGeolocation: action.payload }
+    case 'SET_MODAL_IS_OPEN':
+      return { ...state, modalIsOpen: action.payload }
+    case 'SET_SELECTED_STATION':
+      return { ...state, selectedStation: action.payload }
+    case 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION':
+      return { ...state, routesAffiliatedToSelectedStation: action.payload }
     default:
       return state
   }
@@ -68,8 +77,52 @@ function reducer(state, action) {
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const { route, tripDirection, stops, mapKey, userGeolocation } = state
+  const dispatchHelper = useMemo(
+    () => ({
+      setRoute: (routeId) => {
+        dispatch({ type: 'SET_ROUTE', payload: routeId })
+      },
+      setDirection: (tripDirection) => {
+        dispatch({ type: 'SET_DIRECTION', payload: tripDirection })
+      },
+      setStops: (stops) => {
+        dispatch({ type: 'SET_STOPS', payload: stops })
+      },
+      setCenter: (center) => {
+        dispatch({ type: 'SET_CENTER', payload: center })
+      },
+      increaseMapKey: () => {
+        dispatch({ type: 'INCREASE_MAP_KEY' })
+      },
+      setUserGeolocation: (userGeolocation) => {
+        dispatch({ type: 'SET_USER_GEOLOCATION', payload: userGeolocation })
+      },
+      setModalIsOpen: (payloadValue) => {
+        dispatch({ type: 'SET_MODAL_IS_OPEN', payload: payloadValue })
+      },
+      setSelectedStation: (station) => {
+        dispatch({ type: 'SET_SELECTED_STATION', payload: station })
+      },
+      setRoutesAffiliatedToSelectedStation: (routes) => {
+        dispatch({
+          type: 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION',
+          payload: routes,
+        })
+      },
+    }),
+    [dispatch]
+  )
 
+  const {
+    route,
+    tripDirection,
+    stops,
+    mapKey,
+    userGeolocation,
+    modalIsOpen,
+    selectedStation,
+    routesAffiliatedToSelectedStation,
+  } = state
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
@@ -80,9 +133,8 @@ function RoutesPage() {
           userGeolocation[0] !== result[0] ||
           userGeolocation[1] !== result[1]
         ) {
-          console.log('increaseMapKey')
-          dispatch({ type: 'SET_USER_GEOLOCATION', payload: result })
-          dispatch({ type: 'INCREASE_MAP_KEY' })
+          dispatchHelper.setUserGeolocation(result)
+          dispatchHelper.increaseMapKey()
         }
       } catch (error) {
         console.error('Error fetching geolocation:', error)
@@ -90,17 +142,17 @@ function RoutesPage() {
     }
 
     getLocation()
-  }, [])
+  })
 
   useEffect(() => {
     const routeId = searchParams.get('route')
     const direction = searchParams.get('direction')
 
     if (routeId) {
-      dispatch({ type: 'SET_ROUTE', payload: routeId })
+      dispatchHelper.setRoute(routeId)
     }
     if (direction) {
-      dispatch({ type: 'SET_DIRECTION', payload: direction })
+      dispatchHelper.setDirection(direction)
     }
   }, [searchParams])
 
@@ -121,10 +173,10 @@ function RoutesPage() {
   useEffect(() => {
     async function getData() {
       const shapes = await shapeRepository.GetShapeById(tripId)
-      dispatch({ type: 'SET_STOPS', payload: shapes })
+      dispatchHelper.setStops(shapes)
     }
     getData()
-  }, [tripId])
+  }, [dispatchHelper, tripId])
 
   useEffect(() => {
     async function getVehicles() {
@@ -134,37 +186,33 @@ function RoutesPage() {
     getVehicles()
   }, [tripId])
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
-  const [selectedStation, setSelectedStation] = useState(null)
-  const [
-    routesAffiliatedToSelectedStation,
-    setRoutesAffiliatedToSelectedStation,
-  ] = useState([])
   function handleBusStopClick(station) {
     if (selectedStation === station) {
-      setModalIsOpen((prevValue) => (prevValue !== true ? true : false))
+      dispatchHelper.setModalIsOpen((prevValue) =>
+        prevValue !== true ? true : false
+      )
       return
     }
-    setModalIsOpen(true)
-    setSelectedStation(station)
+    dispatchHelper.setModalIsOpen(true)
+    dispatchHelper.setSelectedStation(station)
     const trips = stopTimesRepo
       .GetStopTimesByStopId(station.stop_id)
       .map(({ trip_id }) => tripRepository.GetTripById(trip_id))
-    console.log(trips)
     const routeTripMapping = trips.map((trip) => ({
       trip,
       route: routesRepository.GetRouteById(trip.route_id),
     }))
 
-    setRoutesAffiliatedToSelectedStation(routeTripMapping)
+    dispatchHelper.setRoutesAffiliatedToSelectedStation(routeTripMapping)
   }
+
   return (
     <>
       <MapSelect
         route={route}
         tripsOnRoute={tripsOnRoute}
         tripDirection={tripDirection}
-        dispatch={dispatch}
+        dispatchHelper={dispatchHelper}
       />
       <Map zoom={16} centerPosition={userGeolocation} key={mapKey}>
         {userGeolocation !== defaultCenterPositionOnMap ? (
@@ -200,15 +248,20 @@ function RoutesPage() {
         ) : null}
 
         <ShowBusStops busStops={Stops} onBusStopClick={handleBusStopClick} />
-        <MapTools dispatch={dispatch} />
+        <MapTools dispatchHelper={dispatchHelper} />
       </Map>
       <BusStopModal
         isOpen={modalIsOpen}
         station={selectedStation}
         afiliateRoutes={routesAffiliatedToSelectedStation}
         onClose={() => {
-          setModalIsOpen(false)
-          setSelectedStation(null)
+          dispatchHelper.setModalIsOpen(false)
+          dispatchHelper.setSelectedStation(null)
+        }}
+        onRouteSelected={(routeId) => {
+          dispatchHelper.setRoute(routeId)
+          dispatchHelper.setModalIsOpen(false)
+          dispatchHelper.setSelectedStation(null)
         }}
       />
     </>
