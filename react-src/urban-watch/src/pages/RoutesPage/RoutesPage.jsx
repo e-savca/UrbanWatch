@@ -15,13 +15,17 @@ import BusIcon from '../../components/leaflet-components/icons/BusIcon.jsx'
 import Stops from '../../data/Stops'
 import ShowBusStops from '../../components/leaflet-components/ShowBusStops'
 import MapTools from '../../components/leaflet-components/MapTools.jsx'
-import ResponsiveModal from '../../components/ResponsiveModal.jsx'
+import BusStopModal from '../../components/BusStopModal.jsx'
+import StopTimesRepository from '../../repositories/StopTimesRepository'
+import RoutesRepository from '../../repositories/RoutesRepository'
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils()
 const shapeRepository = new ShapeRepository()
 const tripRepository = new TripRepository()
 const vehicleRepository = new VehicleRepository(false)
+const stopTimesRepo = new StopTimesRepository()
+const routesRepository = new RoutesRepository()
 
 // Initial state
 const initialState = {
@@ -132,14 +136,27 @@ function RoutesPage() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [selectedStation, setSelectedStation] = useState(null)
+  const [
+    routesAffiliatedToSelectedStation,
+    setRoutesAffiliatedToSelectedStation,
+  ] = useState([])
   function handleBusStopClick(station) {
     if (selectedStation === station) {
       setModalIsOpen((prevValue) => (prevValue !== true ? true : false))
-
       return
     }
     setModalIsOpen(true)
     setSelectedStation(station)
+    const trips = stopTimesRepo
+      .GetStopTimesByStopId(station.stop_id)
+      .map(({ trip_id }) => tripRepository.GetTripById(trip_id))
+    console.log(trips)
+    const routeTripMapping = trips.map((trip) => ({
+      trip,
+      route: routesRepository.GetRouteById(trip.route_id),
+    }))
+
+    setRoutesAffiliatedToSelectedStation(routeTripMapping)
   }
   return (
     <>
@@ -185,10 +202,10 @@ function RoutesPage() {
         <ShowBusStops busStops={Stops} onBusStopClick={handleBusStopClick} />
         <MapTools dispatch={dispatch} />
       </Map>
-      <ResponsiveModal
+      <BusStopModal
         isOpen={modalIsOpen}
         station={selectedStation}
-        afiliateVehicles={vehicles}
+        afiliateRoutes={routesAffiliatedToSelectedStation}
         onClose={() => {
           setModalIsOpen(false)
           setSelectedStation(null)
