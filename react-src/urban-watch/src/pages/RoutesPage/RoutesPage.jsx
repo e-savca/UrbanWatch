@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react'
-import { useLocation, useNavigate, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
 import Map from '../../components/leaflet-components/Map.jsx'
 import RoutesData from '../../data/Routes.jsx'
 import TripRepository from '../../repositories/TripRepository.jsx'
@@ -15,6 +15,7 @@ import BusIcon from '../../components/leaflet-components/icons/BusIcon.jsx'
 import Stops from '../../data/Stops'
 import ShowBusStops from '../../components/leaflet-components/ShowBusStops'
 import MapTools from '../../components/leaflet-components/MapTools.jsx'
+import ResponsiveModal from '../../components/ResponsiveModal.jsx'
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils()
@@ -27,7 +28,6 @@ const initialState = {
   route: RoutesData[0],
   tripDirection: 0,
   stops: null,
-  mapCenter: defaultCenterPositionOnMap,
   mapKey: 0,
   userGeolocation: defaultCenterPositionOnMap,
 }
@@ -64,8 +64,7 @@ function reducer(state, action) {
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const { route, tripDirection, stops, mapCenter, mapKey, userGeolocation } =
-    state
+  const { route, tripDirection, stops, mapKey, userGeolocation } = state
 
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -92,7 +91,6 @@ function RoutesPage() {
   useEffect(() => {
     const routeId = searchParams.get('route')
     const direction = searchParams.get('direction')
-    const center = searchParams.get('mapCenter')
 
     if (routeId) {
       dispatch({ type: 'SET_ROUTE', payload: routeId })
@@ -100,23 +98,14 @@ function RoutesPage() {
     if (direction) {
       dispatch({ type: 'SET_DIRECTION', payload: direction })
     }
-    if (center) {
-      try {
-        const parsedCenter = JSON.parse(center)
-        dispatch({ type: 'SET_CENTER', payload: parsedCenter })
-      } catch (e) {
-        console.error('Invalid mapCenter parameter:', e)
-      }
-    }
   }, [searchParams])
 
   useEffect(() => {
     const params = {}
     params.route = route.route_id
     params.direction = tripDirection
-    params.mapCenter = JSON.stringify(mapCenter)
     setSearchParams(params, { replace: true })
-  }, [route, tripDirection, mapCenter, setSearchParams])
+  }, [route, tripDirection, setSearchParams])
 
   const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id)
   const tripId = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
@@ -141,6 +130,17 @@ function RoutesPage() {
     getVehicles()
   }, [tripId])
 
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [selectedStation, setSelectedStation] = useState(null)
+  function handleBusStopClick(station) {
+    if (selectedStation === station) {
+      setModalIsOpen((prevValue) => (prevValue !== true ? true : false))
+
+      return
+    }
+    setModalIsOpen(true)
+    setSelectedStation(station)
+  }
   return (
     <>
       <MapSelect
@@ -149,7 +149,7 @@ function RoutesPage() {
         tripDirection={tripDirection}
         dispatch={dispatch}
       />
-      <Map zoom={16} centerPosition={mapCenter} key={mapKey}>
+      <Map zoom={16} centerPosition={userGeolocation} key={mapKey}>
         {userGeolocation !== defaultCenterPositionOnMap ? (
           <Marker
             key={userGeolocation[0] + userGeolocation[1]}
@@ -182,9 +182,18 @@ function RoutesPage() {
           />
         ) : null}
 
-        <ShowBusStops busStops={Stops} />
+        <ShowBusStops busStops={Stops} onBusStopClick={handleBusStopClick} />
         <MapTools dispatch={dispatch} />
       </Map>
+      <ResponsiveModal
+        isOpen={modalIsOpen}
+        station={selectedStation}
+        afiliateVehicles={vehicles}
+        onClose={() => {
+          setModalIsOpen(false)
+          setSelectedStation(null)
+        }}
+      />
     </>
   )
 }

@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css' // IMPORTANT for map to work properly
 import { useEffect, useRef, useState } from 'react'
-import { Marker, Popup, useMap } from 'react-leaflet'
+import { Marker, useMap } from 'react-leaflet'
 import BusStopIcon from './icons/BusStopIcon'
 import PropTypes from 'prop-types'
 
@@ -63,13 +63,15 @@ const filterStations = (index, truncatedBounds, exactBounds) => {
 
 ShowBusStops.propTypes = {
   busStops: PropTypes.array,
+  onBusStopClick: PropTypes.func,
 }
-function ShowBusStops({ busStops }) {
+function ShowBusStops({ busStops, onBusStopClick }) {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
   const [corners, setCorners] = useState(null)
   const [stations, setStations] = useState([])
   const index = useRef(preprocessAndIndexStations(busStops))
+
   useEffect(() => {
     if (zoom < 16) {
       setStations([])
@@ -110,11 +112,12 @@ function ShowBusStops({ busStops }) {
           key={station.stop_id}
           position={[station.stop_lat, station.stop_lon]}
           icon={BusStopIcon}
-        >
-          <Popup>
-            <strong>{station.stop_name}</strong>
-          </Popup>
-        </Marker>
+          eventHandlers={{
+            click: () => {
+              onBusStopClick(station)
+            },
+          }}
+        ></Marker>
       ))}
     </>
   )

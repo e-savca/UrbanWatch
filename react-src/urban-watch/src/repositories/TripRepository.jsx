@@ -7,4 +7,7 @@ export default class TripRepository {
   GetTripsByRouteId(routeId) {
     return Trips.filter((x) => x.route_id === routeId)
   }
+  GetRouteIdByTripId(tripId) {
+    return Trips.find((trip) => trip.trip_id === tripId).route_id
+  }
 }
