@@ -38,9 +38,11 @@ function BusStopModal({
               {afiliateRoutes.length > 0 ? (
                 afiliateRoutes.map(({ route, trip }) => (
                   <div
-                    key={route.route_id}
+                    key={trip.trip_id}
                     className="flex items-center p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-all"
-                    onClick={() => onRouteSelected(route.route_id)}
+                    onClick={() =>
+                      onRouteSelected(route.route_id, trip.direction_id)
+                    }
                   >
                     <div
                       className="h-10 w-10 flex items-center justify-center 

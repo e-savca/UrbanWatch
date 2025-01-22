@@ -258,8 +258,9 @@ function RoutesPage() {
           dispatchHelper.setModalIsOpen(false)
           dispatchHelper.setSelectedStation(null)
         }}
-        onRouteSelected={(routeId) => {
+        onRouteSelected={(routeId, direction_id) => {
           dispatchHelper.setRoute(routeId)
+          dispatchHelper.setDirection(direction_id)
           dispatchHelper.setModalIsOpen(false)
           dispatchHelper.setSelectedStation(null)
         }}
