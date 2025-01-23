@@ -142,7 +142,7 @@ function RoutesPage() {
     }
 
     getLocation()
-  })
+  }, [])
 
   useEffect(() => {
     const routeId = searchParams.get('route')
