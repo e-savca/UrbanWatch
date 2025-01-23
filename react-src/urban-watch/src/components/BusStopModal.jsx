@@ -15,10 +15,21 @@ function BusStopModal({
   afiliateRoutes,
   onRouteSelected,
 }) {
+  const handleClose = (e) => {
+    if (e.target.id === 'modal-overlay') {
+      console.log(e.target)
+      onClose()
+    }
+  }
+
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          id="modal-overlay"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={handleClose}
+        >
           <div
             className="relative bg-white rounded-lg shadow-2xl p-6 
                        w-full max-w-md md:max-w-lg lg:max-w-xl 
