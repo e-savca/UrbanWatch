@@ -1,5 +1,5 @@
 import L from 'leaflet'
-import busStopIcon from '../../..//assets/leaflet-icons/bus.png'
+import busStopIcon from '../../..//assets/leaflet-icons/bus-stop.png'
 
 const BusStopIcon = L.icon({
   iconUrl: busStopIcon,

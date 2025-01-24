@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 
-import VehicleRepository from '../../repositories/VehicleRepository.jsx'
-import RoutesData from '../../data/Routes.jsx'
+import VehicleRepository from '../../../repositories/VehicleRepository.jsx'
+import RoutesData from '../../../data/Routes.jsx'
 
 const vehicleRepository = new VehicleRepository()
 

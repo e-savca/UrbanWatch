@@ -6,17 +6,17 @@ import { defaultCenterPositionOnMapLngLat } from '../../data/AppData'
 import { GetUserPositionOnMap } from '../../utils/GetUserGeoLocation'
 
 const tileStyles = {
-  MapMD2D:
+  MapMD_2D:
     'https://map.md/api/tiles/styles/map/style.json?v=2018-12-28T00:00:00.000Z',
-  MapMD3D:
+  MapMD_3D:
     'https://map.md/api/tiles/styles/satelite/style.json?v=2018-12-28T00:00:00.000Z',
-  GlobalMapVOyager: {
+  CARTO_Voyager: {
     version: 8,
     sources: {
       osm: {
         type: 'raster',
         tiles: [
-          'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+          'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
         ],
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -59,7 +59,7 @@ function MapLibreGLMap() {
   useEffect(() => {
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: tileStyles.MapMD2D,
+      style: tileStyles.MapMD_2D,
       center: mapCenter,
       zoom: 14,
       attributionControl: false,
