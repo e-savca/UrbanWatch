@@ -5,20 +5,40 @@ import { useEffect } from 'react'
 import { defaultCenterPositionOnMapLngLat } from '../../data/AppData'
 import { GetUserPositionOnMap } from '../../utils/GetUserGeoLocation'
 
-// Import an icon (local or online URL)
-const userIcon = 'https://cdn-icons-png.flaticon.com/32/684/684908.png'
-
-// source: https://leaflet-extras.github.io/leaflet-providers/preview/
-const tileLayers = {
-  default: 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  voyager:
-    'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+const tileStyles = {
+  MapMD2D:
+    'https://map.md/api/tiles/styles/map/style.json?v=2018-12-28T00:00:00.000Z',
+  MapMD3D:
+    'https://map.md/api/tiles/styles/satelite/style.json?v=2018-12-28T00:00:00.000Z',
+  GlobalMapVOyager: {
+    version: 8,
+    sources: {
+      osm: {
+        type: 'raster',
+        tiles: [
+          'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        ],
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        tileSize: 256,
+      },
+    },
+    layers: [
+      {
+        id: 'osm-tiles',
+        type: 'raster',
+        source: 'osm',
+        minzoom: 0,
+        maxzoom: 19,
+      },
+    ],
+  },
 }
 
 function MapLibreGLMap() {
   const mapRef = useRef(null)
   const mapContainerRef = useRef(null)
-  const markerRef = useRef(null) // Reference for marker instance
+  const markerRef = useRef(null)
   const [mapCenter, setMapCenter] = useState(defaultCenterPositionOnMapLngLat)
 
   useEffect(() => {
@@ -27,7 +47,6 @@ function MapLibreGLMap() {
         const result = await GetUserPositionOnMap()
         if (mapCenter[0] !== result[0] || mapCenter[1] !== result[1]) {
           setMapCenter(result)
-          console.log(result)
         }
       } catch (error) {
         console.error('Error fetching geolocation:', error)
@@ -40,30 +59,18 @@ function MapLibreGLMap() {
   useEffect(() => {
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current,
-      style: {
-        version: 8,
-        sources: {
-          osm: {
-            type: 'raster',
-            tiles: [tileLayers.voyager],
-            tileSize: 256,
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="/">UrbanWatch</a> ',
-          },
-        },
-        layers: [
-          {
-            id: 'osm-tiles',
-            type: 'raster',
-            source: 'osm',
-            minzoom: 0,
-            maxzoom: 19,
-          },
-        ],
-      },
+      style: tileStyles.MapMD2D,
       center: mapCenter,
       zoom: 14,
+      attributionControl: false,
     })
+
+    mapRef.current.addControl(
+      new maplibregl.AttributionControl({
+        customAttribution: '&copy; <a href="/" target="_blank">UrbanWatch</a>',
+        compact: true,
+      })
+    )
 
     return () => {
       if (mapRef.current) mapRef.current.remove()
@@ -79,8 +86,8 @@ function MapLibreGLMap() {
       }
 
       markerRef.current = new maplibregl.Marker({
-        color: '#ff0000', // Optional color customization
-        draggable: false, // Prevent moving the marker
+        color: '#ff0000',
+        draggable: false,
       })
         .setLngLat(mapCenter)
         .setPopup(new maplibregl.Popup().setHTML('<h3>You are here</h3>'))
