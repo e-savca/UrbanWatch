@@ -22,10 +22,17 @@ import { NavLink } from 'react-router'
 
 const mapTypes = [
   {
-    name: 'Bus Stop Explorer',
+    name: 'Bus Stop Explorer Leaflet',
     description:
       'Easily locate a bus stop and discover all the live routes and buses passing through it in real-time.',
-    href: '/map',
+    href: '/map/routes/leaflet',
+    icon: MapPinIcon,
+  },
+  {
+    name: 'Bus Stop Explorer MapLibre',
+    description:
+      'Easily locate a bus stop and discover all the live routes and buses passing through it in real-time.',
+    href: '/map/routes/maplibre',
     icon: MapPinIcon,
   },
   {
