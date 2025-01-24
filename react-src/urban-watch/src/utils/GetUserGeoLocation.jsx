@@ -16,3 +16,13 @@ export async function GetUserGeoLocation() {
     return Promise.resolve(defaultCenterPositionOnMap)
   }
 }
+
+export async function GetUserPositionOnMap() {
+  if ('geolocation' in navigator) {
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition((p) => {
+        resolve([p.coords.longitude, p.coords.latitude])
+      })
+    })
+  }
+}
