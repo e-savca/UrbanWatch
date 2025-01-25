@@ -1263,6 +1263,6 @@ const Trips = [
     block_id: 117,
     shape_id: '117_1',
   },
-]
+];
 
-export default Trips
+export default Trips;

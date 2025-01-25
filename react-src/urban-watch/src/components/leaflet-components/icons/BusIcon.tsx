@@ -1,4 +1,4 @@
-import L from 'leaflet'
+import L from 'leaflet';
 
 const BusStopIcon = L.divIcon({
   className: 'bus-stop-icon',
@@ -10,6 +10,6 @@ const BusStopIcon = L.divIcon({
   iconSize: [24, 24],
   iconAnchor: [12, 12],
   popupAnchor: [7, -20],
-})
+});
 
-export default BusStopIcon
+export default BusStopIcon;

@@ -1,22 +1,22 @@
-import 'leaflet/dist/leaflet.css' // IMPORTANT for map to work properly
-import { defaultCenterPositionOnMap } from '../../data/AppData'
+import 'leaflet/dist/leaflet.css'; // IMPORTANT for map to work properly
 
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
-import PropTypes from 'prop-types'
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import PropTypes from 'prop-types';
+import { defaultCenterPositionOnMap } from '../../data/AppData';
 
 // source: https://leaflet-extras.github.io/leaflet-providers/preview/
 const tileLayers = {
   default: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   voyager:
     'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-}
+};
 
 Map.propTypes = {
   children: PropTypes.any,
   centerPosition: PropTypes.array,
   zoom: PropTypes.number,
   scrollWheelZoom: PropTypes.bool,
-}
+};
 
 function Map({
   children = null,
@@ -44,7 +44,7 @@ function Map({
         </MapContainer>
       </section>
     </div>
-  )
+  );
 }
 
-export default Map
+export default Map;

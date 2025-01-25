@@ -1,4 +1,4 @@
-import currentLocation from '../../../assets/leaflet-icons/current-location.svg'
+import currentLocation from '../../../assets/leaflet-icons/current-location.svg';
 
 function UserPositionMarker() {
   return (
@@ -10,7 +10,7 @@ function UserPositionMarker() {
         height="100%"
       />
     </div>
-  )
+  );
 }
 
-export default UserPositionMarker
+export default UserPositionMarker;

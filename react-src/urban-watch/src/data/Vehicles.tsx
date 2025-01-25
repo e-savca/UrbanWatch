@@ -8566,5 +8566,5 @@ const Vehicles = [
     bike_accessible: 'BIKE_INACCESSIBLE',
     wheelchair_accessible: 'WHEELCHAIR_INACCESSIBLE',
   },
-]
-export default Vehicles
+];
+export default Vehicles;

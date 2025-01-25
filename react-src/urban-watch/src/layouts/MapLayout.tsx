@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router'
+import { Outlet } from 'react-router';
 
 function MapLayout() {
-  return <Outlet />
+  return <Outlet />;
 }
 
-export default MapLayout
+export default MapLayout;

@@ -9439,6 +9439,6 @@ const Stops = [
     location_type: 0,
     stop_code: '2',
   },
-]
+];
 
-export default Stops
+export default Stops;

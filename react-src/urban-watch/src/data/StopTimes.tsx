@@ -18199,6 +18199,6 @@ const StopTimes = [
     stop_id: 717,
     stop_sequence: 15,
   },
-]
+];
 
-export default StopTimes
+export default StopTimes;

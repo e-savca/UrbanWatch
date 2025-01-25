@@ -1392,5 +1392,5 @@ const Shapes = [
     shape_pt_lon: 28.81773,
     shape_pt_sequence: 231,
   },
-]
-export default Shapes
+];
+export default Shapes;

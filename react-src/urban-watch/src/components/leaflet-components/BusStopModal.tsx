@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 BusStopModal.propTypes = {
   isOpen: PropTypes.bool,
@@ -6,7 +6,7 @@ BusStopModal.propTypes = {
   station: PropTypes.object,
   afiliateRoutes: PropTypes.array,
   onRouteSelected: PropTypes.func,
-}
+};
 
 function BusStopModal({
   isOpen,
@@ -17,10 +17,10 @@ function BusStopModal({
 }) {
   const handleClose = (e) => {
     if (e.target.id === 'modal-overlay') {
-      console.log(e.target)
-      onClose()
+      console.log(e.target);
+      onClose();
     }
-  }
+  };
 
   return (
     <>
@@ -31,8 +31,8 @@ function BusStopModal({
           onClick={handleClose}
         >
           <div
-            className="relative bg-white rounded-lg shadow-2xl p-6 
-                       w-full max-w-md md:max-w-lg lg:max-w-xl 
+            className="relative bg-white rounded-lg shadow-2xl p-6
+                       w-full max-w-md md:max-w-lg lg:max-w-xl
                        sm:w-11/12 sm:mx-4 md:w-auto animate-fade-in m-3"
           >
             <button
@@ -51,12 +51,10 @@ function BusStopModal({
                   <div
                     key={trip.trip_id}
                     className="flex items-center p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-all"
-                    onClick={() =>
-                      onRouteSelected(route.route_id, trip.direction_id)
-                    }
+                    onClick={() => onRouteSelected(route.route_id, trip.direction_id)}
                   >
                     <div
-                      className="h-10 w-10 flex items-center justify-center 
+                      className="h-10 w-10 flex items-center justify-center
                                  bg-blue-500 text-white font-bold rounded-full mr-4"
                     >
                       {route.route_short_name}
@@ -81,7 +79,7 @@ function BusStopModal({
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default BusStopModal
+export default BusStopModal;

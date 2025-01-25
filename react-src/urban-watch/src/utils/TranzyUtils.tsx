@@ -1,7 +1,7 @@
 class TranzyUtils {
   getTripIdBaseOnRouteIdAndDirection(routeId, tripDirection) {
-    return `${routeId}_${tripDirection}`
+    return `${routeId}_${tripDirection}`;
   }
 }
 
-export default TranzyUtils
+export default TranzyUtils;

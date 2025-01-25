@@ -1,5 +1,5 @@
 // Home.jsx
-import { NavLink } from 'react-router'
+import { NavLink } from 'react-router';
 
 function Home() {
   return (
@@ -202,7 +202,7 @@ function Home() {
         </NavLink>
       </section>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

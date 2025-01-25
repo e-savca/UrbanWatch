@@ -1,11 +1,11 @@
-import Routes from '../data/Routes'
+import Routes from '../data/Routes';
 
 export default class RoutesRepository {
-  GetRouteById(routeId) {
-    return Routes.find((route) => route.route_id === routeId)
+  GetRouteById(routeId: number) {
+    return Routes.find((route) => route.route_id === routeId);
   }
 
   GetAllRoutes() {
-    return Routes
+    return Routes;
   }
 }

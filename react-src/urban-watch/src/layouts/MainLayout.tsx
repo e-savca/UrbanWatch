@@ -1,10 +1,10 @@
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 MainLayout.propTypes = {
   children: PropTypes.element,
-}
+};
 
 function MainLayout({ children }) {
   return (
@@ -13,7 +13,7 @@ function MainLayout({ children }) {
       <main className="grow">{children}</main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default MainLayout
+export default MainLayout;

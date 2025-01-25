@@ -1,22 +1,24 @@
-import MapSelect from '../../../components/map-components/MapSelect'
-import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap'
-import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData'
-import RoutesRepository from '../../../repositories/RoutesRepository'
-import ShapeRepository from '../../../repositories/ShapeRepository'
-import StopTimesRepository from '../../../repositories/StopTimesRepository'
-import TripRepository from '../../../repositories/TripRepository'
-import VehicleRepository from '../../../repositories/VehicleRepository'
-import TranzyUtils from '../../../utils/TranzyUtils'
-import RoutesData from '../../../data/Routes'
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import {
+  useEffect, useMemo, useReducer, useState,
+} from 'react';
+import MapSelect from '../../../components/map-components/MapSelect';
+import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap';
+import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData';
+import RoutesRepository from '../../../repositories/RoutesRepository';
+import ShapeRepository from '../../../repositories/ShapeRepository';
+import StopTimesRepository from '../../../repositories/StopTimesRepository';
+import TripRepository from '../../../repositories/TripRepository';
+import VehicleRepository from '../../../repositories/VehicleRepository';
+import TranzyUtils from '../../../utils/TranzyUtils';
+import RoutesData from '../../../data/Routes';
 
 // Repositories and utils
-const tranzyUtils = new TranzyUtils()
-const shapeRepository = new ShapeRepository()
-const tripRepository = new TripRepository()
-const vehicleRepository = new VehicleRepository(false)
-const stopTimesRepo = new StopTimesRepository()
-const routesRepository = new RoutesRepository()
+const tranzyUtils = new TranzyUtils();
+const shapeRepository = new ShapeRepository();
+const tripRepository = new TripRepository();
+const vehicleRepository = new VehicleRepository(false);
+const stopTimesRepo = new StopTimesRepository();
+const routesRepository = new RoutesRepository();
 
 // Initial state
 const initialState = {
@@ -28,7 +30,7 @@ const initialState = {
   modalIsOpen: false,
   selectedStation: null,
   routesAffiliatedToSelectedStation: [],
-}
+};
 
 // Reducer function
 function reducer(state, action) {
@@ -37,72 +39,72 @@ function reducer(state, action) {
       return {
         ...state,
         route: RoutesData.find(
-          (route) => route.route_id === Number(action.payload)
+          (route) => route.route_id === Number(action.payload),
         ),
         tripDirection: 0,
-      }
+      };
     case 'SET_DIRECTION':
       return {
         ...state,
         tripDirection: Number(action.payload),
-      }
+      };
     case 'SET_STOPS':
-      return { ...state, stops: action.payload }
+      return { ...state, stops: action.payload };
     case 'SET_CENTER':
-      return { ...state, mapCenter: action.payload }
+      return { ...state, mapCenter: action.payload };
     case 'INCREASE_MAP_KEY':
-      return { ...state, mapKey: state.mapKey + 1 }
+      return { ...state, mapKey: state.mapKey + 1 };
     case 'SET_USER_GEOLOCATION':
-      return { ...state, userGeolocation: action.payload }
+      return { ...state, userGeolocation: action.payload };
     case 'SET_MODAL_IS_OPEN':
-      return { ...state, modalIsOpen: action.payload }
+      return { ...state, modalIsOpen: action.payload };
     case 'SET_SELECTED_STATION':
-      return { ...state, selectedStation: action.payload }
+      return { ...state, selectedStation: action.payload };
     case 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION':
-      return { ...state, routesAffiliatedToSelectedStation: action.payload }
+      return { ...state, routesAffiliatedToSelectedStation: action.payload };
     default:
-      return state
+      return state;
   }
 }
 
 function RoutesPage() {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const dispatchHelper = useMemo(
     () => ({
       setRoute: (routeId) => {
-        dispatch({ type: 'SET_ROUTE', payload: routeId })
+        dispatch({ type: 'SET_ROUTE', payload: routeId });
       },
       setDirection: (tripDirection) => {
-        dispatch({ type: 'SET_DIRECTION', payload: tripDirection })
+        dispatch({ type: 'SET_DIRECTION', payload: tripDirection });
       },
       setStops: (stops) => {
-        dispatch({ type: 'SET_STOPS', payload: stops })
+        dispatch({ type: 'SET_STOPS', payload: stops });
       },
       setCenter: (center) => {
-        dispatch({ type: 'SET_CENTER', payload: center })
+        dispatch({ type: 'SET_CENTER', payload: center });
       },
       increaseMapKey: () => {
-        dispatch({ type: 'INCREASE_MAP_KEY' })
+        dispatch({ type: 'INCREASE_MAP_KEY' });
       },
       setUserGeolocation: (userGeolocation) => {
-        dispatch({ type: 'SET_USER_GEOLOCATION', payload: userGeolocation })
+        dispatch({ type: 'SET_USER_GEOLOCATION', payload: userGeolocation });
       },
       setModalIsOpen: (payloadValue) => {
-        dispatch({ type: 'SET_MODAL_IS_OPEN', payload: payloadValue })
+        dispatch({ type: 'SET_MODAL_IS_OPEN', payload: payloadValue });
       },
       setSelectedStation: (station) => {
-        dispatch({ type: 'SET_SELECTED_STATION', payload: station })
+        dispatch({ type: 'SET_SELECTED_STATION', payload: station });
       },
       setRoutesAffiliatedToSelectedStation: (routes) => {
         dispatch({
           type: 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION',
           payload: routes,
-        })
+        });
       },
     }),
-    [dispatch]
-  )
+    [dispatch],
+  );
 
   const {
     route,
@@ -113,31 +115,31 @@ function RoutesPage() {
     modalIsOpen,
     selectedStation,
     routesAffiliatedToSelectedStation,
-  } = state
+  } = state;
 
-  const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id)
+  const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id);
   const tripId = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
     route.route_id,
-    tripDirection
-  )
+    tripDirection,
+  );
 
-  const [vehicles, setVehicles] = useState([])
+  const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      const shapes = await shapeRepository.GetShapeById(tripId)
-      dispatchHelper.setStops(shapes)
+      const shapes = await shapeRepository.GetShapeById(tripId);
+      dispatchHelper.setStops(shapes);
     }
-    getData()
-  }, [dispatchHelper, tripId])
+    getData();
+  }, [dispatchHelper, tripId]);
 
   useEffect(() => {
     async function getVehicles() {
-      const data = await vehicleRepository.GetVehiclesByTripId(tripId)
-      setVehicles(data)
+      const data = await vehicleRepository.GetVehiclesByTripId(tripId);
+      setVehicles(data);
     }
-    getVehicles()
-  }, [tripId])
+    getVehicles();
+  }, [tripId]);
 
   return (
     <>
@@ -149,7 +151,7 @@ function RoutesPage() {
       />
       <MapLibreGLMap vehicles={vehicles} />
     </>
-  )
+  );
 }
 
-export default RoutesPage
+export default RoutesPage;

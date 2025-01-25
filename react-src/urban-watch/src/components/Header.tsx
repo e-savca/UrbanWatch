@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Dialog,
   DialogPanel,
@@ -10,15 +10,15 @@ import {
   PopoverButton,
   PopoverGroup,
   PopoverPanel,
-} from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+} from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import {
+  Bars3Icon, XMarkIcon,
   MapPinIcon,
   ArrowsRightLeftIcon,
   MapIcon,
-} from '@heroicons/react/24/outline'
-import { NavLink } from 'react-router'
+} from '@heroicons/react/24/outline';
+import { NavLink } from 'react-router';
 
 const mapTypes = [
   {
@@ -49,7 +49,7 @@ const mapTypes = [
     href: '/map',
     icon: ArrowsRightLeftIcon,
   },
-]
+];
 
 const menuItems = [
   {
@@ -62,10 +62,10 @@ const menuItems = [
     name: 'Contact',
     href: '#',
   },
-]
+];
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="relative z-20 bg-white shadow">
@@ -140,14 +140,14 @@ export default function Header() {
         setMobileMenuOpen={setMobileMenuOpen}
       />
     </header>
-  )
+  );
 }
 
 MobileMenu.propTypes = {
   anyProp: PropTypes.any,
   mobileMenuOpen: PropTypes.bool,
   setMobileMenuOpen: PropTypes.func,
-}
+};
 
 function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
   return (
@@ -209,7 +209,7 @@ function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
         </div>
       </DialogPanel>
     </Dialog>
-  )
+  );
 }
 
 export function Logo() {
@@ -222,5 +222,5 @@ export function Logo() {
         </span>
       </h1>
     </a>
-  )
+  );
 }

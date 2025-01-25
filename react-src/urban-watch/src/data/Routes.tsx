@@ -777,41 +777,41 @@ const Routes = [
     route_type: 3,
     route_desc: 'Un. Agrară - Un. Medicină și Farmacie - Un. Agrară',
   },
-]
+];
 
 function sortRoutesByShortName(a, b) {
-  const regex = /^(\d+)?([a-zA-Z]*)$/
+  const regex = /^(\d+)?([a-zA-Z]*)$/;
 
   const parse = (str) => {
-    const match = str.match(regex)
+    const match = str.match(regex);
     return {
       number: match[1] ? parseInt(match[1], 10) : null, // Extract numeric part
       text: match[2] || '', // Extract alphabetic part
-    }
-  }
+    };
+  };
 
   if (a.route_type !== b.route_type) {
-    return b.route_type - a.route_type
+    return b.route_type - a.route_type;
   }
 
-  const aParsed = parse(a.route_short_name)
-  const bParsed = parse(b.route_short_name)
+  const aParsed = parse(a.route_short_name);
+  const bParsed = parse(b.route_short_name);
 
   // Compare numeric parts
   if (aParsed.number !== null && bParsed.number !== null) {
     if (aParsed.number !== bParsed.number) {
-      return aParsed.number - bParsed.number
+      return aParsed.number - bParsed.number;
     }
   } else if (aParsed.number !== null) {
-    return -1
+    return -1;
   } else if (bParsed.number !== null) {
-    return 1
+    return 1;
   }
 
   // Compare alphabetic parts
-  return aParsed.text.localeCompare(bParsed.text)
+  return aParsed.text.localeCompare(bParsed.text);
 }
 
-const sortedRoutes = Routes.sort(sortRoutesByShortName)
+const sortedRoutes = Routes.sort(sortRoutesByShortName);
 
-export default sortedRoutes
+export default sortedRoutes;

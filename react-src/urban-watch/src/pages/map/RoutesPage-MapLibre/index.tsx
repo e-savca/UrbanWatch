@@ -1,2 +1,3 @@
-import RoutesPage from './RoutesPage'
-export default RoutesPage
+import RoutesPage from './RoutesPage';
+
+export default RoutesPage;
