@@ -15,7 +15,7 @@ function BusStopModal({
   afiliateRoutes,
   onRouteSelected,
 }) {
-  const handleClose = (e) => {
+  const handleClose = e => {
     if (e.target.id === 'modal-overlay') {
       console.log(e.target);
       onClose();
@@ -51,7 +51,9 @@ function BusStopModal({
                   <div
                     key={trip.trip_id}
                     className="flex items-center p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-all"
-                    onClick={() => onRouteSelected(route.route_id, trip.direction_id)}
+                    onClick={() =>
+                      onRouteSelected(route.route_id, trip.direction_id)
+                    }
                   >
                     <div
                       className="h-10 w-10 flex items-center justify-center

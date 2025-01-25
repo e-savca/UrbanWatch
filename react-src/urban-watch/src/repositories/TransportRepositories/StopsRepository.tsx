@@ -16,6 +16,6 @@ export default class StopsRepository extends BaseRepository<StopDTO> {
   }
 
   getById(id: number): StopDTO[] | null {
-    return this.data?.filter((stop) => stop.stop_id === id) || null;
+    return this.data?.filter(stop => stop.stop_id === id) || null;
   }
 }

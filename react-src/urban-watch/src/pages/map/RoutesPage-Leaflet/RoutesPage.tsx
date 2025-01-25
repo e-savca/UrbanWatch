@@ -1,6 +1,4 @@
-import {
-  useEffect, useMemo, useReducer, useState,
-} from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Marker, Polyline, Popup } from 'react-leaflet';
 import Map from '../../../components/leaflet-components/Map.jsx';
@@ -48,7 +46,7 @@ function reducer(state, action) {
       return {
         ...state,
         route: RoutesData.find(
-          (route) => route.route_id === Number(action.payload),
+          route => route.route_id === Number(action.payload)
         ),
         tripDirection: 0,
       };
@@ -81,38 +79,38 @@ function RoutesPage() {
 
   const dispatchHelper = useMemo(
     () => ({
-      setRoute: (routeId) => {
+      setRoute: routeId => {
         dispatch({ type: 'SET_ROUTE', payload: routeId });
       },
-      setDirection: (tripDirection) => {
+      setDirection: tripDirection => {
         dispatch({ type: 'SET_DIRECTION', payload: tripDirection });
       },
-      setStops: (stops) => {
+      setStops: stops => {
         dispatch({ type: 'SET_STOPS', payload: stops });
       },
-      setCenter: (center) => {
+      setCenter: center => {
         dispatch({ type: 'SET_CENTER', payload: center });
       },
       increaseMapKey: () => {
         dispatch({ type: 'INCREASE_MAP_KEY' });
       },
-      setUserGeolocation: (userGeolocation) => {
+      setUserGeolocation: userGeolocation => {
         dispatch({ type: 'SET_USER_GEOLOCATION', payload: userGeolocation });
       },
-      setModalIsOpen: (payloadValue) => {
+      setModalIsOpen: payloadValue => {
         dispatch({ type: 'SET_MODAL_IS_OPEN', payload: payloadValue });
       },
-      setSelectedStation: (station) => {
+      setSelectedStation: station => {
         dispatch({ type: 'SET_SELECTED_STATION', payload: station });
       },
-      setRoutesAffiliatedToSelectedStation: (routes) => {
+      setRoutesAffiliatedToSelectedStation: routes => {
         dispatch({
           type: 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION',
           payload: routes,
         });
       },
     }),
-    [dispatch],
+    [dispatch]
   );
 
   const {
@@ -132,8 +130,8 @@ function RoutesPage() {
       try {
         const result = await GetUserGeoLocation();
         if (
-          userGeolocation[0] !== result[0]
-          || userGeolocation[1] !== result[1]
+          userGeolocation[0] !== result[0] ||
+          userGeolocation[1] !== result[1]
         ) {
           dispatchHelper.setUserGeolocation(result);
           dispatchHelper.increaseMapKey();
@@ -168,7 +166,7 @@ function RoutesPage() {
   const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id);
   const tripId = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
     route.route_id,
-    tripDirection,
+    tripDirection
   );
   const [vehicles, setVehicles] = useState([]);
 
@@ -190,7 +188,7 @@ function RoutesPage() {
 
   function handleBusStopClick(station) {
     if (selectedStation === station) {
-      dispatchHelper.setModalIsOpen((prevValue) => (prevValue !== true));
+      dispatchHelper.setModalIsOpen(prevValue => prevValue !== true);
       return;
     }
     dispatchHelper.setModalIsOpen(true);
@@ -198,7 +196,7 @@ function RoutesPage() {
     const trips = stopTimesRepo
       .GetStopTimesByStopId(station.stop_id)
       .map(({ trip_id }) => tripRepository.GetTripById(trip_id));
-    const routeTripMapping = trips.map((trip) => ({
+    const routeTripMapping = trips.map(trip => ({
       trip,
       route: routesRepository.GetRouteById(trip.route_id),
     }));
@@ -225,7 +223,7 @@ function RoutesPage() {
           ''
         )}
 
-        {vehicles.map((vehicle) => (
+        {vehicles.map(vehicle => (
           <Marker
             key={vehicle.id}
             position={[vehicle.latitude, vehicle.longitude]}
@@ -240,7 +238,7 @@ function RoutesPage() {
 
         {stops !== null ? (
           <Polyline
-            positions={stops.map((stop) => [
+            positions={stops.map(stop => [
               stop.shape_pt_lat,
               stop.shape_pt_lon,
             ])}

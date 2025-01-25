@@ -13,7 +13,8 @@ import {
 } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import {
-  Bars3Icon, XMarkIcon,
+  Bars3Icon,
+  XMarkIcon,
   MapPinIcon,
   ArrowsRightLeftIcon,
   MapIcon,
@@ -101,7 +102,7 @@ export default function Header() {
               className="absolute -left-44 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
             >
               <div className="p-4">
-                {mapTypes.map((item) => (
+                {mapTypes.map(item => (
                   <NavLink key={item.name} to={item.href}>
                     <div className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm/6 hover:bg-gray-50">
                       <div className="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
@@ -124,7 +125,7 @@ export default function Header() {
             </PopoverPanel>
           </Popover>
 
-          {menuItems.map((item) => (
+          {menuItems.map(item => (
             <NavLink
               key={item.id}
               to={item.href}
@@ -182,7 +183,7 @@ function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
                   />
                 </DisclosureButton>
                 <DisclosurePanel className="mt-2 space-y-2">
-                  {[...mapTypes].map((item) => (
+                  {[...mapTypes].map(item => (
                     <NavLink key={item.name} to={item.href}>
                       <DisclosureButton
                         as="a"
@@ -195,7 +196,7 @@ function MobileMenu({ mobileMenuOpen, setMobileMenuOpen }) {
                 </DisclosurePanel>
               </Disclosure>
 
-              {menuItems.map((item) => (
+              {menuItems.map(item => (
                 <NavLink
                   to={item.href}
                   key={item.id}

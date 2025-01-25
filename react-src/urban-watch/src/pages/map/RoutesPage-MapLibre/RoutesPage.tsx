@@ -36,14 +36,14 @@ const initialState: TransportState = {
 // Reducer function
 function reducer(
   state: TransportState,
-  action: TransportActions,
+  action: TransportActions
 ): TransportState {
   switch (action.type) {
     case TransportActionTypes.SetRoute:
       return {
         ...state,
         route:
-          RoutesData.find((route) => route.route_id === action.payload) ||
+          RoutesData.find(route => route.route_id === action.payload) ||
           state.route,
         tripDirection: 0,
       };
@@ -70,38 +70,38 @@ function RoutesPage() {
 
   const dispatchHelper = useMemo(
     () => ({
-      setRoute: (routeId) => {
+      setRoute: routeId => {
         dispatch({ type: 'SET_ROUTE', payload: routeId });
       },
-      setDirection: (tripDirection) => {
+      setDirection: tripDirection => {
         dispatch({ type: 'SET_DIRECTION', payload: tripDirection });
       },
-      setStops: (stops) => {
+      setStops: stops => {
         dispatch({ type: 'SET_STOPS', payload: stops });
       },
-      setCenter: (center) => {
+      setCenter: center => {
         dispatch({ type: 'SET_CENTER', payload: center });
       },
       increaseMapKey: () => {
         dispatch({ type: 'INCREASE_MAP_KEY' });
       },
-      setUserGeolocation: (userGeolocation) => {
+      setUserGeolocation: userGeolocation => {
         dispatch({ type: 'SET_USER_GEOLOCATION', payload: userGeolocation });
       },
-      setModalIsOpen: (payloadValue) => {
+      setModalIsOpen: payloadValue => {
         dispatch({ type: 'SET_MODAL_IS_OPEN', payload: payloadValue });
       },
-      setSelectedStation: (station) => {
+      setSelectedStation: station => {
         dispatch({ type: 'SET_SELECTED_STATION', payload: station });
       },
-      setRoutesAffiliatedToSelectedStation: (routes) => {
+      setRoutesAffiliatedToSelectedStation: routes => {
         dispatch({
           type: 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION',
           payload: routes,
         });
       },
     }),
-    [dispatch],
+    [dispatch]
   );
 
   const {
@@ -118,7 +118,7 @@ function RoutesPage() {
   const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id);
   const tripId = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
     route.route_id,
-    tripDirection,
+    tripDirection
   );
 
   const [vehicles, setVehicles] = useState([]);

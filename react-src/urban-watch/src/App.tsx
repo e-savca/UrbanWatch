@@ -11,11 +11,11 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={(
+          element={
             <MainLayout>
               <Home />
             </MainLayout>
-          )}
+          }
         />
         <Route path="map" element={<MapLayout />}>
           <Route path="routes">

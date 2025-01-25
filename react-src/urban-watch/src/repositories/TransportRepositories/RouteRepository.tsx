@@ -16,6 +16,6 @@ export default class RouteRepository extends BaseRepository<RouteDTO> {
   }
 
   getById(id: number): RouteDTO | null {
-    return this.data?.find((route) => route.route_id === id) || null;
+    return this.data?.find(route => route.route_id === id) || null;
   }
 }

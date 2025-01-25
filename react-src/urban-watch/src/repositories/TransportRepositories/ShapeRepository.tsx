@@ -16,6 +16,6 @@ export default class ShapeRepository extends BaseRepository<ShapeDTO> {
   }
 
   getById(id: string): ShapeDTO[] | null {
-    return this.data?.filter((shape) => shape.shape_id === id) || null;
+    return this.data?.filter(shape => shape.shape_id === id) || null;
   }
 }

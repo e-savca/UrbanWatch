@@ -16,6 +16,6 @@ export default class StopsRepository extends BaseRepository<TripDTO> {
   }
 
   getById(id: string): TripDTO[] | null {
-    return this.data?.filter((trip) => trip.trip_id === id) || null;
+    return this.data?.filter(trip => trip.trip_id === id) || null;
   }
 }

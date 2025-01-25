@@ -14,8 +14,10 @@ function NavBar() {
 
         {/* Hamburger button for mobile */}
         <button
+          type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="lg:hidden block text-gray-600 hover:text-gray-800"
+          aria-label="Toggle navigation menu"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +44,11 @@ function NavBar() {
           <li className="lg:my-0 my-2">
             <NavLink
               to="/"
-              className={({ isActive }) => (isActive
-                ? 'text-blue-500 font-semibold'
-                : 'text-gray-600 hover:text-gray-800')}
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-blue-500 font-semibold'
+                  : 'text-gray-600 hover:text-gray-800'
+              }
             >
               Home
             </NavLink>
@@ -52,9 +56,11 @@ function NavBar() {
           <li className="lg:my-0 my-2">
             <NavLink
               to="/about"
-              className={({ isActive }) => (isActive
-                ? 'text-blue-500 font-semibold'
-                : 'text-gray-600 hover:text-gray-800')}
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-blue-500 font-semibold'
+                  : 'text-gray-600 hover:text-gray-800'
+              }
             >
               About
             </NavLink>
@@ -62,9 +68,11 @@ function NavBar() {
           <li className="lg:my-0 my-2">
             <NavLink
               to="/contact"
-              className={({ isActive }) => (isActive
-                ? 'text-blue-500 font-semibold'
-                : 'text-gray-600 hover:text-gray-800')}
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-blue-500 font-semibold'
+                  : 'text-gray-600 hover:text-gray-800'
+              }
             >
               Contact
             </NavLink>
