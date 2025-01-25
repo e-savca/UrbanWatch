@@ -18,6 +18,8 @@ module.exports = {
     },
   },
   rules: {
+    'brace-style': 'off',
+
     // Allow JSX in .tsx files
     'react/jsx-filename-extension': ['error', { extensions: ['.tsx', '.jsx'] }],
 

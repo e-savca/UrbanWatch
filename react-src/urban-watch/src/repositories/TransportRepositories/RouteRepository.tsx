@@ -1,11 +1,7 @@
-import { IRepository } from '../../types/interfaces/IRepository';
 import { RouteDTO } from '../../dto/TranzyDTOs';
 import BaseRepository from './BaseReposiory';
 
-export default class RouteRepository
-  extends BaseRepository<RouteDTO>
-  implements IRepository<RouteDTO>
-{
+export default class RouteRepository extends BaseRepository<RouteDTO> {
   protected apiUrl: string = 'https://api.tranzy.ai/v1/opendata/routes';
 
   protected data: RouteDTO[] | null = null;
