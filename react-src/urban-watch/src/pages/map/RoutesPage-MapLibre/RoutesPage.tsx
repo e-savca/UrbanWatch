@@ -2,14 +2,13 @@ import { useEffect, useMemo, useReducer, useState } from 'react';
 import MapSelect from '../../../components/map-components/MapSelect';
 import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap';
 import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData';
-import RoutesRepository from '../../../repositories/RoutesRepository';
-import ShapeRepository from '../../../repositories/ShapeRepository';
-import StopTimesRepository from '../../../repositories/StopTimesRepository';
-import TripRepository from '../../../repositories/TripRepository';
-import VehicleRepository from '../../../repositories/VehicleRepository';
+import RoutesRepository from '../../../repositories/TransportRepositories/RouteRepository';
+import ShapeRepository from '../../../repositories/TransportRepositories/ShapeRepository';
+import StopTimesRepository from '../../../repositories/TransportRepositories/StopTimesRepository';
+import TripRepository from '../../../repositories/TransportRepositories/TripRepository';
+import VehicleRepository from '../../../repositories/TransportRepositories/VehicleRepository';
 import TranzyUtils from '../../../utils/TranzyUtils';
-import RoutesData from '../../../data/Routes';
-import { RouteDTO, ShapeDTO } from '../../../dto/TranzyDTOs';
+
 import {
   TransportState,
   TransportActions,
