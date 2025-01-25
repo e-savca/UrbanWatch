@@ -1,4 +1,3 @@
-// .eslintrc.js
 module.exports = {
   extends: ['airbnb', 'airbnb/hooks', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
@@ -11,7 +10,30 @@ module.exports = {
     browser: true,
     es2020: true,
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
   rules: {
-    // Add any project-specific rules or overrides here
+    // Allow JSX in .tsx files
+    'react/jsx-filename-extension': ['error', { extensions: ['.tsx', '.jsx'] }],
+
+    // Disable React in scope rule if using React 17+
+    'react/react-in-jsx-scope': 'off',
+
+    // Disable the requirement for specific file extensions
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
   },
 };

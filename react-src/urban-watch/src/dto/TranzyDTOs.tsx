@@ -22,12 +22,12 @@ export interface VehicleDTO {
 }
 
 export interface RouteDTO {
+  agency_id: string;
   route_id: number;
-  agency_id: number;
   route_short_name: string;
   route_long_name: string;
   route_color: string;
-  route_type: number;
+  route_type: RouteType;
   route_desc: string;
 }
 
@@ -47,7 +47,7 @@ export interface ShapeDTO {
   shape_pt_lat: number;
   shape_pt_lon: number;
   shape_pt_sequence: number;
-  shape_dist_traveled: number;
+  shape_dist_traveled?: number;
 }
 
 export interface StopDTO {
@@ -78,4 +78,17 @@ export enum PickupDropOffType {
   NONE = 1,
   CALL_AGENCY = 2,
   COORDINATE_WITH_DRIVER = 3,
+}
+
+export enum RouteType {
+  Tram = 0, // Tram, Streetcar, Light rail
+  Subway = 1, // Subway, Metro
+  Rail = 2, // Rail
+  Bus = 3, // Bus
+  Ferry = 4, // Ferry
+  CableTram = 5, // Cable tram
+  AerialLift = 6, // Aerial lift
+  Funicular = 7, // Funicular
+  Trolleybus = 11, // Trolleybus
+  Monorail = 12, // Monorail
 }

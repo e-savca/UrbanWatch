@@ -7,6 +7,8 @@ import { GetUserPositionOnMap } from '../../utils/GetUserGeoLocation';
 import { renderComponentToElement } from '../../utils/MapLibreUtils';
 import UserPositionMarker from './icons/UserPositionMarker';
 import BusIcon from './icons/BusIcon';
+import { VehicleDTO } from '../../dto/TranzyDTOs';
+import { createRoot } from 'react-dom/client';
 
 const tileStyles = {
   MapMD_2D:
@@ -37,11 +39,11 @@ const tileStyles = {
     ],
   },
 };
-
-MapLibreGLMap.propTypes = {
-  vehicles: PropTypes.array,
+interface MapLibreGLMapProps = {
+  vehicles: Array<VehicleDTO>;
 };
-function MapLibreGLMap({ vehicles }) {
+
+function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
   const vehiclesMarkerRef = useRef(vehicles);
@@ -70,6 +72,7 @@ function MapLibreGLMap({ vehicles }) {
       center: mapCenter,
       zoom: 14,
       maxZoom: 19,
+      minZoom: 10,
       attributionControl: false,
     });
 
@@ -161,9 +164,9 @@ function MapLibreGLMap({ vehicles }) {
     console.log(vehicles);
     return () => {
       if (
-        mapRef.current
-        && mapRef.current.getLayer
-        && mapRef.current.getLayer('vehicle-layer')
+        mapRef.current &&
+        mapRef.current.getLayer &&
+        mapRef.current.getLayer('vehicle-layer')
       ) {
         mapRef.current.removeLayer('vehicle-layer');
         mapRef.current.removeSource('vehicles');

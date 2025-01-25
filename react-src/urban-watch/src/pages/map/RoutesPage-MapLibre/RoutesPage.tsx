@@ -1,6 +1,4 @@
-import {
-  useEffect, useMemo, useReducer, useState,
-} from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import MapSelect from '../../../components/map-components/MapSelect';
 import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap';
 import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData';
@@ -11,6 +9,12 @@ import TripRepository from '../../../repositories/TripRepository';
 import VehicleRepository from '../../../repositories/VehicleRepository';
 import TranzyUtils from '../../../utils/TranzyUtils';
 import RoutesData from '../../../data/Routes';
+import { RouteDTO, ShapeDTO } from '../../../dto/TranzyDTOs';
+import {
+  TransportState,
+  TransportActions,
+  TransportActionTypes,
+} from '../../../types/maps';
 
 // Repositories and utils
 const tranzyUtils = new TranzyUtils();
@@ -21,47 +25,41 @@ const stopTimesRepo = new StopTimesRepository();
 const routesRepository = new RoutesRepository();
 
 // Initial state
-const initialState = {
+const initialState: TransportState = {
   route: RoutesData[0],
   tripDirection: 0,
-  stops: null,
+  routeShapes: null,
   mapKey: 0,
   userGeolocation: defaultCenterPositionOnMapLngLat,
-  modalIsOpen: false,
-  selectedStation: null,
-  routesAffiliatedToSelectedStation: [],
 };
 
 // Reducer function
-function reducer(state, action) {
+function reducer(
+  state: TransportState,
+  action: TransportActions,
+): TransportState {
   switch (action.type) {
-    case 'SET_ROUTE':
+    case TransportActionTypes.SetRoute:
       return {
         ...state,
-        route: RoutesData.find(
-          (route) => route.route_id === Number(action.payload),
-        ),
+        route:
+          RoutesData.find((route) => route.route_id === action.payload) ||
+          state.route,
         tripDirection: 0,
       };
-    case 'SET_DIRECTION':
+    case TransportActionTypes.SetDirection:
       return {
         ...state,
         tripDirection: Number(action.payload),
       };
-    case 'SET_STOPS':
+    case TransportActionTypes.SetRouteShapes:
       return { ...state, stops: action.payload };
-    case 'SET_CENTER':
+    case TransportActionTypes.SetMapCenter:
       return { ...state, mapCenter: action.payload };
-    case 'INCREASE_MAP_KEY':
+    case TransportActionTypes.IncreaseMapKey:
       return { ...state, mapKey: state.mapKey + 1 };
-    case 'SET_USER_GEOLOCATION':
+    case TransportActionTypes.SetUserGeolocation:
       return { ...state, userGeolocation: action.payload };
-    case 'SET_MODAL_IS_OPEN':
-      return { ...state, modalIsOpen: action.payload };
-    case 'SET_SELECTED_STATION':
-      return { ...state, selectedStation: action.payload };
-    case 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION':
-      return { ...state, routesAffiliatedToSelectedStation: action.payload };
     default:
       return state;
   }
