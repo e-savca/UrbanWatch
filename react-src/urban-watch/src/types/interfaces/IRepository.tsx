@@ -1,4 +1,4 @@
 export interface IRepository<T> {
-  getAll(): Promise<T[]>;
-  getById(id: string): Promise<T>;
+  getAll(): T[] | null;
+  getById(id: string | number): T | null;
 }

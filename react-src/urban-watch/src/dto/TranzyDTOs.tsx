@@ -21,6 +21,19 @@ export interface VehicleDTO {
   trip_id: string;
 }
 
+export enum RouteType {
+  Tram = 0, // Tram, Streetcar, Light rail
+  Subway = 1, // Subway, Metro
+  Rail = 2, // Rail
+  Bus = 3, // Bus
+  Ferry = 4, // Ferry
+  CableTram = 5, // Cable tram
+  AerialLift = 6, // Aerial lift
+  Funicular = 7, // Funicular
+  Trolleybus = 11, // Trolleybus
+  Monorail = 12, // Monorail
+}
+
 export interface RouteDTO {
   agency_id: string;
   route_id: number;
@@ -78,17 +91,4 @@ export enum PickupDropOffType {
   NONE = 1,
   CALL_AGENCY = 2,
   COORDINATE_WITH_DRIVER = 3,
-}
-
-export enum RouteType {
-  Tram = 0, // Tram, Streetcar, Light rail
-  Subway = 1, // Subway, Metro
-  Rail = 2, // Rail
-  Bus = 3, // Bus
-  Ferry = 4, // Ferry
-  CableTram = 5, // Cable tram
-  AerialLift = 6, // Aerial lift
-  Funicular = 7, // Funicular
-  Trolleybus = 11, // Trolleybus
-  Monorail = 12, // Monorail
 }
