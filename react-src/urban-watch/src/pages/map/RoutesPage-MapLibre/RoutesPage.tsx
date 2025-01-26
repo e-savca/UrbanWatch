@@ -9,16 +9,32 @@ import {
   TransportActionTypes,
 } from '../../../types/maps';
 import TransportUnitOfWork from '../../../repositories/TransportRepositories/TransportUnitOfWork';
+import tranzyUtils from '../../../utils/TranzyUtils';
+import { RouteDTO } from '../../../dto/TranzyDTOs';
 
 const transportUnitOfWork = await TransportUnitOfWork.create();
+
+function generateInitialState(routeId: number): TransportState {
+  const route = transportUnitOfWork.Routes.getById(routeId);
+  const tripDirection = 0;
+  const trip = transportUnitOfWork.Trips.getByRouteIdAndDirection(
+    route?.route_id,
+    tripDirection
+  );
+  const routeShapes = transportUnitOfWork.Shapes.getById(trip?.shape_id);
+
+  return { route, tripDirection, trip };
+}
 
 // Initial state
 const initialState: TransportState = {
   route: transportUnitOfWork.Routes.getAll()?.at(0) || null,
   tripDirection: 0,
   routeShapes: null,
+  mapCenter: defaultCenterPositionOnMapLngLat,
   mapKey: 0,
-  userGeolocation: defaultCenterPositionOnMapLngLat,
+  userGeolocation: null,
+  Vehicles: null,
 };
 
 // Reducer function
@@ -56,25 +72,15 @@ function reducer(
 
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [vehicles, setVehicles] = useState(Array<RouteDTO>);
 
-  const {
-    route,
-    tripDirection,
-    stops,
-    mapKey,
-    userGeolocation,
-    modalIsOpen,
-    selectedStation,
-    routesAffiliatedToSelectedStation,
-  } = state;
+  const { route, tripDirection } = state;
 
-  const tripsOnRoute = tripRepository.GetTripsByRouteId(route.route_id);
-  const tripId = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
+  const tripsOnRoute = transportUnitOfWork.Trips.getByRouteId(route?.route_id);
+  const tripId: string = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
     route.route_id,
     tripDirection
   );
-
-  const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
     async function getData() {

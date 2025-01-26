@@ -1,9 +1,11 @@
-import { RouteDTO, ShapeDTO } from '../../../dto/TranzyDTOs';
+import { RouteDTO, ShapeDTO, VehicleDTO } from '../../../dto/TranzyDTOs';
 
 export interface TransportState {
-  route: RouteDTO | null;
+  route: RouteDTO;
   tripDirection: number;
-  routeShapes: Array<ShapeDTO> | null;
+  routeShapes: Array<ShapeDTO>;
+  mapCenter: Array<number>;
   mapKey: number;
-  userGeolocation: Array<number>;
+  userGeolocation: Array<number> | null;
+  vehicles: VehicleDTO[];
 }

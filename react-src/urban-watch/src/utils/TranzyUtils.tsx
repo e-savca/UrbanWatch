@@ -1,8 +1,8 @@
 class TranzyUtils {
-  static getTripIdBaseOnRouteIdAndDirection(
-    routeId: unknown,
-    tripDirection: unknown
-  ) {
+  static getTripIdBaseOnRouteIdAndDirection (
+    routeId: number,
+    tripDirection: number
+  ): string {
     return `${routeId}_${tripDirection}`;
   }
 }

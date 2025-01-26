@@ -4,18 +4,19 @@ import BaseRepository from './BaseReposiory';
 export default class StopsRepository extends BaseRepository<StopDTO> {
   protected apiUrl: string = 'https://api.tranzy.ai/v1/opendata/stops';
 
-  protected data: StopDTO[] | null = null;
+  protected data: StopDTO[] = [];
 
   async Initialize(): Promise<void> {
-    if (this.data !== null) return;
-    this.data = await this.fetchData();
+    if (this.data.length >= 0) return;
+    const fetchData = await this.fetchData();
+    this.data = fetchData ?? [];
   }
 
-  getAll(): StopDTO[] | null {
-    return this.data || null;
+  getAll(): StopDTO[] {
+    return this.data;
   }
 
-  getById(id: number): StopDTO[] | null {
-    return this.data?.filter(stop => stop.stop_id === id) || null;
+  getById(id: number): StopDTO[] | undefined {
+    return this.data.filter(stop => stop.stop_id === id);
   }
 }
