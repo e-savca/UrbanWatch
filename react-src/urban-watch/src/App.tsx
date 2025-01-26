@@ -1,8 +1,8 @@
 import { HashRouter, Route, Routes } from 'react-router';
-import Home from './pages/Home.jsx';
-import RoutesPageLeaflet from './pages/map/RoutesPage-Leaflet/index.jsx';
-import RoutesPageMapLibre from './pages/map/RoutesPage-MapLibre/index';
-import MainLayout from './layouts/MainLayout.jsx';
+import Home from './pages/Home';
+import RoutesPageLeaflet from './pages/map/RoutesPage-Leaflet';
+import RoutesPageMapLibre from './pages/map/RoutesPage-MapLibre';
+import MainLayout from './layouts/MainLayout';
 import MapLayout from './layouts/MapLayout';
 
 function App() {
