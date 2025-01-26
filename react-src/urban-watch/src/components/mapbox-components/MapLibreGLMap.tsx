@@ -3,8 +3,6 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { useRef, useState, useEffect } from 'react';
 import { defaultCenterPositionOnMapLngLat } from '../../data/AppData';
 import { GetUserPositionOnMap } from '../../utils/GetUserGeoLocation';
-import { renderComponentToElement } from '../../utils/MapLibreUtils';
-import UserPositionMarker from './icons/UserPositionMarker';
 import { VehicleDTO } from '../../dto/TranzyDTOs';
 
 const tileStyles = {
@@ -86,88 +84,88 @@ function MapLibreGLMap({
     };
   });
 
-  useEffect(() => {
-    if (!mapRef.current) return;
+  // useEffect(() => {
+  //   if (!mapRef.current) return;
 
-    mapRef.current.on('load', () => {
-      mapRef.current?.setCenter(mapCenter);
-      if (userPositionMarkerRef.current) {
-        userPositionMarkerRef.current.remove();
-      }
+  //   mapRef.current.on('load', () => {
+  //     mapRef.current?.setCenter(mapCenter);
+  //     if (userPositionMarkerRef.current) {
+  //       userPositionMarkerRef.current.remove();
+  //     }
 
-      const markerElement = renderComponentToElement(<UserPositionMarker />);
+  //     const markerElement = renderComponentToElement(<UserPositionMarker />);
 
-      userPositionMarkerRef.current = new maplibregl.Marker({
-        element: markerElement,
-        draggable: false,
-      })
-        .setLngLat(mapCenter)
-        .addTo(mapRef.current);
-    });
-  }, [mapCenter]);
+  //     userPositionMarkerRef.current = new maplibregl.Marker({
+  //       element: markerElement,
+  //       draggable: false,
+  //     })
+  //       .setLngLat(mapCenter)
+  //       .addTo(mapRef.current);
+  //   });
+  // }, [mapCenter]);
 
-  useEffect(() => {
-    if (!mapRef.current) return;
-    if (vehicles.length === 0) return;
+  // useEffect(() => {
+  //   if (!mapRef.current) return;
+  //   if (vehicles.length === 0) return;
 
-    const updateVehicles = () => {
-      if (!mapRef.current || !mapRef.current.getStyle()) return;
+  //   const updateVehicles = () => {
+  //     if (!mapRef.current || !mapRef.current.getStyle()) return;
 
-      const geojsonData = {
-        type: 'FeatureCollection',
-        features: vehicles.map(vehicle => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [vehicle.longitude, vehicle.latitude],
-          },
-          properties: {
-            id: vehicle.id,
-            name: vehicle.speed || 'Unknown Vehicle', // Add any other vehicle details here
-            info: vehicle.label || 'No additional information available.',
-          },
-        })),
-      };
+  //     const geojsonData = {
+  //       type: 'FeatureCollection',
+  //       features: vehicles.map(vehicle => ({
+  //         type: 'Feature',
+  //         geometry: {
+  //           type: 'Point',
+  //           coordinates: [vehicle.longitude, vehicle.latitude],
+  //         },
+  //         properties: {
+  //           id: vehicle.id,
+  //           name: vehicle.speed || 'Unknown Vehicle', // Add any other vehicle details here
+  //           info: vehicle.label || 'No additional information available.',
+  //         },
+  //       })),
+  //     };
 
-      if (mapRef.current.getLayer && mapRef.current.getLayer('vehicle-layer')) {
-        mapRef.current.getSource('vehicles').setData(geojsonData);
-      } else {
-        mapRef.current.addSource('vehicles', {
-          type: 'geojson',
-          data: geojsonData,
-        });
+  //     if (mapRef.current.getLayer && mapRef.current.getLayer('vehicle-layer')) {
+  //       mapRef.current.getSource('vehicles').setData(geojsonData);
+  //     } else {
+  //       mapRef.current.addSource('vehicles', {
+  //         type: 'geojson',
+  //         data: geojsonData,
+  //       });
 
-        mapRef.current.addLayer({
-          id: 'vehicle-layer',
-          type: 'circle',
-          source: 'vehicles',
-          paint: {
-            'circle-radius': 8,
-            'circle-color': '#FF0000',
-          },
-        });
-      }
-    };
+  //       mapRef.current.addLayer({
+  //         id: 'vehicle-layer',
+  //         type: 'circle',
+  //         source: 'vehicles',
+  //         paint: {
+  //           'circle-radius': 8,
+  //           'circle-color': '#FF0000',
+  //         },
+  //       });
+  //     }
+  //   };
 
-    if (mapRef.current.isStyleLoaded()) {
-      updateVehicles();
-    } else {
-      mapRef.current.once('style.load', () => {
-        updateVehicles();
-      });
-    }
+  //   if (mapRef.current.isStyleLoaded()) {
+  //     updateVehicles();
+  //   } else {
+  //     mapRef.current.once('style.load', () => {
+  //       updateVehicles();
+  //     });
+  //   }
 
-    return () => {
-      if (
-        mapRef.current &&
-        mapRef.current.getLayer &&
-        mapRef.current.getLayer('vehicle-layer')
-      ) {
-        mapRef.current.removeLayer('vehicle-layer');
-        mapRef.current.removeSource('vehicles');
-      }
-    };
-  }, [vehicles]);
+  //   return () => {
+  //     if (
+  //       mapRef.current &&
+  //       mapRef.current.getLayer &&
+  //       mapRef.current.getLayer('vehicle-layer')
+  //     ) {
+  //       mapRef.current.removeLayer('vehicle-layer');
+  //       mapRef.current.removeSource('vehicles');
+  //     }
+  //   };
+  // }, [vehicles]);
 
   return (
     <div id="map-root" className="absolute inset-0">

@@ -7,7 +7,7 @@ export default class ShapeRepository extends BaseRepository<ShapeDTO> {
   protected data: ShapeDTO[] = [];
 
   async Initialize(): Promise<void> {
-    if (this.data.length >= 0) return;
+    if (this.data.length > 0) return;
     const fetchData = await this.fetchData();
     this.data = fetchData ?? [];
   }

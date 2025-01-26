@@ -7,7 +7,7 @@ export default class RouteRepository extends BaseRepository<RouteDTO> {
   protected data: RouteDTO[] = [];
 
   async Initialize(): Promise<void> {
-    if (this.data.length >= 0) return;
+    if (this.data.length > 0) return;
     const fetchedData = await this.fetchData();
 
     this.data = fetchedData ?? [];

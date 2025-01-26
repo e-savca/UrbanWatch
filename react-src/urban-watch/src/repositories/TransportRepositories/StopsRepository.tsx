@@ -7,7 +7,7 @@ export default class StopsRepository extends BaseRepository<StopDTO> {
   protected data: StopDTO[] = [];
 
   async Initialize(): Promise<void> {
-    if (this.data.length >= 0) return;
+    if (this.data.length > 0) return;
     const fetchData = await this.fetchData();
     this.data = fetchData ?? [];
   }

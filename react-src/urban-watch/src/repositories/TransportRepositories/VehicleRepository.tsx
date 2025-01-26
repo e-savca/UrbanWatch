@@ -7,7 +7,7 @@ export default class VehicleRepository extends BaseRepository<VehicleDTO> {
   protected data: VehicleDTO[] = [];
 
   async Initialize(): Promise<void> {
-    if (this.data.length >= 0) return;
+    if (this.data.length > 0) return;
     const fetchedData = await this.fetchData();
     this.data = fetchedData ?? [];
   }

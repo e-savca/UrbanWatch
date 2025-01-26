@@ -132,7 +132,7 @@ function RoutesPage() {
         route={route}
         tripDirection={tripDirection}
         tripsOnRoute={tripsOnRoute}
-        dispatchHelper={dispatch}
+        dispatch={dispatch}
       />
       <MapLibreGLMap vehicles={vehicles} />
     </>

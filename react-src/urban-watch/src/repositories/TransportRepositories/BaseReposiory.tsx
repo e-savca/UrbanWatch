@@ -1,8 +1,6 @@
 const API_KEY = import.meta.env.VITE_TRANZY_API_KEY;
 
 export default abstract class BaseRepository<T> {
-  protected apiKey: string = API_KEY;
-
   protected agencyId: string = '4';
 
   protected abstract apiUrl: string;
@@ -20,14 +18,13 @@ export default abstract class BaseRepository<T> {
       headers: {
         'X-Agency-Id': this.agencyId,
         Accept: 'application/json',
-        'X-API-KEY': this.apiKey,
+        'X-API-KEY': API_KEY,
       },
       signal,
     };
 
     try {
       const response = await fetch(this.apiUrl, options);
-
       if (!response.ok) {
         throw new Error(
           `Failed to fetch data: ${response.status} ${response.statusText}`

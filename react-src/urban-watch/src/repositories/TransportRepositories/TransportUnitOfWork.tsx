@@ -53,7 +53,6 @@ export default class TransportUnitOfWork {
       stops.Initialize(),
       stopTimes.Initialize(),
     ]);
-
     return new TransportUnitOfWork(
       vehicles,
       routes,
