@@ -16,7 +16,7 @@ export default class ShapeRepository extends BaseRepository<ShapeDTO> {
     return this.data;
   }
 
-  getById(id: string): ShapeDTO[] | undefined {
+  getByTripId(id: string): ShapeDTO[] | undefined {
     return this.data.filter(shape => shape.shape_id === id);
   }
 }

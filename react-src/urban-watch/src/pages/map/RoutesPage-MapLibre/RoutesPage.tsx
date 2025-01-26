@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import MapSelect from '../../../components/map-components/MapSelect';
 import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap';
 import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData';
@@ -9,33 +9,55 @@ import {
   TransportActionTypes,
 } from '../../../types/maps';
 import TransportUnitOfWork from '../../../repositories/TransportRepositories/TransportUnitOfWork';
-import tranzyUtils from '../../../utils/TranzyUtils';
-import { RouteDTO } from '../../../dto/TranzyDTOs';
+import { ShapeDTO } from '../../../dto/TranzyDTOs';
 
 const transportUnitOfWork = await TransportUnitOfWork.create();
 
-function generateInitialState(routeId: number): TransportState {
+function generateInitialState(routeId: number = 3): TransportState {
   const route = transportUnitOfWork.Routes.getById(routeId);
+
+  if (!route) {
+    throw new Error(`Route with ID ${routeId} not found.`);
+  }
+
   const tripDirection = 0;
   const trip = transportUnitOfWork.Trips.getByRouteIdAndDirection(
-    route?.route_id,
+    routeId,
     tripDirection
   );
-  const routeShapes = transportUnitOfWork.Shapes.getById(trip?.shape_id);
 
-  return { route, tripDirection, trip };
+  if (!trip) {
+    throw new Error(`Trip not found.`);
+  }
+
+  const routeShapes: ShapeDTO[] =
+    trip !== undefined
+      ? transportUnitOfWork.Shapes.getByTripId(trip.shape_id.toString()) || []
+      : [];
+
+  const mapCenter = defaultCenterPositionOnMapLngLat;
+
+  const vehicles = transportUnitOfWork.Vehicles.getByTripId(trip.trip_id);
+
+  if (!vehicles)
+    throw new Error(
+      `Vehicles not found by trip ID (tripId = ${trip.trip_id})).`
+    );
+
+  return {
+    route,
+    tripDirection,
+    trip,
+    routeShapes,
+    mapCenter,
+    mapKey: 0,
+    userGeolocation: null,
+    vehicles,
+  };
 }
 
 // Initial state
-const initialState: TransportState = {
-  route: transportUnitOfWork.Routes.getAll()?.at(0) || null,
-  tripDirection: 0,
-  routeShapes: null,
-  mapCenter: defaultCenterPositionOnMapLngLat,
-  mapKey: 0,
-  userGeolocation: null,
-  Vehicles: null,
-};
+const initialState: TransportState = generateInitialState(3);
 
 // Reducer function
 function reducer(
@@ -46,7 +68,8 @@ function reducer(
     case TransportActionTypes.SetRoute:
       return {
         ...state,
-        route: transportUnitOfWork.Routes.getById(action.payload),
+        route:
+          transportUnitOfWork.Routes.getById(action.payload) || state.route,
         tripDirection: 0,
       };
     case TransportActionTypes.SetDirection:
@@ -54,10 +77,17 @@ function reducer(
         ...state,
         tripDirection: Number(action.payload),
       };
+    case TransportActionTypes.SetVehicles:
+      return {
+        ...state,
+        vehicles:
+          transportUnitOfWork.Vehicles.getByTripId(action.payload) || [],
+      };
     case TransportActionTypes.SetRouteShapes:
       return {
         ...state,
-        routeShapes: transportUnitOfWork.Shapes.getById(action.payload),
+        routeShapes:
+          transportUnitOfWork.Shapes.getByTripId(action.payload) || [],
       };
     case TransportActionTypes.SetMapCenter:
       return { ...state, mapCenter: action.payload };
@@ -72,31 +102,29 @@ function reducer(
 
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [vehicles, setVehicles] = useState(Array<RouteDTO>);
 
-  const { route, tripDirection } = state;
+  const { route, tripDirection, trip, vehicles } = state;
 
   const tripsOnRoute = transportUnitOfWork.Trips.getByRouteId(route?.route_id);
-  const tripId: string = tranzyUtils.getTripIdBaseOnRouteIdAndDirection(
-    route.route_id,
-    tripDirection
-  );
 
   useEffect(() => {
-    async function getData() {
-      const shapes = await shapeRepository.GetShapeById(tripId);
-      dispatch({ type: TransportActionTypes.SetRouteShapes, payload: shapes });
+    function getData() {
+      dispatch({
+        type: TransportActionTypes.SetRouteShapes,
+        payload: trip.trip_id,
+      });
+    }
+
+    function getVehicles() {
+      dispatch({
+        type: TransportActionTypes.SetVehicles,
+        payload: trip.trip_id,
+      });
     }
     getData();
-  }, [dispatchHelper, tripId]);
 
-  useEffect(() => {
-    async function getVehicles() {
-      const data = await vehicleRepository.GetVehiclesByTripId(tripId);
-      setVehicles(data);
-    }
     getVehicles();
-  }, [tripId]);
+  }, [trip.trip_id]);
 
   return (
     <>

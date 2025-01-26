@@ -36,22 +36,23 @@ const tileStyles = {
     ],
   },
 };
-interface MapLibreGLMapProps {
-  vehicles: Array<VehicleDTO>;
-}
 
-function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
-  const mapRef = useRef(null);
-  const mapContainerRef = useRef(null);
-  const vehiclesMarkerRef = useRef(vehicles);
-  const userPositionMarkerRef = useRef(null);
+function MapLibreGLMap({
+  vehicles,
+}: {
+  vehicles: Array<VehicleDTO>;
+}): JSX.Element {
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const userPositionMarkerRef = useRef<HTMLDivElement | null>(null);
   const [mapCenter, setMapCenter] = useState(defaultCenterPositionOnMapLngLat);
 
   useEffect(() => {
     const getLocation = async () => {
       try {
         const result = await GetUserPositionOnMap();
-        if (mapCenter[0] !== result[0] || mapCenter[1] !== result[1]) {
+        if (!result) return;
+        if (mapCenter.lng !== result.lng || mapCenter.lat !== result.lat) {
           setMapCenter(result);
         }
       } catch (error) {
@@ -60,11 +61,11 @@ function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
     };
 
     getLocation();
-  }, []);
+  });
 
   useEffect(() => {
     mapRef.current = new maplibregl.Map({
-      container: mapContainerRef.current,
+      container: mapContainerRef.current || '',
       style: tileStyles.MapMD_2D,
       center: mapCenter,
       zoom: 14,
@@ -83,13 +84,13 @@ function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
     return () => {
       if (mapRef.current) mapRef.current.remove();
     };
-  }, []);
+  });
 
   useEffect(() => {
     if (!mapRef.current) return;
 
     mapRef.current.on('load', () => {
-      mapRef.current.setCenter(mapCenter);
+      mapRef.current?.setCenter(mapCenter);
       if (userPositionMarkerRef.current) {
         userPositionMarkerRef.current.remove();
       }

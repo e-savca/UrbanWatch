@@ -15,4 +15,8 @@ export default class VehicleRepository extends BaseRepository<VehicleDTO> {
   getById(id: string): VehicleDTO[] | undefined {
     return this.data?.filter(vehicle => vehicle.id === id);
   }
+
+  getByTripId(id: string): VehicleDTO[] | undefined {
+    return this.data?.filter(vehicle => vehicle.trip_id === id);
+  }
 }
