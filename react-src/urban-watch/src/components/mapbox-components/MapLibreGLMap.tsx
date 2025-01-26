@@ -1,8 +1,7 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { defaultCenterPositionOnMapLngLat } from '../../data/AppData';
-import { GetUserPositionOnMap } from '../../utils/GetUserGeoLocation';
 import { VehicleDTO } from '../../dto/TranzyDTOs';
 
 const tileStyles = {
@@ -42,30 +41,12 @@ function MapLibreGLMap({
 }): JSX.Element {
   const mapRef = useRef<maplibregl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const userPositionMarkerRef = useRef<HTMLDivElement | null>(null);
-  const [mapCenter, setMapCenter] = useState(defaultCenterPositionOnMapLngLat);
-
-  useEffect(() => {
-    const getLocation = async () => {
-      try {
-        const result = await GetUserPositionOnMap();
-        if (!result) return;
-        if (mapCenter.lng !== result.lng || mapCenter.lat !== result.lat) {
-          setMapCenter(result);
-        }
-      } catch (error) {
-        console.error('Error fetching geolocation:', error);
-      }
-    };
-
-    getLocation();
-  });
 
   useEffect(() => {
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current || '',
       style: tileStyles.MapMD_2D,
-      center: mapCenter,
+      center: defaultCenterPositionOnMapLngLat,
       zoom: 14,
       maxZoom: 19,
       minZoom: 10,
@@ -79,30 +60,31 @@ function MapLibreGLMap({
       })
     );
 
+    mapRef.current.addControl(
+      new maplibregl.NavigationControl({ visualizePitch: true }),
+      'bottom-right'
+    );
+
+    mapRef.current.addControl(
+      new maplibregl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 30000,
+        },
+      }),
+      'bottom-right'
+    );
+
+    mapRef.current.addControl(
+      new maplibregl.FullscreenControl(),
+      'bottom-right'
+    );
+
     return () => {
       if (mapRef.current) mapRef.current.remove();
     };
-  });
-
-  // useEffect(() => {
-  //   if (!mapRef.current) return;
-
-  //   mapRef.current.on('load', () => {
-  //     mapRef.current?.setCenter(mapCenter);
-  //     if (userPositionMarkerRef.current) {
-  //       userPositionMarkerRef.current.remove();
-  //     }
-
-  //     const markerElement = renderComponentToElement(<UserPositionMarker />);
-
-  //     userPositionMarkerRef.current = new maplibregl.Marker({
-  //       element: markerElement,
-  //       draggable: false,
-  //     })
-  //       .setLngLat(mapCenter)
-  //       .addTo(mapRef.current);
-  //   });
-  // }, [mapCenter]);
+  }, []);
 
   // useEffect(() => {
   //   if (!mapRef.current) return;

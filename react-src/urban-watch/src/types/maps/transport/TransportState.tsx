@@ -7,13 +7,13 @@ import {
 } from '../../../dto/TranzyDTOs';
 
 export interface TransportState {
-  route: RouteDTO;
-  tripDirection: number;
-  trip: TripDTO;
-  tripsOnRoute: TripDTO[];
-  routeShapes: Array<ShapeDTO>;
+  route?: RouteDTO;
+  tripDirection?: number;
+  trip?: TripDTO;
+  tripsOnRoute?: TripDTO[];
+  routeShapes?: Array<ShapeDTO>;
   mapCenter: LngLat;
   mapKey: number;
-  userGeolocation: Array<number> | null;
-  vehicles: VehicleDTO[];
+  userGeolocation?: Array<number>;
+  vehicles?: VehicleDTO[];
 }

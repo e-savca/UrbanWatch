@@ -5,8 +5,10 @@ import {
   TripDTO,
   VehicleDTO,
 } from '../../../dto/TranzyDTOs';
+import { TransportState } from './TransportState';
 
 export enum TransportActionTypes {
+  InitializeState,
   SetRoute,
   SetDirection,
   SetTripsOnRoute,
@@ -21,6 +23,7 @@ export enum TransportActionTypes {
 }
 
 export type TransportActions =
+  | { type: TransportActionTypes.InitializeState; payload: TransportState }
   | { type: TransportActionTypes.SetRoute; payload: RouteDTO | undefined }
   | { type: TransportActionTypes.SetDirection; payload: number }
   | {
