@@ -15,12 +15,16 @@ function Home() {
         </p>
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           <NavLink to="/map/routes">
-            <button className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300">
+            <button
+              type="button"
+              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300"
+            >
               Explore the Map
             </button>
           </NavLink>
 
           <button
+            type="button"
             className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-300"
             onClick={() => alert('Coming soon!')}
           >
@@ -130,8 +134,8 @@ function Home() {
           {/* Testimonial 1 */}
           <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <p className="text-gray-600 mb-4">
-              "UrbanWatch+ has completely transformed the way I navigate the
-              city. The real-time updates are a game-changer!"
+              &quot;UrbanWatch+ has completely transformed the way I navigate
+              the city. The real-time updates are a game-changer!&quot;
             </p>
             <div className="flex items-center">
               <img
@@ -149,8 +153,8 @@ function Home() {
           {/* Testimonial 2 */}
           <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <p className="text-gray-600 mb-4">
-              "The interactive maps are incredibly detailed. I never get lost
-              anymore!"
+              &quot;The interactive maps are incredibly detailed. I never get
+              lost anymore!&quot;
             </p>
             <div className="flex items-center">
               <img
@@ -168,8 +172,8 @@ function Home() {
           {/* Testimonial 3 */}
           <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <p className="text-gray-600 mb-4">
-              "With UrbanWatch+, planning my daily commute has never been
-              easier. Highly recommend!"
+              &quot;With UrbanWatch+, planning my daily commute has never been
+              easier. Highly recommend!&quot;
             </p>
             <div className="flex items-center">
               <img
@@ -196,7 +200,10 @@ function Home() {
           efficient with UrbanWatch+.
         </p>
         <NavLink to="/signup">
-          <button className="px-8 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-300">
+          <button
+            type="button"
+            className="px-8 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors duration-300"
+          >
             Get Started
           </button>
         </NavLink>

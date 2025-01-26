@@ -1,25 +1,26 @@
-import PropTypes from 'prop-types';
-
-import VehicleRepository from '../../repositories/VehicleRepository.jsx';
+import VehicleRepository from '../../repositories/VehicleRepository';
 import RoutesData from '../../data/Routes';
+import { RouteDTO, TripDTO } from '../../dto/TranzyDTOs';
 
 const vehicleRepository = new VehicleRepository(false);
 
-MapSelect.propTypes = {
-  route: PropTypes.object,
-  tripDirection: PropTypes.number,
-  tripsOnRoute: PropTypes.array,
-  dispatchHelper: PropTypes.object,
-};
-
-function MapSelect({ route, tripDirection, tripsOnRoute, dispatchHelper }) {
+function MapSelect({
+  route,
+  tripDirection,
+  tripsOnRoute,
+  dispatchHelper,
+}: {
+  route: RouteDTO;
+  tripDirection: number;
+  tripsOnRoute: TripDTO[];
+  dispatchHelper: unknown;
+}) {
   return (
     <div className="absolute z-10 flex flex-wrap sm:flex-nowrap flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 p-4 bg-gray-100 shadow w-full">
       <select
         className="p-2 rounded border border-gray-300 bg-white w-full flex-grow"
         value={route.route_id}
         onChange={e => {
-          console.log(e.target.value);
           dispatchHelper.setRoute(e.target.value);
         }}
       >

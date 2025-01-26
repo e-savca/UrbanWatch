@@ -1,7 +1,7 @@
 import { TripDTO } from '../../dto/TranzyDTOs';
 import BaseRepository from './BaseReposiory';
 
-export default class StopsRepository extends BaseRepository<TripDTO> {
+export default class TripRepository extends BaseRepository<TripDTO> {
   protected apiUrl: string = 'https://api.tranzy.ai/v1/opendata/trips';
 
   protected data: TripDTO[] | null = null;

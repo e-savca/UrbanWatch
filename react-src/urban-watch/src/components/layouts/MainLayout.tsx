@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import Footer from '../Footer';
+import Header from '../Header/Header';
 
 function MainLayout({ children }: { children: React.JSX.Element }) {
   return (

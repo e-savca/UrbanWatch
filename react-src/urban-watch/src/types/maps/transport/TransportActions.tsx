@@ -1,3 +1,5 @@
+import { ShapeDTO } from '../../../dto/TranzyDTOs';
+
 export enum TransportActionTypes {
   SetRoute,
   SetDirection,
@@ -13,7 +15,7 @@ export enum TransportActionTypes {
 export type TransportActions =
   | { type: TransportActionTypes.SetRoute; payload: number }
   | { type: TransportActionTypes.SetDirection; payload: number }
-  | { type: TransportActionTypes.SetRouteShapes; payload: Array<any> }
+  | { type: TransportActionTypes.SetRouteShapes; payload: string }
   | { type: TransportActionTypes.SetMapCenter; payload: Array<number> }
   | { type: TransportActionTypes.IncreaseMapKey }
   | {

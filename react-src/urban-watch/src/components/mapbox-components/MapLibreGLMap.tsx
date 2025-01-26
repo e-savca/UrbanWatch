@@ -1,14 +1,11 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useRef, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { defaultCenterPositionOnMapLngLat } from '../../data/AppData';
 import { GetUserPositionOnMap } from '../../utils/GetUserGeoLocation';
 import { renderComponentToElement } from '../../utils/MapLibreUtils';
 import UserPositionMarker from './icons/UserPositionMarker';
-import BusIcon from './icons/BusIcon';
 import { VehicleDTO } from '../../dto/TranzyDTOs';
-import { createRoot } from 'react-dom/client';
 
 const tileStyles = {
   MapMD_2D:
@@ -39,9 +36,9 @@ const tileStyles = {
     ],
   },
 };
-interface MapLibreGLMapProps = {
+interface MapLibreGLMapProps {
   vehicles: Array<VehicleDTO>;
-};
+}
 
 function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
   const mapRef = useRef(null);
@@ -80,7 +77,7 @@ function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
       new maplibregl.AttributionControl({
         customAttribution: '&copy; <a href="/" target="_blank">UrbanWatch</a>',
         compact: true,
-      }),
+      })
     );
 
     return () => {
@@ -117,7 +114,7 @@ function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
 
       const geojsonData = {
         type: 'FeatureCollection',
-        features: vehicles.map((vehicle) => ({
+        features: vehicles.map(vehicle => ({
           type: 'Feature',
           geometry: {
             type: 'Point',
@@ -155,13 +152,10 @@ function MapLibreGLMap({ vehicles }: MapLibreGLMapProps): JSX.Element {
       updateVehicles();
     } else {
       mapRef.current.once('style.load', () => {
-        console.log('Map style loaded!');
         updateVehicles();
       });
     }
 
-    console.log(mapRef.current);
-    console.log(vehicles);
     return () => {
       if (
         mapRef.current &&

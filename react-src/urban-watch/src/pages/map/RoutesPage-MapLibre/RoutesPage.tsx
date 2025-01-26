@@ -1,31 +1,20 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import MapSelect from '../../../components/map-components/MapSelect';
 import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap';
 import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData';
-import RoutesRepository from '../../../repositories/TransportRepositories/RouteRepository';
-import ShapeRepository from '../../../repositories/TransportRepositories/ShapeRepository';
-import StopTimesRepository from '../../../repositories/TransportRepositories/StopTimesRepository';
-import TripRepository from '../../../repositories/TransportRepositories/TripRepository';
-import VehicleRepository from '../../../repositories/TransportRepositories/VehicleRepository';
-import TranzyUtils from '../../../utils/TranzyUtils';
 
 import {
   TransportState,
   TransportActions,
   TransportActionTypes,
 } from '../../../types/maps';
+import TransportUnitOfWork from '../../../repositories/TransportRepositories/TransportUnitOfWork';
 
-// Repositories and utils
-const tranzyUtils = new TranzyUtils();
-const shapeRepository = new ShapeRepository();
-const tripRepository = new TripRepository();
-const vehicleRepository = new VehicleRepository(false);
-const stopTimesRepo = new StopTimesRepository();
-const routesRepository = new RoutesRepository();
+const transportUnitOfWork = await TransportUnitOfWork.create();
 
 // Initial state
 const initialState: TransportState = {
-  route: RoutesData[0],
+  route: transportUnitOfWork.Routes.getAll()?.at(0) || null,
   tripDirection: 0,
   routeShapes: null,
   mapKey: 0,
@@ -41,9 +30,7 @@ function reducer(
     case TransportActionTypes.SetRoute:
       return {
         ...state,
-        route:
-          RoutesData.find(route => route.route_id === action.payload) ||
-          state.route,
+        route: transportUnitOfWork.Routes.getById(action.payload),
         tripDirection: 0,
       };
     case TransportActionTypes.SetDirection:
@@ -52,7 +39,10 @@ function reducer(
         tripDirection: Number(action.payload),
       };
     case TransportActionTypes.SetRouteShapes:
-      return { ...state, stops: action.payload };
+      return {
+        ...state,
+        routeShapes: transportUnitOfWork.Shapes.getById(action.payload),
+      };
     case TransportActionTypes.SetMapCenter:
       return { ...state, mapCenter: action.payload };
     case TransportActionTypes.IncreaseMapKey:
@@ -66,42 +56,6 @@ function reducer(
 
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const dispatchHelper = useMemo(
-    () => ({
-      setRoute: routeId => {
-        dispatch({ type: 'SET_ROUTE', payload: routeId });
-      },
-      setDirection: tripDirection => {
-        dispatch({ type: 'SET_DIRECTION', payload: tripDirection });
-      },
-      setStops: stops => {
-        dispatch({ type: 'SET_STOPS', payload: stops });
-      },
-      setCenter: center => {
-        dispatch({ type: 'SET_CENTER', payload: center });
-      },
-      increaseMapKey: () => {
-        dispatch({ type: 'INCREASE_MAP_KEY' });
-      },
-      setUserGeolocation: userGeolocation => {
-        dispatch({ type: 'SET_USER_GEOLOCATION', payload: userGeolocation });
-      },
-      setModalIsOpen: payloadValue => {
-        dispatch({ type: 'SET_MODAL_IS_OPEN', payload: payloadValue });
-      },
-      setSelectedStation: station => {
-        dispatch({ type: 'SET_SELECTED_STATION', payload: station });
-      },
-      setRoutesAffiliatedToSelectedStation: routes => {
-        dispatch({
-          type: 'SET_ROUTES_AFFILIATED_TO_SELECTED_STATION',
-          payload: routes,
-        });
-      },
-    }),
-    [dispatch]
-  );
 
   const {
     route,
@@ -125,7 +79,7 @@ function RoutesPage() {
   useEffect(() => {
     async function getData() {
       const shapes = await shapeRepository.GetShapeById(tripId);
-      dispatchHelper.setStops(shapes);
+      dispatch({ type: TransportActionTypes.SetRouteShapes, payload: shapes });
     }
     getData();
   }, [dispatchHelper, tripId]);
@@ -144,7 +98,7 @@ function RoutesPage() {
         route={route}
         tripDirection={tripDirection}
         tripsOnRoute={tripsOnRoute}
-        dispatchHelper={dispatchHelper}
+        dispatchHelper={dispatch}
       />
       <MapLibreGLMap vehicles={vehicles} />
     </>
