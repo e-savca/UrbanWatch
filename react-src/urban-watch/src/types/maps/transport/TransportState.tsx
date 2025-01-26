@@ -1,3 +1,4 @@
+import { LngLat } from 'maplibre-gl';
 import {
   RouteDTO,
   ShapeDTO,
@@ -9,8 +10,9 @@ export interface TransportState {
   route: RouteDTO;
   tripDirection: number;
   trip: TripDTO;
+  tripsOnRoute: TripDTO[];
   routeShapes: Array<ShapeDTO>;
-  mapCenter: Array<number>;
+  mapCenter: LngLat;
   mapKey: number;
   userGeolocation: Array<number> | null;
   vehicles: VehicleDTO[];

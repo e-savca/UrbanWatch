@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import MapSelect from '../../../components/map-components/MapSelect';
 import MapLibreGLMap from '../../../components/mapbox-components/MapLibreGLMap';
 import { defaultCenterPositionOnMapLngLat } from '../../../data/AppData';
+import { ShapeDTO } from '../../../dto/TranzyDTOs';
 
 import {
   TransportState,
@@ -9,35 +10,37 @@ import {
   TransportActionTypes,
 } from '../../../types/maps';
 import TransportUnitOfWork from '../../../repositories/TransportRepositories/TransportUnitOfWork';
-import { ShapeDTO } from '../../../dto/TranzyDTOs';
 
-const transportUnitOfWork = await TransportUnitOfWork.create();
+const transportUnitOfWork = new TransportUnitOfWork();
 
-function generateInitialState(routeId: number = 3): TransportState {
-  const route = transportUnitOfWork.Routes.getById(routeId);
+async function generateInitialState(
+  routeId: number = 8
+): Promise<TransportState> {
+  const route = await transportUnitOfWork.Routes.getById(routeId);
 
   if (!route) {
     throw new Error(`Route with ID ${routeId} not found.`);
   }
 
   const tripDirection = 0;
-  const trip = transportUnitOfWork.Trips.getByRouteIdAndDirection(
+  const trip = await transportUnitOfWork.Trips.getByRouteIdAndDirection(
     routeId,
     tripDirection
   );
+
+  const tripsOnRoute = await transportUnitOfWork.Trips.getByRouteId(routeId);
 
   if (!trip) {
     throw new Error(`Trip not found.`);
   }
 
   const routeShapes: ShapeDTO[] =
-    trip !== undefined
-      ? transportUnitOfWork.Shapes.getByTripId(trip.shape_id.toString()) || []
-      : [];
+    (await transportUnitOfWork.Shapes.getByTripId(trip.shape_id.toString())) ||
+    [];
 
   const mapCenter = defaultCenterPositionOnMapLngLat;
 
-  const vehicles = transportUnitOfWork.Vehicles.getByTripId(trip.trip_id);
+  const vehicles = await transportUnitOfWork.Vehicles.getByTripId(trip.trip_id);
 
   if (!vehicles)
     throw new Error(
@@ -48,6 +51,7 @@ function generateInitialState(routeId: number = 3): TransportState {
     route,
     tripDirection,
     trip,
+    tripsOnRoute,
     routeShapes,
     mapCenter,
     mapKey: 0,
@@ -57,7 +61,7 @@ function generateInitialState(routeId: number = 3): TransportState {
 }
 
 // Initial state
-const initialState: TransportState = generateInitialState(3);
+const initialState: TransportState = await generateInitialState(8);
 
 // Reducer function
 function reducer(
@@ -68,8 +72,7 @@ function reducer(
     case TransportActionTypes.SetRoute:
       return {
         ...state,
-        route:
-          transportUnitOfWork.Routes.getById(action.payload) || state.route,
+        route: action.payload || state.route,
         tripDirection: 0,
       };
     case TransportActionTypes.SetDirection:
@@ -77,17 +80,17 @@ function reducer(
         ...state,
         tripDirection: Number(action.payload),
       };
+    case TransportActionTypes.SetTripsOnRoute:
+      return { ...state, tripsOnRoute: action.payload || [] };
     case TransportActionTypes.SetVehicles:
       return {
         ...state,
-        vehicles:
-          transportUnitOfWork.Vehicles.getByTripId(action.payload) || [],
+        vehicles: action.payload || [],
       };
     case TransportActionTypes.SetRouteShapes:
       return {
         ...state,
-        routeShapes:
-          transportUnitOfWork.Shapes.getByTripId(action.payload) || [],
+        routeShapes: action.payload || [],
       };
     case TransportActionTypes.SetMapCenter:
       return { ...state, mapCenter: action.payload };
@@ -103,28 +106,39 @@ function reducer(
 function RoutesPage() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { route, tripDirection, trip, vehicles } = state;
-
-  const tripsOnRoute = transportUnitOfWork.Trips.getByRouteId(route?.route_id);
+  const { route, tripDirection, trip, vehicles, tripsOnRoute } = state;
 
   useEffect(() => {
-    function getData() {
-      dispatch({
-        type: TransportActionTypes.SetRouteShapes,
-        payload: trip.trip_id,
-      });
-    }
-
-    function getVehicles() {
+    async function setVehicles() {
+      const vehiclesData = await transportUnitOfWork.Vehicles.getByTripId(
+        trip.trip_id
+      );
       dispatch({
         type: TransportActionTypes.SetVehicles,
-        payload: trip.trip_id,
+        payload: vehiclesData,
       });
     }
-    getData();
 
-    getVehicles();
-  }, [trip.trip_id]);
+    async function setRouteShapes() {
+      const shapes = await transportUnitOfWork.Shapes.getByTripId(trip.trip_id);
+      dispatch({
+        type: TransportActionTypes.SetRouteShapes,
+        payload: shapes || [],
+      });
+    }
+    async function updateTripsOnRoute() {
+      const trips = await transportUnitOfWork.Trips.getByRouteId(
+        route.route_id
+      );
+      dispatch({ type: TransportActionTypes.SetTripsOnRoute, payload: trips });
+    }
+
+    setVehicles();
+
+    setRouteShapes();
+
+    updateTripsOnRoute();
+  }, [route.route_id, trip.trip_id]);
 
   return (
     <>

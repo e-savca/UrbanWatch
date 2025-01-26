@@ -6,28 +6,32 @@ export default class TripRepository extends BaseRepository<TripDTO> {
 
   protected data: TripDTO[] = [];
 
-  async Initialize(): Promise<void> {
+  private async Initialize(): Promise<void> {
     if (this.data.length > 0) return;
     const fetchedData = await this.fetchData();
     this.data = fetchedData ?? [];
   }
 
-  getAll(): TripDTO[] {
+  async getAll(): Promise<TripDTO[]> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data;
   }
 
-  getById(id: string): TripDTO[] {
+  async getById(id: string): Promise<TripDTO[]> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data?.filter(trip => trip.trip_id === id);
   }
 
-  getByRouteId(routeId: number): TripDTO[] {
+  async getByRouteId(routeId: number): Promise<TripDTO[]> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data?.filter(trip => trip.route_id === routeId);
   }
 
-  getByRouteIdAndDirection(
+  async getByRouteIdAndDirection(
     routeId: number,
     direction: number
-  ): TripDTO | undefined {
+  ): Promise<TripDTO | undefined> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data.find(
       trip => trip.route_id === routeId && trip.direction_id === direction
     );

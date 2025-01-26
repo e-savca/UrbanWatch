@@ -40,7 +40,6 @@ export default abstract class BaseRepository<T> {
       return data;
     } catch (error) {
       if ((error as Error).name === 'AbortError') {
-        console.warn('Fetch request was cancelled');
         return [];
       }
       throw new Error(`Error fetching data: ${(error as Error).message}`);

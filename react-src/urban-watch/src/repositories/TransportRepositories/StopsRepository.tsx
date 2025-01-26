@@ -6,17 +6,19 @@ export default class StopsRepository extends BaseRepository<StopDTO> {
 
   protected data: StopDTO[] = [];
 
-  async Initialize(): Promise<void> {
+  private async Initialize(): Promise<void> {
     if (this.data.length > 0) return;
     const fetchData = await this.fetchData();
     this.data = fetchData ?? [];
   }
 
-  getAll(): StopDTO[] {
+  async getAll(): Promise<StopDTO[]> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data;
   }
 
-  getById(id: number): StopDTO[] | undefined {
+  async getById(id: number): Promise<StopDTO[] | undefined> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data.filter(stop => stop.stop_id === id);
   }
 }

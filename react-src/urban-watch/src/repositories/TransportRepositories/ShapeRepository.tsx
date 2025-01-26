@@ -2,21 +2,20 @@ import { ShapeDTO } from '../../dto/TranzyDTOs';
 import BaseRepository from './BaseReposiory';
 
 export default class ShapeRepository extends BaseRepository<ShapeDTO> {
-  protected apiUrl: string = 'https://api.tranzy.ai/v1/opendata/shapes';
+  private baseUrl: string =
+    'https://api.tranzy.ai/v1/opendata/shapes?shape_id=';
 
-  protected data: ShapeDTO[] = [];
+  protected apiUrl: string = '';
 
-  async Initialize(): Promise<void> {
-    if (this.data.length > 0) return;
-    const fetchData = await this.fetchData();
-    this.data = fetchData ?? [];
+  private setApiUrl(id: string) {
+    this.apiUrl = this.baseUrl + id;
   }
 
-  getAll(): ShapeDTO[] {
-    return this.data;
-  }
+  async getByTripId(id: string): Promise<ShapeDTO[] | undefined> {
+    this.setApiUrl(id);
 
-  getByTripId(id: string): ShapeDTO[] | undefined {
-    return this.data.filter(shape => shape.shape_id === id);
+    const shapes = await this.fetchData();
+
+    return shapes;
   }
 }

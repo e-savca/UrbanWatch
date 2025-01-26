@@ -6,17 +6,17 @@ export default class VehicleRepository extends BaseRepository<VehicleDTO> {
 
   protected data: VehicleDTO[] = [];
 
-  async Initialize(): Promise<void> {
+  private async Initialize(): Promise<void> {
     if (this.data.length > 0) return;
     const fetchedData = await this.fetchData();
     this.data = fetchedData ?? [];
   }
 
-  getById(id: string): VehicleDTO[] | undefined {
+  async getById(id: string): Promise<VehicleDTO[] | undefined> {
     return this.data?.filter(vehicle => vehicle.id === id);
   }
 
-  getByTripId(id: string): VehicleDTO[] | undefined {
+  async getByTripId(id: string): Promise<VehicleDTO[] | undefined> {
     return this.data?.filter(vehicle => vehicle.trip_id === id);
   }
 }
