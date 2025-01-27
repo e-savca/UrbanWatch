@@ -20,6 +20,15 @@ function MapPage(): JSX.Element {
   const handleMoveEnd = useCallback(() => {
     const newCenter = mapRef.current?.getCenter();
     const newZoom = mapRef.current?.getZoom();
+
+    // implemented later. because map.md api provides map just for Moldova territory
+    // console.log(newZoom);
+
+    // if (newZoom && newZoom < 10)
+    //   mapRef.current?.setStyle(mapTiles.CARTO_Voyager);
+
+    // if (newZoom && newZoom >= 10) mapRef.current?.setStyle(mapTiles.MapMD_2D);
+
     if (newZoom && newCenter)
       setMapParams(newZoom, newCenter.lat, newCenter.lng);
   }, [setMapParams]);
@@ -39,7 +48,7 @@ function MapPage(): JSX.Element {
       center,
       zoom,
       maxZoom: 19,
-      minZoom: 10,
+      minZoom: 1,
       attributionControl: false,
     });
 

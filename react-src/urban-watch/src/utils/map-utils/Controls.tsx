@@ -41,35 +41,34 @@ interface ForwardGeocodeResult {
   features: GeocodeFeature[];
 }
 
-// Function to create geocoder API
 const geocoderApi = (): GeocoderOptions['localGeocoder'] => ({
   forwardGeocode: async (config: {
     query: string;
   }): Promise<ForwardGeocodeResult> => {
     const features: GeocodeFeature[] = [];
     try {
-      const requestUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-        config.query
-      )}&format=geojson&polygon_geojson=1&addressdetails=1`;
+      const apiKey = import.meta.env.VITE_MAP_MD_API_KEY;
+      const location = 'Chisinau'; // hard-coded for the moment. As there isn't implemented the logic which parse the city
+      const requestUrl = `https://map.md/api/companies/webmap/search_street?location=${encodeURIComponent(
+        location
+      )}&q=${encodeURIComponent(config.query)}`;
 
       const response = await fetch(requestUrl, {
         headers: {
-          'User-Agent': 'YourAppName/1.0 (your-email@example.com)',
+          Authorization: `Basic ${btoa(`${apiKey}:`)}`,
+          'Content-Type': 'application/json',
         },
       });
 
+      console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const geojson = await response.json();
+      const data = await response.json();
 
-      for (const feature of geojson.features) {
-        const [minLng, minLat, maxLng, maxLat] = feature.bbox;
-        const center: [number, number] = [
-          minLng + (maxLng - minLng) / 2,
-          minLat + (maxLat - minLat) / 2,
-        ];
+      for (const item of data) {
+        const center: [number, number] = [item.centroid.lon, item.centroid.lat];
 
         features.push({
           type: 'Feature',
@@ -77,10 +76,10 @@ const geocoderApi = (): GeocoderOptions['localGeocoder'] => ({
             type: 'Point',
             coordinates: center,
           },
-          place_name: feature.properties.display_name,
-          properties: feature.properties,
-          text: feature.properties.display_name,
-          place_type: ['place'],
+          place_name: item.name,
+          properties: item,
+          text: item.name,
+          place_type: ['street'],
           center,
         });
       }
@@ -96,6 +95,6 @@ const geocoderApi = (): GeocoderOptions['localGeocoder'] => ({
 export const createGeocoderApi = () =>
   new MaplibreGeocoder(geocoderApi(), {
     maplibregl,
-    placeholder: 'Search for a location...',
-    limit: 5, // Limit results to avoid flooding responses
+    placeholder: 'Search for a street...',
+    limit: 5,
   });
