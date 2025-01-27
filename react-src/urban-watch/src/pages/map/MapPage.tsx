@@ -1,51 +1,32 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useRef, useEffect } from 'react';
-import { defaultCenterPositionOnMapLngLat } from '../../data/AppData';
+import { mapTiles } from '../../data/AppData';
+import useMapHashParams from '../../custom-hooks/map-hooks/useMapHashParams';
 
-const tileStyles = {
-  MapMD_2D:
-    'https://map.md/api/tiles/styles/map/style.json?v=2018-12-28T00:00:00.000Z',
-  MapMD_3D:
-    'https://map.md/api/tiles/styles/satelite/style.json?v=2018-12-28T00:00:00.000Z',
-  CARTO_Voyager: {
-    version: 8,
-    sources: {
-      osm: {
-        type: 'raster',
-        tiles: [
-          'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-        ],
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        tileSize: 256,
-      },
-    },
-    layers: [
-      {
-        id: 'osm-tiles',
-        type: 'raster',
-        source: 'osm',
-        minzoom: 0,
-        maxzoom: 19,
-      },
-    ],
-  },
-};
-
-function MapLibreGLMap(): JSX.Element {
+function MapPage(): JSX.Element {
   const mapRef = useRef<maplibregl.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const [{ zoom, center }, setMapParams] = useMapHashParams();
 
   useEffect(() => {
     mapRef.current = new maplibregl.Map({
       container: mapContainerRef.current || '',
-      style: tileStyles.MapMD_2D,
-      center: defaultCenterPositionOnMapLngLat,
-      zoom: 14,
+      hash: false,
+      style: mapTiles.MapMD_2D,
+      center,
+      zoom,
       maxZoom: 19,
       minZoom: 10,
       attributionControl: false,
+    });
+
+    // Update URL search parameters when map moves
+    mapRef.current.on('moveend', () => {
+      const newCenter = mapRef.current?.getCenter();
+      const newZoom = mapRef.current?.getZoom();
+      if (newZoom && newCenter)
+        setMapParams(newZoom, newCenter.lat, newCenter.lng);
     });
 
     mapRef.current.addControl(
@@ -92,4 +73,4 @@ function MapLibreGLMap(): JSX.Element {
   );
 }
 
-export default MapLibreGLMap;
+export default MapPage;

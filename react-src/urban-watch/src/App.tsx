@@ -1,8 +1,7 @@
 import { HashRouter, Route, Routes } from 'react-router';
 import Home from './pages/Home';
-import RoutesPageMapLibre from './pages/map/RoutesPage-MapLibre';
 import MainLayout from './components/layouts/MainLayout';
-import MapLayout from './components/layouts/MapLayout';
+import MapPage from './pages/map/MapPage';
 
 function App() {
   return (
@@ -16,12 +15,7 @@ function App() {
             </MainLayout>
           }
         />
-        <Route path="map" element={<MapLayout />}>
-          <Route path="routes">
-            <Route index element={<RoutesPageMapLibre />} />
-            <Route path="maplibre" element={<RoutesPageMapLibre />} />
-          </Route>
-        </Route>
+        <Route path="map" element={<MapPage />} />
       </Routes>
     </HashRouter>
   );

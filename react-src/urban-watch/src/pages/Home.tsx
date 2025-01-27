@@ -14,7 +14,7 @@ function Home() {
           easier and more efficient. Start exploring today!
         </p>
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-          <NavLink to="/map/routes">
+          <NavLink to="/map">
             <button
               type="button"
               className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors duration-300"
