@@ -13,10 +13,12 @@ export default class VehicleRepository extends BaseRepository<VehicleDTO> {
   }
 
   async getById(id: string): Promise<VehicleDTO[] | undefined> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data?.filter(vehicle => vehicle.id === id);
   }
 
   async getByTripId(id: string): Promise<VehicleDTO[] | undefined> {
+    if (this.data.length === 0) await this.Initialize();
     return this.data?.filter(vehicle => vehicle.trip_id === id);
   }
 }
