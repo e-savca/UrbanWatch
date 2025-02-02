@@ -1,13 +1,11 @@
 import maplibregl from 'maplibre-gl';
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router';
 
-type MapParams = {
-  zoom: number;
-  center: maplibregl.LngLat;
-};
 export const useMapHashParams = (): [
-  MapParams,
-  (zoom: number, lat: number, lng: number) => void,
+  zoom: number,
+  center: maplibregl.LngLat,
+  (map: maplibregl.Map | null) => void,
 ] => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,15 +23,29 @@ export const useMapHashParams = (): [
 
   const center = new maplibregl.LngLat(lng, lat);
 
-  const updateMapParams = (newZoom: number, newLat: number, newLng: number) => {
-    setSearchParams({
-      zoom: newZoom.toFixed(2),
-      lat: newLat.toFixed(6),
-      lng: newLng.toFixed(6),
-    });
-  };
+  const updateParams = useCallback(
+    (newZoom: number, newCenter: { lat: number; lng: number }) => {
+      setSearchParams({
+        zoom: newZoom.toFixed(2),
+        lat: newCenter.lat.toFixed(6),
+        lng: newCenter.lng.toFixed(6),
+      });
+    },
+    [setSearchParams]
+  );
 
-  return [{ zoom, center }, updateMapParams];
+  const onMoveEnd = useCallback(
+    (map: maplibregl.Map | null) => {
+      if (!map) return;
+      const newCenter = map?.getCenter();
+      const newZoom = map?.getZoom();
+
+      if (newZoom && newCenter) updateParams(newZoom, newCenter);
+    },
+    [updateParams]
+  );
+
+  return [zoom, center, onMoveEnd];
 };
 
 export default useMapHashParams;
