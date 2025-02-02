@@ -17,9 +17,9 @@ export default class TripRepository extends BaseRepository<TripDTO> {
     return this.data;
   }
 
-  async getById(id: string): Promise<TripDTO[]> {
+  async getById(id: string): Promise<TripDTO | undefined> {
     if (this.data.length === 0) await this.Initialize();
-    return this.data?.filter(trip => trip.trip_id === id);
+    return this.data?.find(trip => trip.trip_id === id);
   }
 
   async getByRouteId(routeId: number): Promise<TripDTO[]> {

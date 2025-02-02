@@ -1,6 +1,8 @@
 import { VehicleDTO } from '../../dto/TranzyDTOs';
 
-export const convertVehiclesToGeoJSON = (vehicles: VehicleDTO[]) => ({
+export const convertVehiclesToGeoJSON = (
+  vehicles: VehicleDTO[]
+): GeoJSON.FeatureCollection => ({
   type: 'FeatureCollection',
   features: vehicles.map(vehicle => ({
     type: 'Feature',
