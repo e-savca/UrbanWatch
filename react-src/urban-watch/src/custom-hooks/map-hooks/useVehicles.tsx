@@ -1,4 +1,5 @@
 import maplibregl from 'maplibre-gl';
+import { Feature, LineString } from 'geojson';
 import { useCallback, useEffect } from 'react';
 import { ShapeDTO, VehicleDTO } from '../../dto/TranzyDTOs';
 import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
@@ -91,7 +92,7 @@ export default function useVehicles(
       if (map.getSource('route')) map.removeSource('route');
 
       if (tripLine?.length > 0) {
-        const routeGeoJSON = {
+        const routeGeoJSON: Feature<LineString> = {
           type: 'Feature',
           geometry: {
             type: 'LineString',
@@ -100,6 +101,7 @@ export default function useVehicles(
               point.shape_pt_lat,
             ]),
           },
+          properties: {},
         };
 
         map.addSource('route', { type: 'geojson', data: routeGeoJSON });
@@ -141,7 +143,7 @@ export default function useVehicles(
   ]);
 
   useEffect(() => {
-    fetchVehicles();
     fetchTripLines();
+    fetchVehicles();
   }, [fetchTripLines, fetchVehicles]);
 }
