@@ -53,11 +53,11 @@ function MapPage(): JSX.Element {
         className="h-full w-full bg-gray-300"
       />
 
-      <div className="absolute top-4 left-4 z-10 bg-white p-3 rounded-lg shadow-md">
+      <div className="absolute top-2 z-10 bg-white p-2 m-2 rounded-lg shadow-md w-fit sm:max-w-sm md:max-w-md lg:max-w-lg">
         <select
           value={selectedRoute}
           onChange={handleRouteChange}
-          className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
         >
           <option value="0">Select a route: Trolleybus or Bus</option>
           {routes.map(route => (
@@ -72,7 +72,7 @@ function MapPage(): JSX.Element {
           <select
             value={tripDirection}
             onChange={e => setTripDirection(Number(e.target.value))}
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ml-2"
+            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full mt-2"
           >
             {tripsOnSelectedRoute?.map(trip => (
               <option key={trip.trip_id} value={trip.direction_id}>
