@@ -25,13 +25,13 @@ export const useMapHashParams = (): [
 
   const updateParams = useCallback(
     (newZoom: number, newCenter: { lat: number; lng: number }) => {
-      setSearchParams({
-        zoom: newZoom.toFixed(2),
-        lat: newCenter.lat.toFixed(6),
-        lng: newCenter.lng.toFixed(6),
-      });
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('zoom', newZoom.toFixed(2));
+      newParams.set('lat', newCenter.lat.toFixed(6));
+      newParams.set('lng', newCenter.lng.toFixed(6));
+      setSearchParams(newParams);
     },
-    [setSearchParams]
+    [searchParams, setSearchParams]
   );
 
   const onMoveEnd = useCallback(

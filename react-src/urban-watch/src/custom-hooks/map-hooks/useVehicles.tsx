@@ -143,7 +143,10 @@ export default function useVehicles(
   ]);
 
   useEffect(() => {
-    fetchTripLines();
-    fetchVehicles();
+    const fetchData = async () => {
+      await fetchTripLines();
+      await fetchVehicles();
+    };
+    fetchData();
   }, [fetchTripLines, fetchVehicles]);
 }
