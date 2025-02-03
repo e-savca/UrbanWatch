@@ -117,7 +117,7 @@ export default function useVehicles(
           },
           paint: {
             'line-color': tripLineColor,
-            'line-width': 3,
+            'line-width': 5,
           },
         });
       }
