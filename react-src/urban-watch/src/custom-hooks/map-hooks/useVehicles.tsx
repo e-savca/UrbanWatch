@@ -45,34 +45,6 @@ export default function useVehicles(
             'circle-color': '#007cbf',
           },
         });
-
-        map.on('click', 'vehicle-points', e => {
-          if (e.features && e.features.length > 0) {
-            const vehicle = e.features[0].properties as VehicleDTO;
-            const coordinates = e.lngLat;
-
-            new maplibregl.Popup()
-              .setLngLat(coordinates)
-              .setHTML(
-                `
-                <h3>Vehicle Information</h3>
-                <p>ID: ${vehicle.id}</p>
-                <p>Status: ${vehicle.label}</p>
-                <p>Status: ${vehicle.speed}</p>
-
-              `
-              )
-              .addTo(map);
-          }
-        });
-
-        map.on('mouseenter', 'vehicle-points', () => {
-          map.getCanvas().style.cursor = 'pointer';
-        });
-
-        map.on('mouseleave', 'vehicle-points', () => {
-          map.getCanvas().style.cursor = '';
-        });
       }
     }
   }, [mapRef, selectedTrip?.trip_id, transportUnitOfWork.Vehicles]);
