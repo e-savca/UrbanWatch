@@ -8,6 +8,7 @@ import TransportUtilities from '../utils/TransportUtilities';
 import useRoutesAndTrips from '../custom-hooks/map-hooks/useRoutesAndTrips';
 import useInitializeMap from '../custom-hooks/map-hooks/useInitializeMap';
 import useVehicles from '../custom-hooks/map-hooks/useVehicles';
+import useBusStops from '../custom-hooks/map-hooks/useBusStops';
 
 function MapPage(): JSX.Element {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -42,6 +43,8 @@ function MapPage(): JSX.Element {
     };
   }, [handleMoveEnd, mapRef]);
 
+  // Use custom hook to fetch bus stops and update the map
+  useBusStops(mapRef, transportUnitOfWork);
   // Use custom hook to fetch vehicles and update map
   useVehicles(mapRef, selectedTrip, transportUnitOfWork);
 

@@ -1,4 +1,4 @@
-import { VehicleDTO } from '../../dto/TranzyDTOs';
+import { StopDTO, VehicleDTO } from '../../dto/TranzyDTOs';
 
 export const convertVehiclesToGeoJSON = (
   vehicles: VehicleDTO[]
@@ -24,4 +24,22 @@ export const convertVehiclesToGeoJSON = (
   })),
 });
 
-export default convertVehiclesToGeoJSON;
+export const convertBusStopsToGeoJSON = (
+  stops: StopDTO[]
+): GeoJSON.FeatureCollection => ({
+  type: 'FeatureCollection',
+  features: stops.map(stop => ({
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [stop.stop_lon, stop.stop_lat],
+    },
+    properties: {
+      id: stop.stop_id,
+      name: stop.stop_name,
+      description: stop.stop_desc,
+      code: stop.stop_code,
+      location_type: stop.location_type,
+    },
+  })),
+});

@@ -3,13 +3,26 @@ import { Feature, LineString } from 'geojson';
 import { useCallback, useEffect } from 'react';
 import { ShapeDTO, VehicleDTO } from '../../dto/TranzyDTOs';
 import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
-import convertVehiclesToGeoJSON from '../../utils/mapping/MapToGeoJson';
+import { convertVehiclesToGeoJSON } from '../../utils/mapping/MapToGeoJson';
 
 export default function useVehicles(
   mapRef: React.MutableRefObject<maplibregl.Map | null>,
   selectedTrip: { trip_id?: string } | null,
   transportUnitOfWork: TransportUnitOfWork
 ) {
+  useEffect(() => {
+    const doEffect = async () => {
+      const map = mapRef.current;
+      if (map) {
+        const image = await map.loadImage(
+          '/src/assets/leaflet-icons/bus-stop.png'
+        );
+        map.addImage('vehicle-icon', image.data);
+      }
+    };
+    doEffect();
+  }, [mapRef]);
+
   const fetchVehicles = useCallback(async () => {
     const map = mapRef.current;
     let vehicleData: VehicleDTO[] = [];
@@ -38,11 +51,14 @@ export default function useVehicles(
 
         map.addLayer({
           id: 'vehicle-points',
-          type: 'circle',
+          type: 'symbol',
           source: 'vehicles',
-          paint: {
-            'circle-radius': 6,
-            'circle-color': '#007cbf',
+          layout: {
+            'icon-image': 'vehicle-icon',
+            'icon-size': 0.1,
+            'icon-allow-overlap': true,
+            'icon-rotate': ['get', 'bearing'],
+            'icon-anchor': 'bottom',
           },
         });
       }
