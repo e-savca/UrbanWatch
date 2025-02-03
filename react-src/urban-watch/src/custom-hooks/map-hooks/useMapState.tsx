@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { RouteDTO, TripDTO } from '../../dto/TranzyDTOs';
 import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
 
-const useRoutesAndTrips = (transportUnitOfWork: TransportUnitOfWork) => {
+const useMapState = (transportUnitOfWork: TransportUnitOfWork) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const routeParam = Number(searchParams.get('route') ?? '0');
@@ -70,4 +70,4 @@ const useRoutesAndTrips = (transportUnitOfWork: TransportUnitOfWork) => {
   };
 };
 
-export default useRoutesAndTrips;
+export default useMapState;

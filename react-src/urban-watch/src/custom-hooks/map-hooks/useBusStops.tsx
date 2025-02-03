@@ -1,3 +1,4 @@
+import maplibregl from 'maplibre-gl';
 import { useCallback, useEffect, useState } from 'react';
 import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
 import { StopDTO } from '../../dto/TranzyDTOs';
@@ -10,7 +11,8 @@ import {
 
 export default function useBusStops(
   mapRef: React.MutableRefObject<maplibregl.Map | null>,
-  transportUnitOfWork: TransportUnitOfWork
+  transportUnitOfWork: TransportUnitOfWork,
+  setSelectedStop: (stop: StopDTO) => void
 ) {
   const [indexedStops, setIndexedStops] = useState<{
     [key: string]: StopDTO[];
@@ -141,4 +143,33 @@ export default function useBusStops(
     };
     fetchData();
   }, [fetchBusStops]);
+
+  useEffect(() => {
+    if (!mapRef.current) return undefined;
+
+    const map = mapRef.current;
+
+    map.on('click', 'bus-stop-points', e => {
+      if (e.features && e.features.length > 0) {
+        const stop = e.features[0].properties as StopDTO;
+
+        setSelectedStop(stop);
+      }
+    });
+
+    map.on('mouseenter', 'bus-stop-points', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', 'bus-stop-points', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
+    // Cleanup listener
+    return () => {
+      if (map) {
+        map.off('click', 'bus-stop-points', e => {});
+      }
+    };
+  }, [mapRef, setSelectedStop]);
 }
