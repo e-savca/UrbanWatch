@@ -1,7 +1,4 @@
 import maplibregl from 'maplibre-gl';
-import MaplibreGeocoder, {
-  GeocoderOptions,
-} from '@maplibre/maplibre-gl-geocoder';
 
 export const createAttributionControl = (): maplibregl.AttributionControl =>
   new maplibregl.AttributionControl({
