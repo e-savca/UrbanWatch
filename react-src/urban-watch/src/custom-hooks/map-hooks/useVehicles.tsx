@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { ShapeDTO, VehicleDTO } from '../../dto/TranzyDTOs';
 import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
 import { convertVehiclesToGeoJSON } from '../../utils/mapping/MapToGeoJson';
+import vehicleIcon from '../../assets/leaflet-icons/bus-stop.png';
 
 export default function useVehicles(
   mapRef: React.MutableRefObject<maplibregl.Map | null>,
@@ -14,9 +15,7 @@ export default function useVehicles(
     const doEffect = async () => {
       const map = mapRef.current;
       if (map) {
-        const image = await map.loadImage(
-          '../../assets/leaflet-icons/bus-stop.png'
-        );
+        const image = await map.loadImage(vehicleIcon);
         map.addImage('vehicle-icon', image.data);
       }
     };
