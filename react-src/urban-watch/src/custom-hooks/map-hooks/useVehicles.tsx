@@ -15,7 +15,7 @@ export default function useVehicles(
       const map = mapRef.current;
       if (map) {
         const image = await map.loadImage(
-          '/src/assets/leaflet-icons/bus-stop.png'
+          '../../assets/leaflet-icons/bus-stop.png'
         );
         map.addImage('vehicle-icon', image.data);
       }
