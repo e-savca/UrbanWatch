@@ -26,6 +26,7 @@ function MapPage(): JSX.Element {
     setTripDirection,
     selectedTrip,
     handleRouteChange,
+    handleRouteAndDirectionChange,
   } = useMapState(transportUnitOfWork);
 
   const mapRef = useInitializeMap(mapContainerRef, zoom, center);
@@ -57,6 +58,7 @@ function MapPage(): JSX.Element {
         <BusStopModal
           stop={selectedStop}
           onClose={() => setSelectedStop(null)}
+          onRouteChange={handleRouteAndDirectionChange}
           transportUnitOfWork={transportUnitOfWork}
         />
       )}

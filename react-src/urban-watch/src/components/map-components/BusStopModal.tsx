@@ -6,12 +6,14 @@ import TransportUnitOfWork from '../../repositories/TransportRepositories/Transp
 interface BusStopModalProps {
   onClose: () => void;
   stop: StopDTO | null;
+  onRouteChange: (routeId: number, directionId: number) => void;
   transportUnitOfWork: TransportUnitOfWork;
 }
 
 export function BusStopModal({
   onClose,
   stop,
+  onRouteChange,
   transportUnitOfWork,
 }: BusStopModalProps) {
   const [afiliateRoutes, setAfiliateRoutes] = useState<
@@ -63,11 +65,8 @@ export function BusStopModal({
   };
 
   const onRouteSelected = (routeId: number, directionId: number) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('route', routeId.toString());
-    newParams.set('direction', directionId.toString());
-    setSearchParams(newParams);
-    console.log(newParams);
+    onRouteChange(routeId, directionId);
+    onClose();
   };
 
   const renderRoutes = () => {

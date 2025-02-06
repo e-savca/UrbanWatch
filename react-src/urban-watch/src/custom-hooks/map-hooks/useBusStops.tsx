@@ -126,7 +126,7 @@ export default function useBusStops(
           type: 'circle',
           source: 'bus-stops',
           paint: {
-            'circle-radius': 6,
+            'circle-radius': 8,
             'circle-color': '#1E90FF',
             'circle-opacity': 0.8,
             'circle-stroke-width': 2,

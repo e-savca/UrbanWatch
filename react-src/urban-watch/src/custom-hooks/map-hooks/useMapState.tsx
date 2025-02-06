@@ -59,6 +59,14 @@ const useMapState = (transportUnitOfWork: TransportUnitOfWork) => {
     setTripDirection(0);
   }, []);
 
+  const handleRouteAndDirectionChange = useCallback(
+    (routeId: number, directionId: number) => {
+      setSelectedRoute(routeId);
+      setTripDirection(directionId);
+    },
+    []
+  );
+
   return {
     routes,
     selectedRoute,
@@ -67,6 +75,7 @@ const useMapState = (transportUnitOfWork: TransportUnitOfWork) => {
     setTripDirection,
     selectedTrip,
     handleRouteChange,
+    handleRouteAndDirectionChange,
   };
 };
 
