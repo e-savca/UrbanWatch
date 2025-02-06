@@ -168,7 +168,7 @@ export default function useBusStops(
     // Cleanup listener
     return () => {
       if (map) {
-        map.off('click', 'bus-stop-points', e => {});
+        map.off('click', 'bus-stop-points', () => {});
       }
     };
   }, [mapRef, setSelectedStop]);

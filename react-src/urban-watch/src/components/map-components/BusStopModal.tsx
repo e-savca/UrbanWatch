@@ -1,4 +1,3 @@
-import { useSearchParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { StopDTO, RouteDTO, TripDTO } from '../../dto/TranzyDTOs';
 import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
@@ -19,7 +18,6 @@ export function BusStopModal({
   const [afiliateRoutes, setAfiliateRoutes] = useState<
     { route: RouteDTO; trip: TripDTO }[]
   >([]);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchRoutes = async () => {
@@ -58,7 +56,9 @@ export function BusStopModal({
     fetchRoutes();
   }, [stop, transportUnitOfWork]);
 
-  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClose = (
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
+  ) => {
     if ((e.target as HTMLDivElement).id === 'modal-overlay') {
       onClose();
     }
@@ -88,8 +88,9 @@ export function BusStopModal({
         }}
       >
         <div
-          className={`h-10 w-10 flex items-center justify-center
-                         text-white font-bold rounded-full mr-4 ${route.route_type === 11 ? 'bg-sky-500' : 'bg-zinc-800'}`}
+          className={`min-h-10 min-w-10 h-10 w-10 flex items-center justify-center
+    text-white font-bold rounded-full mr-4 
+    whitespace-nowrap px-2 ${route.route_type === 11 ? 'bg-sky-500' : 'bg-zinc-800'}`}
         >
           {route.route_short_name}
         </div>
@@ -106,10 +107,15 @@ export function BusStopModal({
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
       id="modal-overlay"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      role="presentation"
+      onKeyDown={e => {
+        if (e.key === 'Escape') {
+          handleClose(e);
+        }
+      }}
       onClick={handleClose}
     >
       <div
