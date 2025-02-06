@@ -88,15 +88,17 @@ export function BusStopModal({
         }}
       >
         <div
-          className="h-10 w-10 flex items-center justify-center
-                         bg-blue-500 text-white font-bold rounded-full mr-4"
+          className={`h-10 w-10 flex items-center justify-center
+                         text-white font-bold rounded-full mr-4 ${route.route_type === 11 ? 'bg-sky-500' : 'bg-zinc-800'}`}
         >
           {route.route_short_name}
         </div>
         <div>
-          <p className="text-gray-700 font-medium">{route.route_long_name}</p>
+          <p className="text-gray-700 font-medium">
+            {route.route_type === 11 ? '🚎' : '🚌'} {route.route_long_name}
+          </p>
           <p className="text-gray-500 text-sm">
-            {trip.trip_headsign || 'No destination info'}
+            to {trip.trip_headsign || 'No destination info'}
           </p>
         </div>
       </div>
