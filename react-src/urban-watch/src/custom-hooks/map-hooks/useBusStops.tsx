@@ -127,9 +127,9 @@ export default function useBusStops(
           source: 'bus-stops',
           paint: {
             'circle-radius': 8,
-            'circle-color': '#1E90FF',
+            'circle-color': '#8B0000',
             'circle-opacity': 0.8,
-            'circle-stroke-width': 2,
+            'circle-stroke-width': 3,
             'circle-stroke-color': '#ffffff',
           },
         });

@@ -75,17 +75,11 @@ export function BusStopModal({
     }
 
     return afiliateRoutes.map(({ route, trip }) => (
-      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         key={trip.trip_id}
         className="flex items-center p-3 bg-gray-100 rounded-lg shadow-sm hover:bg-gray-200 transition-all"
+        role="presentation"
         onClick={() => onRouteSelected(route.route_id, trip.direction_id)}
-        onKeyDown={e => {
-          // if is escape close modal
-          if (e.key === 'Escape') {
-            onClose();
-          }
-        }}
       >
         <div
           className={`min-h-10 min-w-10 h-10 w-10 flex items-center justify-center
@@ -111,11 +105,6 @@ export function BusStopModal({
       id="modal-overlay"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       role="presentation"
-      onKeyDown={e => {
-        if (e.key === 'Escape') {
-          handleClose(e);
-        }
-      }}
       onClick={handleClose}
     >
       <div
