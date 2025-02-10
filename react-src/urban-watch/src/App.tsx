@@ -1,7 +1,6 @@
 import { HashRouter, Route, Routes } from 'react-router';
-import Home from './pages/Home';
+import { Home, MapPage } from './pages';
 import MainLayout from './components/layouts/MainLayout';
-import MapPage from './pages/MapPage';
 
 function App() {
   return (

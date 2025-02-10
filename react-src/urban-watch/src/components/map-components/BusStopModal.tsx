@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { StopDTO, RouteDTO, TripDTO } from '../../dto/TranzyDTOs';
-import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
+import { StopDTO, RouteDTO, TripDTO } from '../../dto';
+import { TransportUnitOfWork } from '../../repositories';
 
 interface BusStopModalProps {
   onClose: () => void;

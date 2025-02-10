@@ -1,6 +1,5 @@
 import React from 'react';
-import Footer from '../Footer';
-import Header from '../Header/Header';
+import { Header, Footer } from '../index';
 
 function MainLayout({ children }: { children: React.JSX.Element }) {
   return (

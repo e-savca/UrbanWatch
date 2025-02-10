@@ -1,16 +1,18 @@
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css';
 import { useRef, useMemo, useEffect, useCallback, useState } from 'react';
-import useMapHashParams from '../custom-hooks/map-hooks/useMapHashParams';
+import {
+  useMapHashParams,
+  useMapState,
+  useInitializeMap,
+  useVehicles,
+  useBusStops,
+} from '../custom-hooks/map-hooks';
 
-import TransportUnitOfWork from '../repositories/TransportRepositories/TransportUnitOfWork';
-import TransportUtilities from '../utils/TransportUtilities';
-import useMapState from '../custom-hooks/map-hooks/useMapState';
-import useInitializeMap from '../custom-hooks/map-hooks/useInitializeMap';
-import useVehicles from '../custom-hooks/map-hooks/useVehicles';
-import useBusStops from '../custom-hooks/map-hooks/useBusStops';
-import { StopDTO } from '../dto/TranzyDTOs';
-import BusStopModal from '../components/map-components/BusStopModal';
+import { TransportUnitOfWork } from '../repositories';
+import { TransportUtilities } from '../utils';
+import { BusStopModal } from '../components';
+import { StopDTO } from '../dto';
 
 function MapPage(): JSX.Element {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);

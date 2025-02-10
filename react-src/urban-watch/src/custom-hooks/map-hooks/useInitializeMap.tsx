@@ -8,7 +8,7 @@ import {
   // createGeocoderApi,
   createGeolocateControl,
   createNavigationControl,
-} from '../../utils/map-utils/Controls';
+} from '../../utils';
 
 export default function useInitializeMap(
   mapContainerRef: React.RefObject<HTMLDivElement>,

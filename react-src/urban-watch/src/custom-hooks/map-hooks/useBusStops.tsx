@@ -1,13 +1,13 @@
 import maplibregl from 'maplibre-gl';
 import { useCallback, useEffect, useState } from 'react';
-import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
-import { StopDTO } from '../../dto/TranzyDTOs';
-import { convertBusStopsToGeoJSON } from '../../utils/mapping/MapToGeoJson';
+import { TransportUnitOfWork } from '../../repositories';
+import { StopDTO } from '../../dto';
+import { convertBusStopsToGeoJSON } from '../../utils';
 import {
   filterStationsByBounds,
   getNumberMultipliedByHundred,
   preprocessAndIndexStations,
-} from './BusStopsUtils';
+} from './index';
 
 export default function useBusStops(
   mapRef: React.MutableRefObject<maplibregl.Map | null>,

@@ -1,4 +1,4 @@
-import { StopDTO } from '../../dto/TranzyDTOs';
+import { StopDTO } from '../../dto';
 
 export const getNumberMultipliedByHundred = (num: number) => num * 100;
 

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
-import { RouteDTO, TripDTO } from '../../dto/TranzyDTOs';
-import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
+import { RouteDTO, TripDTO } from '../../dto';
+import { TransportUnitOfWork } from '../../repositories';
 
 const useMapState = (transportUnitOfWork: TransportUnitOfWork) => {
   const [searchParams, setSearchParams] = useSearchParams();

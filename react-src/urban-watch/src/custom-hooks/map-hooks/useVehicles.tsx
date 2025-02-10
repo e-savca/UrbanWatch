@@ -1,9 +1,9 @@
 import maplibregl from 'maplibre-gl';
 import { Feature, LineString } from 'geojson';
 import { useCallback, useEffect } from 'react';
-import { ShapeDTO, VehicleDTO } from '../../dto/TranzyDTOs';
-import TransportUnitOfWork from '../../repositories/TransportRepositories/TransportUnitOfWork';
-import { convertVehiclesToGeoJSON } from '../../utils/mapping/MapToGeoJson';
+import { ShapeDTO, VehicleDTO } from '../../dto';
+import { TransportUnitOfWork } from '../../repositories';
+import { convertVehiclesToGeoJSON } from '../../utils';
 import vehicleIcon from '../../assets/leaflet-icons/bus-stop.png';
 
 export default function useVehicles(

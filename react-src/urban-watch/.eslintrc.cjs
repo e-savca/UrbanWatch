@@ -24,7 +24,7 @@ module.exports = {
   },
   rules: {
     // Enable Prettier as an error to enforce code formatting
-    'prettier/prettier': ['error'],
+    'prettier/prettier': ['error', { endOfLine: 'auto' }],
 
     // Turn off brace-style rule since it's handled by Prettier
     'brace-style': 'off',
