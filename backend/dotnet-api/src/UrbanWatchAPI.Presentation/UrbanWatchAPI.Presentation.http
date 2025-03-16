@@ -1,0 +1,6 @@
+@UrbanWatchAPI.Presentation_HostAddress = http://localhost:5020
+
+GET {{UrbanWatchAPI.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
