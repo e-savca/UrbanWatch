@@ -1,33 +1,33 @@
 pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('Restore') {
-            steps {
-                sh 'dotnet restore'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'dotnet build --configuration Release'
-            }
-        }
-        stage('Publish') {
-            steps {
-                sh 'dotnet publish --configuration Release --output ./publish'
-            }
+    agent {
+        node {
+            label 'jenkins-agent-dotnet'
         }
     }
-    post {
-        always {
-            // Archive the published files as build artifacts
-            archiveArtifacts artifacts: 'publish/**', allowEmptyArchive: true
-            // Clean up the workspace after the build
-            cleanWs()
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building.."
+                sh '''
+                echo "doing build stuff.."
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Testing.."
+                sh '''
+                echo "doing test stuff.."
+                '''
+            }
+        }
+        stage('Deliver') {
+            steps {
+                echo 'Deliver....'
+                sh '''
+                echo "doing delivery stuff.."
+                '''
+            }
         }
     }
 }
