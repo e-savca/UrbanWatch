@@ -4,6 +4,9 @@ pipeline {
             label 'jenkins-agent-dotnet'
         }
     }
+    triggers {
+        pollSCM '* * * * *'
+    }
     stages {
         stage('Build') {
             steps {
