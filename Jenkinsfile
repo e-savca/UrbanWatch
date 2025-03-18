@@ -11,26 +11,40 @@ pipeline {
         stage('Restore') {
             steps {
                 sh '''
-                ls -l
                 cd backend/dotnet-api/vssln/UrbanWatchAPI
-                ls -l
                 dotnet restore
                 '''
             }
         }
         stage('Build') {
             steps {
-                echo 'before dotnet build'
-                sh 'dotnet build --configuration Release'
-                echo 'after dotnet build'
+                sh '''
+                cd backend/dotnet-api/vssln/UrbanWatchAPI
+                dotnet build --configuration Release
+                '''
             }
         }
         stage('Publish') {
             steps {
-                echo 'before dotnet publish'
-                sh 'dotnet publish --configuration Release --output ./publish'
-                echo 'after dotnet publish'
+                sh '''
+                cd backend/dotnet-api/vssln/UrbanWatchAPI
+                dotnet publish --configuration Release --output ./publish
+                '''
             }
+        }
+    }
+    post {
+        always {
+            script {
+                def publishDir = 'backend/dotnet-api/vssln/UrbanWatchAPI/publish'
+                sh "ls -l ${publishDir}" // Debugging: Check if files exist
+            }
+
+            // Archive the correct publish directory
+            archiveArtifacts artifacts: 'backend/dotnet-api/vssln/UrbanWatchAPI/publish/**', allowEmptyArchive: true
+
+            // Clean up workspace after archiving
+            cleanWs()
         }
     }
 }
