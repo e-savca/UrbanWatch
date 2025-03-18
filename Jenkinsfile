@@ -5,31 +5,28 @@ pipeline {
         }
     }
     triggers {
-        pollSCM 'H * * * *'
+        pollSCM '1 * * * *'
     }
     stages {
+        stage('Restore') {
+            steps {
+                echo 'before dotnet restore'
+                sh 'dotnet restore'
+                echo 'after dotnet restore'
+            }
+        }
         stage('Build') {
             steps {
-                echo "Building.."
-                sh '''
-                echo "doing build stuff.."
-                '''
+                echo 'before dotnet build'
+                sh 'dotnet build --configuration Release'
+                echo 'after dotnet build'
             }
         }
-        stage('Test') {
+        stage('Publish') {
             steps {
-                echo "Testing.."
-                sh '''
-                echo "doing test stuff.."
-                '''
-            }
-        }
-        stage('Deliver') {
-            steps {
-                echo 'Deliver....'
-                sh '''
-                echo "doing delivery stuff.."
-                '''
+                echo 'before dotnet publish'
+                sh 'dotnet publish --configuration Release --output ./publish'
+                echo 'after dotnet publish'
             }
         }
     }
