@@ -12,6 +12,8 @@ pipeline {
             steps {
                 echo 'before dotnet restore'
                 sh 'ls -l'
+                sh 'cd backend/dotnet-api/vssln/UrbanWatchAPI'
+                sh 'ls -l'
                 sh 'dotnet restore'
                 echo 'after dotnet restore'
             }
