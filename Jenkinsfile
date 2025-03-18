@@ -14,6 +14,7 @@ pipeline {
                 cd backend/dotnet-api/vssln/UrbanWatchAPI
                 dotnet restore
                 '''
+                sh 'node -v || echo "Node.js is NOT installed!"'
             }
         }
         stage('Build') {
