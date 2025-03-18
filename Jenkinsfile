@@ -5,12 +5,13 @@ pipeline {
         }
     }
     triggers {
-        pollSCM '1 * * * *'
+        pollSCM '* * * * *'
     }
     stages {
         stage('Restore') {
             steps {
                 echo 'before dotnet restore'
+                sh 'ls -l'
                 sh 'dotnet restore'
                 echo 'after dotnet restore'
             }
