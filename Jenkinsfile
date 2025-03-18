@@ -10,12 +10,12 @@ pipeline {
     stages {
         stage('Restore') {
             steps {
-                echo 'before dotnet restore'
-                sh 'ls -l'
-                sh 'cd backend/dotnet-api/vssln/UrbanWatchAPI'
-                sh 'ls -l'
-                sh 'dotnet restore'
-                echo 'after dotnet restore'
+                sh '''
+                ls -l
+                cd backend/dotnet-api/vssln/UrbanWatchAPI
+                ls -l
+                dotnet restore
+                '''
             }
         }
         stage('Build') {
