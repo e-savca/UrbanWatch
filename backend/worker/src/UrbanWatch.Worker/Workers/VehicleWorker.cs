@@ -1,15 +1,18 @@
+using UrbanWatch.Worker.Clients;
+
 namespace UrbanWatch.Worker;
 
 public class VehicleWorker : BackgroundService
 {
-    private readonly string _apiKey;
+    private readonly TranzyClient _client;
     private readonly ILogger<VehicleWorker> _logger;
 
     public VehicleWorker(
-        IConfiguration config,
+        TranzyClient client,
         ILogger<VehicleWorker> logger)
     {
-        _apiKey = config["TRANZY_API_KEY_DEV01"];
+
+        _client = client;
         _logger = logger;
     }
 
@@ -21,8 +24,13 @@ public class VehicleWorker : BackgroundService
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation("Vehicle worker running at: {time}", DateTimeOffset.Now);
-                _logger.LogInformation("API Key: {apiKey}", _apiKey);
             }
+
+            var vehicles = await _client.GetVehiclesAsync("04");
+            
+            _logger.LogInformation("Vehicle count: {count}", vehicles.Length);
+            
+            
             await Task.Delay(1000, stoppingToken);
         }
     }

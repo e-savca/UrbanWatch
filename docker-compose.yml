@@ -5,6 +5,7 @@ services:
       - TRANZY_API_KEY_PROD01=${TRANZY_API_KEY_PROD01}
       - TRANZY_API_KEY_PROD02=${TRANZY_API_KEY_PROD02}
       - TRANZY_API_KEY_PROD03=${TRANZY_API_KEY_PROD03}
+      - ASPNETCORE_ENVIRONMENT=Production
     restart: unless-stopped
 
   # api:
