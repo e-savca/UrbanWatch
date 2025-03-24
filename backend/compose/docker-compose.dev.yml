@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: postgis/postgis
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+  mongodb:
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+  api:
+    build: 
+      context: ../api
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5000:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - ../api:/app
+    command: ["dotnet", "watch", "run", "--project", "src/UrbanWatchAPI.Presentation/UrbanWatchAPI.Presentation.dll"]
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+  worker:
+    build: 
+      context: ../worker
+      dockerfile: Dockerfile.dev
+    environment:
+      TRANZY_API_KEY_DEV01: ${TRANZY_API_KEY_DEV01}
+      ASPNETCORE_ENVIRONMENT: 'Development'
+      MONGO__HOST: mongodb
+      MONGO__PORT: 27017
+      MONGO__DATABASE: UrbanWatchDB
+      MONGO__USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO__PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    restart: always
+    volumes:
+      - ../worker:/app
+    command: ["dotnet", "watch", "run", "--project", "src/UrbanWatch.Worker/UrbanWatch.Worker.csproj"]
+    depends_on:
+      - mongodb
+      - redis
+
+volumes:
+  mongo_data:
+  redis_data:
+  pgdata:
