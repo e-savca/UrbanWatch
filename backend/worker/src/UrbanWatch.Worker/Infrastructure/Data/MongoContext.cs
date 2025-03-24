@@ -15,8 +15,6 @@ public class MongoContext
         var client = new MongoClient($"mongodb://{settings.Username}:{settings.Password}@{settings.Host}:{settings.Port}");
         _database = client.GetDatabase(settings.Database);
     }
-    public IMongoCollection<Vehicle> VehicleHistory =>
-        _database.GetCollection<Vehicle>("vehicle_history");
-
-
+    public IMongoCollection<VehicleSnapshot> VehicleHistory =>
+        _database.GetCollection<VehicleSnapshot>("vehicle_history");
 }

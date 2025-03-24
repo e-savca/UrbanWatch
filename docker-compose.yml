@@ -1,7 +1,13 @@
 services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
   mongodb:
     image: mongo:6.0
-    container_name: mongodb
     restart: always
     ports:
       - "27017:27017"
@@ -9,7 +15,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - mongodata:/data/db
+      - mongo_data:/data/db
   worker:
     build: ./backend/worker
     environment:
@@ -25,9 +31,11 @@ services:
     restart: always
     depends_on:
       - mongodb
+      - redis
 
 volumes:
-  mongodata:
+  mongo_data:
+  redis_data:
   # pgdata:
 
   # api:

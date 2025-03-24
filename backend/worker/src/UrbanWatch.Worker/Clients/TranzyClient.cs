@@ -22,7 +22,7 @@ public class TranzyClient
         _logger = logger;
     }
 
-    public async Task<Vehicle[]> GetVehiclesAsync(string agencyId)
+    public async Task<List<Vehicle>> GetVehiclesAsync(string agencyId)
     {
         using var client = _factory.CreateClient();
 
@@ -51,7 +51,7 @@ public class TranzyClient
 
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Vehicle[]>(body) ?? Array.Empty<Vehicle>();
+                return JsonConvert.DeserializeObject<List<Vehicle>>(body) ?? new List<Vehicle>();
             }
         }
         catch (Exception e)

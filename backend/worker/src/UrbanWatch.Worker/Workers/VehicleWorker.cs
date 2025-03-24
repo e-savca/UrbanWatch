@@ -1,4 +1,8 @@
+using System.Security.Cryptography;
+using System.Text;
 using UrbanWatch.Worker.Clients;
+using UrbanWatch.Worker.ConfigManager;
+using UrbanWatch.Worker.Infrastructure.Data;
 using UrbanWatch.Worker.Models;
 using UrbanWatch.Worker.Services;
 
@@ -9,14 +13,22 @@ public class VehicleWorker : BackgroundService
     private const string AgencyId = "4";
     private readonly TranzyClient _client;
     public VehicleHistoryService VehicleHistoryService { get; }
+    public RedisContext RedisContext { get; }
+    public EnvManager EnvManager { get; }
     private readonly ILogger<VehicleWorker> _logger;
+
+    private readonly Dictionary<string, string> _vehiclesHashCache = new Dictionary<string, string>();
 
     public VehicleWorker(
         TranzyClient client,
         VehicleHistoryService vehicleHistoryService,
+        RedisContext redisContext,
+        EnvManager envManager,
         ILogger<VehicleWorker> logger)
     {
         VehicleHistoryService = vehicleHistoryService;
+        RedisContext = redisContext;
+        EnvManager = envManager;
 
         _client = client;
         _logger = logger;
@@ -24,29 +36,59 @@ public class VehicleWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        
         while (!stoppingToken.IsCancellationRequested)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation("Vehicle worker running at: {time}", DateTimeOffset.Now);
             }
-            
-            _logger.LogInformation("Fetching data on API {time}", DateTimeOffset.Now);
+
             var vehicles = await _client.GetVehiclesAsync(AgencyId);
-            _logger.LogInformation("Converting data to list {time}", DateTimeOffset.Now);
-            var vehicleList = new List<Vehicle>(vehicles);
-            _logger.LogInformation("Save data batch async on MongoDB {time}", DateTimeOffset.Now);
-            await VehicleHistoryService.SaveBatchAsync(vehicleList, stoppingToken);
-            _logger.LogInformation("Check last entries {time}", DateTimeOffset.Now);
-            var lastEntries = await VehicleHistoryService.GetLastAsync();
-            _logger.LogInformation($"Last entries count {lastEntries.Count}");
-            foreach (var vehicle in lastEntries)
+            
+            if (_vehiclesHashCache.Count != 0)
             {
-                _logger.LogInformation("Entry: {vehicle} {time}",vehicle.ToString(), DateTimeOffset.Now);
+                var rnd = new Random();
+                var sample = vehicles.OrderBy(_ => rnd.Next()).Take(20).ToList();
+            
+                bool anyChanged = sample.Any(s =>
+                {
+                    var currentHash = ComputeVehicleHash(s);
+                    if (s.Id == null) return false;
+                    return !_vehiclesHashCache.TryGetValue(s.Id, out var hash) || hash != currentHash;
+                });
+                if (anyChanged)
+                {
+                    await VehicleHistoryService.SaveBatchAsync(vehicles, stoppingToken);
+                    AddOrUpdateVehiclesHash(vehicles);
+                }
+            }
+            else
+            {
+                AddOrUpdateVehiclesHash(vehicles);
+                await VehicleHistoryService.SaveBatchAsync(vehicles, stoppingToken);
             }
             
-            await Task.Delay(5000, stoppingToken);
+            if (!EnvManager.IsDevelopment())
+                await Task.Delay(5000, stoppingToken);
+            else
+                await Task.Delay(10000, stoppingToken);
         }
+    }
+
+    private void AddOrUpdateVehiclesHash(List<Vehicle> vehicles)
+    {
+        foreach (var v in vehicles)
+        {
+            if (!string.IsNullOrWhiteSpace(v.Id))
+                _vehiclesHashCache[v.Id] = ComputeVehicleHash(v);
+        }
+    }
+
+    private string ComputeVehicleHash(Vehicle vehicle)
+    {
+        var input = $"{vehicle.Latitude}_{vehicle.Longitude}_{vehicle.Timestamp}";
+        using var sha256 = SHA256.Create();
+        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+        return Convert.ToBase64String(bytes);
     }
 }

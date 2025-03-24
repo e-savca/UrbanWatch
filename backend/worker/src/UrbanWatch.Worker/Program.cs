@@ -12,13 +12,14 @@ builder.Services.AddHostedService<VehicleWorker>();
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("Mongo"));
 
-// register dependencies 
+// Register dependencies
+builder.Services.AddSingleton<MongoContext>();
+builder.Services.AddSingleton(new RedisContext("redis:6379"));
+
 builder.Services.AddSingleton<TranzyClient>();
 builder.Services.AddSingleton<EnvManager>();
 
-builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddSingleton<VehicleHistoryService>();
-
 
 var host = builder.Build();
 host.Run();

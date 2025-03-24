@@ -6,13 +6,8 @@ namespace UrbanWatch.Worker.Models;
 
 public class Vehicle
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-
     [JsonProperty("id")]
-    [BsonElement("vehicle_id")]
-    public string? VehicleId { get; set; }
+    public string? Id { get; set; }
 
     [JsonProperty("label")]
     public string? Label { get; set; }
@@ -24,7 +19,7 @@ public class Vehicle
     public string? Longitude { get; set; }
 
     [JsonProperty("timestamp")]
-    public DateTime Timestamp { get; set; }
+    public string? Timestamp { get; set; }
 
     [JsonProperty("vehicle_type")]
     public int VehicleType { get; set; }
@@ -35,12 +30,6 @@ public class Vehicle
     [JsonProperty("wheelchair_accessible")]
     public string? WheelchairAccessible { get; set; }
 
-    [JsonProperty("x_provider")]
-    public string? XProvider { get; set; }
-
-    [JsonProperty("x_rand")]
-    public string? XRand { get; set; }
-
     [JsonProperty("speed")]
     public string? Speed { get; set; }
 
@@ -49,9 +38,4 @@ public class Vehicle
 
     [JsonProperty("trip_id")]
     public string? TripId { get; set; }
-    public override string ToString()
-    {
-        return JsonConvert.SerializeObject(this, Formatting.Indented);
-    }
-
 }

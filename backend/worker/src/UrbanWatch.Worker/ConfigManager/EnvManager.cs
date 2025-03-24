@@ -16,6 +16,6 @@ public class EnvManager
     }
 
 
-    private bool IsDevelopment() => Config["ASPNETCORE_ENVIRONMENT"] == "Development";
+    public bool IsDevelopment() => Config["ASPNETCORE_ENVIRONMENT"] == "Development";
 
 }
