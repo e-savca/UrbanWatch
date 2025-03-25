@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace UrbanWatchAPI.Application.Entities;
+namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
 
 public class VehicleSnapshot
 {
