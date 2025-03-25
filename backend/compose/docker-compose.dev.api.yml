@@ -1,11 +1,4 @@
 services:
-  postgres:
-    image: postgis/postgis
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
   # redis:
   #   image: redis:7-alpine
   #   ports:
@@ -24,22 +17,28 @@ services:
   #   volumes:
   #     - mongo_data:/data/db
   api:
-    build: 
+    build:
       context: ../api
       dockerfile: Dockerfile.dev
     ports:
-      - "5020:5020"
+      - '5020:5020'
     environment:
       ASPNETCORE_ENVIRONMENT: Development
     volumes:
       - ../api:/app
-    command: ["dotnet", "watch", "run", "--project", "src/UrbanWatchAPI.Presentation/UrbanWatchAPI.Presentation.csproj"]
+    command:
+      [
+        'dotnet',
+        'watch',
+        'run',
+        '--project',
+        'src/UrbanWatchAPI.Presentation/UrbanWatchAPI.Presentation.csproj',
+      ]
     depends_on:
-      - postgres
       # - mongo
       # - redis
   # worker:
-  #   build: 
+  #   build:
   #     context: ../worker
   #     dockerfile: Dockerfile.dev
   #   environment:
@@ -61,4 +60,3 @@ services:
 volumes:
   # mongo_data:
   # redis_data:
-  pgdata:
