@@ -1,13 +1,11 @@
 using Newtonsoft.Json;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace UrbanWatch.Worker.Models;
 
 public class Vehicle
 {
     [JsonProperty("id")]
-    public string? Id { get; set; }
+    public string? VehicleId { get; set; }
 
     [JsonProperty("label")]
     public string? Label { get; set; }

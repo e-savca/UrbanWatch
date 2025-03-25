@@ -2,7 +2,7 @@
 
 public class Vehicle
 {
-    public string? Id { get; set; }
+    public string? VehicleId { get; set; }
 
     public string? Label { get; set; }
 

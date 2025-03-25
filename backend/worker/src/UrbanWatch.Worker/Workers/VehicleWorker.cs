@@ -53,8 +53,8 @@ public class VehicleWorker : BackgroundService
                 bool anyChanged = sample.Any(s =>
                 {
                     var currentHash = ComputeVehicleHash(s);
-                    if (s.Id == null) return false;
-                    return !_vehiclesHashCache.TryGetValue(s.Id, out var hash) || hash != currentHash;
+                    if (s.VehicleId == null) return false;
+                    return !_vehiclesHashCache.TryGetValue(s.VehicleId, out var hash) || hash != currentHash;
                 });
                 if (anyChanged)
                 {
@@ -79,8 +79,8 @@ public class VehicleWorker : BackgroundService
     {
         foreach (var v in vehicles)
         {
-            if (!string.IsNullOrWhiteSpace(v.Id))
-                _vehiclesHashCache[v.Id] = ComputeVehicleHash(v);
+            if (!string.IsNullOrWhiteSpace(v.VehicleId))
+                _vehiclesHashCache[v.VehicleId] = ComputeVehicleHash(v);
         }
     }
 
