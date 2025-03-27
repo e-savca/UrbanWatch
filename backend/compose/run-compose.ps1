@@ -14,19 +14,15 @@ if (-not $env) {
 
 # Select the corresponding docker-compose file
 switch ($env) {
-    "pg" {
-        $composeFile = "docker-compose.dev.pg.yml"
-    }
-    "api-pg" {
-        $composeFile = "docker-compose.dev.api-pg.yml"
+    "api" {
+        $composeFile = "docker-compose.dev.api.yml"
     }
     "dev" {
         $composeFile = "docker-compose.dev.yml"
     }
     default {
-        Write-Host "Unknown environment: $env"
-        Write-Host "Valid options: api-pg, dev"
-        exit 1
+        Write-Host "Using default 'docker-compose.yml' file"
+        $composeFile = "docker-compose.yml"
     }
 }
 

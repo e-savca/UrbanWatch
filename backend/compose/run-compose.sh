@@ -12,16 +12,15 @@ fi
 
 # Select the corresponding docker-compose file
 case "$1" in
-  api-pg)
-    COMPOSE_FILE="docker-compose.dev.api-pg.yml"
+  api)
+    COMPOSE_FILE="docker-compose.dev.api.yml"
     ;;
   dev)
     COMPOSE_FILE="docker-compose.dev.yml"
     ;;
   *)
-    echo "❌ Unknown environment: $1"
-    echo "Valid options: api-pg, dev"
-    exit 1
+    echo "Using default 'docker-compose.yml' file"
+    COMPOSE_FILE="docker-compose.yml"
     ;;
 esac
 
