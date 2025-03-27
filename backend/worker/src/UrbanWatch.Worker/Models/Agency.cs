@@ -1,11 +1,10 @@
 using MongoDB.Bson;
 using Newtonsoft.Json;
 
-namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
+namespace UrbanWatch.Worker.Models;
 
 public class Agency
 {
-    public ObjectId Id { get; set; }
     [JsonProperty("agency_id")]
     public int AgencyId { get; set; }
     [JsonProperty("agency_name")]

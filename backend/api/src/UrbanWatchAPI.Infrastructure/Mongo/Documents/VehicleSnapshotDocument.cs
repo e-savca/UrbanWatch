@@ -2,9 +2,9 @@
 
 namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
 
-public class VehicleSnapshot
+public class VehicleSnapshotDocument
 {
     public ObjectId Id { get; set; }
     public DateTime Timestamp { get; set; }
-    public List<Vehicle> Vehicles { get; set; } = new();
+    public List<VehicleDocument> Vehicles { get; set; } = new();
 }

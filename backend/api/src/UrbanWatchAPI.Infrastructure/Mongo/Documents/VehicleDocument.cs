@@ -1,6 +1,6 @@
 ﻿namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
 
-public class Vehicle
+public class VehicleDocument
 {
     public string? VehicleId { get; set; }
 

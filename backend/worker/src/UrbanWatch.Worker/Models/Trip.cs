@@ -1,8 +1,7 @@
 using MongoDB.Bson;
 using Newtonsoft.Json;
 
-namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
-
+namespace UrbanWatch.Worker.Models;
 public class Trip
 {
     public ObjectId Id { get; set; }
