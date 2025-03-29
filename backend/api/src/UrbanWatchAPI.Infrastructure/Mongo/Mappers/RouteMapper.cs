@@ -1,9 +1,10 @@
 using UrbanWatchAPI.Domain.Entities.PublicTransportEntities;
+using UrbanWatchAPI.Domain.Interfaces;
 using UrbanWatchAPI.Infrastructure.Mongo.Documents;
 
 namespace UrbanWatchAPI.Infrastructure.Mongo.Mappers;
 
-public class RouteMapper
+public class RouteMapper : IDocumentMapper<Route, RouteDocument>
 {
     public RouteDocument ToDocument(Route route)
     {
