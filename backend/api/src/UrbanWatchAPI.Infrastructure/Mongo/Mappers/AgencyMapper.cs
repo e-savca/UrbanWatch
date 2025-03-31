@@ -8,11 +8,33 @@ public class AgencyMapper : IDocumentMapper<Agency, AgencyDocument>
 {
     public AgencyDocument ToDocument(Agency agency)
     {
-        return new AgencyDocument();
+        var document = new AgencyDocument
+        {
+            Id = agency.Id,
+            AgencyId = agency.AgencyId,
+            AgencyName = agency.AgencyName,
+            AgencyUrl = agency.AgencyUrl,
+            AgencyTimezone = agency.AgencyTimezone,
+            AgencyLang = agency.AgencyLang,
+            AgencyFareUrl = agency.AgencyFareUrl
+        };
+
+        return document;
     }
 
-    public Agency ToDomain(AgencyDocument agency)
+    public Agency ToDomain(AgencyDocument document)
     {
-        return new Agency();
+        var agency = new Agency
+        {
+            Id = document.Id,
+            AgencyId = document.AgencyId,
+            AgencyName = document.AgencyName,
+            AgencyUrl = document.AgencyUrl,
+            AgencyTimezone = document.AgencyTimezone,
+            AgencyLang = document.AgencyLang,
+            AgencyFareUrl = document.AgencyFareUrl
+        };
+
+        return agency;
     }
 }

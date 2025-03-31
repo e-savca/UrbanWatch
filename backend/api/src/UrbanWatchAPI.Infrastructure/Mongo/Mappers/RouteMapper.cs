@@ -8,11 +8,33 @@ public class RouteMapper : IDocumentMapper<Route, RouteDocument>
 {
     public RouteDocument ToDocument(Route route)
     {
-        return new RouteDocument();
+        var document = new RouteDocument()
+        {
+            Id = route.Id,
+            AgencyId = route.AgencyId,
+            RouteId = route.RouteId,
+            RouteShortName = route.RouteShortName,
+            RouteLongName = route.RouteLongName,
+            RouteColor = route.RouteColor,
+            RouteType = route.RouteType,
+            RouteDesc = route.RouteDesc
+        };
+        return document;
     }
 
-    public Route ToDomain(RouteDocument route)
+    public Route ToDomain(RouteDocument document)
     {
-        return new Route();
+        var route = new Route()
+        {
+            Id = document.Id,
+            AgencyId = document.AgencyId,
+            RouteId = document.RouteId,
+            RouteShortName = document.RouteShortName,
+            RouteLongName = document.RouteLongName,
+            RouteColor = document.RouteColor,
+            RouteType = document.RouteType,
+            RouteDesc = document.RouteDesc
+        };
+        return route;
     }
 }

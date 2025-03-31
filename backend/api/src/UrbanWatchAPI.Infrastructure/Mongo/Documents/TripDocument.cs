@@ -1,11 +1,13 @@
 using MongoDB.Bson;
-using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
 
 public class TripDocument
 {
-    public ObjectId Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
+    public Guid Id { get; set; }
     public int RouteId { get; set; }
     public string? TripId { get; set; }
     public string? TripHeadsign { get; set; }

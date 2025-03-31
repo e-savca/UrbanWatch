@@ -1,11 +1,13 @@
 using MongoDB.Bson;
-using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace UrbanWatchAPI.Infrastructure.Mongo.Documents;
 
 public class AgencyDocument
 {
-    public ObjectId Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
+    public Guid Id { get; set; }
     public int AgencyId { get; set; }
     public string? AgencyName { get; set; }
     public string? AgencyUrl { get; set; }
