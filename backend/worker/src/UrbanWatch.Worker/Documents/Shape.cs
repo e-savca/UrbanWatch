@@ -1,10 +1,14 @@
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
 namespace UrbanWatch.Worker.Models;
 
 public class Shape
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
+    public Guid Id { get; set; }
     [JsonProperty("shape_id")]
     public string? ShapeId { get; set; }
     [JsonProperty("shape_pt_lat")]

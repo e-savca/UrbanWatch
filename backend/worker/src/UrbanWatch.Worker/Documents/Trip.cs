@@ -1,9 +1,13 @@
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
 namespace UrbanWatch.Worker.Models;
 public class Trip
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.String)]
+    public Guid Id { get; set; }
     public ObjectId Id { get; set; }
     [JsonProperty("route_id")]
     public int RouteId { get; set; }
