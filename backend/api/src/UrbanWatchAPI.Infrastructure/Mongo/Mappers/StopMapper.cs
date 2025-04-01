@@ -8,11 +8,27 @@ public class StopMapper : IDocumentMapper<Stop, StopDocument>
 {
     public StopDocument ToDocument(Stop stop)
     {
-        return new StopDocument();
+        return new StopDocument(){
+            Id = stop.Id,
+            StopId = stop.StopId,
+            StopName = stop.StopName,
+            Lat = stop.Lat,
+            Lon = stop.Lon,
+            Code = stop.Code,
+            LocationType = stop.LocationType,
+        };
     }
 
     public Stop ToDomain(StopDocument stop)
     {
-        return new Stop();
+        return new Stop(){
+            Id = stop.Id,
+            StopId = stop.StopId,
+            StopName = stop.StopName,
+            Lat = stop.Lat,
+            Lon = stop.Lon,
+            Code = stop.Code,
+            LocationType = stop.LocationType,
+        };
     }
 }

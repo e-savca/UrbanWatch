@@ -8,11 +8,27 @@ public class TripMapper : IDocumentMapper<Trip, TripDocument>
 {
     public TripDocument ToDocument(Trip trip)
     {
-        return new TripDocument();
+        return new TripDocument(){
+            Id = trip.Id,
+            RouteId = trip.RouteId,
+            TripId = trip.TripId,
+            TripHeadsign = trip.TripHeadsign,
+            DirectionId = trip.DirectionId,
+            BlockId = trip.BlockId,
+            ShapeId = trip.ShapeId
+        };
     }
 
     public Trip ToDomain(TripDocument trip)
     {
-        return new Trip();
+        return new Trip(){
+            Id = trip.Id,
+            RouteId = trip.RouteId,
+            TripId = trip.TripId,
+            TripHeadsign = trip.TripHeadsign,
+            DirectionId = trip.DirectionId,
+            BlockId = trip.BlockId,
+            ShapeId = trip.ShapeId
+        };
     }
 }

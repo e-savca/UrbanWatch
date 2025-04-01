@@ -8,11 +8,21 @@ public class StopTimesMapper : IDocumentMapper<StopTimes, StopTimesDocument>
 {
     public StopTimesDocument ToDocument(StopTimes stopTimes)
     {
-        return new StopTimesDocument();
+        return new StopTimesDocument(){
+            Id = stopTimes.Id,
+            TripId = stopTimes.TripId,
+            StopId = stopTimes.StopId,
+            StopSequence = stopTimes.StopSequence
+        };
     }
 
     public StopTimes ToDomain(StopTimesDocument stopTimes)
     {
-        return new StopTimes();
+        return new StopTimes(){
+            Id = stopTimes.Id,
+            TripId = stopTimes.TripId,
+            StopId = stopTimes.StopId,
+            StopSequence = stopTimes.StopSequence
+        };
     }
 }

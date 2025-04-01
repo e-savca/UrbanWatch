@@ -7,13 +7,21 @@ namespace UrbanWatchAPI.Infrastructure.Mongo.Mappers;
 public class VehicleSnapshotMapper : IDocumentMapper<VehicleSnapshot, VehicleSnapshotDocument>
 {
 
-    public VehicleSnapshotDocument ToDocument(VehicleSnapshot agency)
+    public VehicleSnapshotDocument ToDocument(VehicleSnapshot vehicleSnapshot)
     {
-        return new VehicleSnapshotDocument();
+        return new VehicleSnapshotDocument(){
+            Id = vehicleSnapshot.Id,
+            Timestamp = vehicleSnapshot.Timestamp,
+            Vehicles = vehicleSnapshot.Vehicles.Select(v => new VehicleMapper().ToDocument(v)).ToList()
+        };
     }
 
-    public VehicleSnapshot ToDomain(VehicleSnapshotDocument agency)
+    public VehicleSnapshot ToDomain(VehicleSnapshotDocument vehicleSnapshot)
     {
-        return new VehicleSnapshot();
+        return new VehicleSnapshot(){
+            Id = vehicleSnapshot.Id,
+            Timestamp = vehicleSnapshot.Timestamp,
+            Vehicles = vehicleSnapshot.Vehicles.Select(v => new VehicleMapper().ToDomain(v)).ToList()
+        };
     }
 }

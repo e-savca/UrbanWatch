@@ -7,11 +7,23 @@ public class ShapeMapper
 {
     public ShapeDocument ToDocument(Shape shape)
     {
-        return new ShapeDocument();
+        return new ShapeDocument(){
+            Id = shape.Id,
+            ShapeId = shape.ShapeId,
+            ShapePtLat = shape.ShapePtLat,
+            ShapePtLon = shape.ShapePtLon,
+            ShapePtSequence = shape.ShapePtSequence
+        };
     }
 
     public Shape ToDomain(ShapeDocument shape)
     {
-        return new Shape();
+        return new Shape(){
+            Id = shape.Id,
+            ShapeId = shape.ShapeId,
+            ShapePtLat = shape.ShapePtLat,
+            ShapePtLon = shape.ShapePtLon,
+            ShapePtSequence = shape.ShapePtSequence
+        };
     }
 }

@@ -8,7 +8,7 @@ public class AgencyMapper : IDocumentMapper<Agency, AgencyDocument>
 {
     public AgencyDocument ToDocument(Agency agency)
     {
-        var document = new AgencyDocument
+        return new AgencyDocument
         {
             Id = agency.Id,
             AgencyId = agency.AgencyId,
@@ -18,23 +18,19 @@ public class AgencyMapper : IDocumentMapper<Agency, AgencyDocument>
             AgencyLang = agency.AgencyLang,
             AgencyFareUrl = agency.AgencyFareUrl
         };
-
-        return document;
     }
 
-    public Agency ToDomain(AgencyDocument document)
+    public Agency ToDomain(AgencyDocument agency)
     {
-        var agency = new Agency
+        return new Agency
         {
-            Id = document.Id,
-            AgencyId = document.AgencyId,
-            AgencyName = document.AgencyName,
-            AgencyUrl = document.AgencyUrl,
-            AgencyTimezone = document.AgencyTimezone,
-            AgencyLang = document.AgencyLang,
-            AgencyFareUrl = document.AgencyFareUrl
+            Id = agency.Id,
+            AgencyId = agency.AgencyId,
+            AgencyName = agency.AgencyName,
+            AgencyUrl = agency.AgencyUrl,
+            AgencyTimezone = agency.AgencyTimezone,
+            AgencyLang = agency.AgencyLang,
+            AgencyFareUrl = agency.AgencyFareUrl
         };
-
-        return agency;
     }
 }
