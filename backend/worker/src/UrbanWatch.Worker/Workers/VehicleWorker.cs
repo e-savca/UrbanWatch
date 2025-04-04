@@ -13,7 +13,7 @@ public class VehicleWorker : BackgroundService
     private const string AgencyId = "4";
     private readonly TranzyClient _client;
     public VehicleHistoryService VehicleHistoryService { get; }
-    public RedisContext RedisContext { get; }
+    // public RedisContext RedisContext { get; }
     public EnvManager EnvManager { get; }
     private readonly ILogger<VehicleWorker> _logger;
 
@@ -22,12 +22,12 @@ public class VehicleWorker : BackgroundService
     public VehicleWorker(
         TranzyClient client,
         VehicleHistoryService vehicleHistoryService,
-        RedisContext redisContext,
+        // RedisContext redisContext,
         EnvManager envManager,
         ILogger<VehicleWorker> logger)
     {
         VehicleHistoryService = vehicleHistoryService;
-        RedisContext = redisContext;
+        // RedisContext = redisContext;
         EnvManager = envManager;
 
         _client = client;

@@ -8,7 +8,6 @@ public class Trip
     [BsonId]
     [BsonRepresentation(BsonType.String)]
     public Guid Id { get; set; }
-    public ObjectId Id { get; set; }
     [JsonProperty("route_id")]
     public int RouteId { get; set; }
     [JsonProperty("trip_id")]

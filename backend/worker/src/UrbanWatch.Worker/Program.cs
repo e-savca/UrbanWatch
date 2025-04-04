@@ -14,7 +14,7 @@ builder.Services.Configure<MongoSettings>(
 
 // Register dependencies
 builder.Services.AddSingleton<MongoContext>();
-builder.Services.AddSingleton(new RedisContext("redis:6379"));
+// builder.Services.AddSingleton(new RedisContext("redis:6379"));
 
 builder.Services.AddSingleton<TranzyClient>();
 builder.Services.AddSingleton<EnvManager>();

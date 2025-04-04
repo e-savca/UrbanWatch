@@ -24,4 +24,9 @@ public class VehicleSnapshotMapper : IDocumentMapper<VehicleSnapshot, VehicleSna
             Vehicles = vehicleSnapshot.Vehicles.Select(v => new VehicleMapper().ToDomain(v)).ToList()
         };
     }
+    
+    public List<VehicleSnapshot> ToDomain(List<VehicleSnapshotDocument> vehicleSnapshot)
+    {
+        return vehicleSnapshot.Select(d => ToDomain(d)).ToList();
+    }
 }

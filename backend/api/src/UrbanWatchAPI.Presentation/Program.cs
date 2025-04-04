@@ -1,15 +1,31 @@
+using UrbanWatchAPI.Infrastructure.Mongo;
+using UrbanWatchAPI.Infrastructure.Mongo.Documents;
+using UrbanWatchAPI.Infrastructure.Mongo.Repositories;
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseUrls("http://0.0.0.0:5020");
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Bind env vars to config class
+builder.Services.Configure<MongoSettings>(
+    builder.Configuration.GetSection("Mongo"));
+
+// Register MongoContext as a singleton
+builder.Services.AddSingleton<MongoContext>();
+
+// Add custom services to DI Container
+builder.Services.AddSingleton<VehicleSnapshotRepository>();
+
+builder.Services.AddControllers();
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -19,29 +35,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

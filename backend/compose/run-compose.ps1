@@ -14,6 +14,9 @@ if (-not $env) {
 
 # Select the corresponding docker-compose file
 switch ($env) {
+    "api-worker" {
+        $composeFile = "docker-compose.dev.api-worker.yml"
+    }
     "api" {
         $composeFile = "docker-compose.dev.api.yml"
     }

@@ -12,6 +12,9 @@ fi
 
 # Select the corresponding docker-compose file
 case "$1" in
+  api-worker)
+    COMPOSE_FILE="docker-compose.dev.api-worker.yml"
+    ;;
   api)
     COMPOSE_FILE="docker-compose.dev.api.yml"
     ;;
