@@ -4,3 +4,6 @@
 [submodule "backend/api"]
 	path = backend/api
 	url = https://github.com/e-savca/UrbanWatch.API.git
+[submodule "backend/worker"]
+	path = backend/worker
+	url = https://github.com/e-savca/UrbanWatch.Worker.git
