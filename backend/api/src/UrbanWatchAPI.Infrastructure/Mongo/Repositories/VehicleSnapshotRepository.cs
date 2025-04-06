@@ -15,13 +15,6 @@ public class VehicleSnapshotRepository
     {
         _collection = mongoContext.VehicleHistory;
     }
-
-    public async Task<List<VehicleSnapshot>> GetAllAsync()
-    {
-        var documents = await _collection.Find(vehicleSnapshot => true).ToListAsync();
-        
-        return new VehicleSnapshotMapper().ToDomain(documents);
-    }
     
     public async Task<List<VehicleSnapshot>> GetRecorsForLastAsync(int seconds)
     {
@@ -32,6 +25,14 @@ public class VehicleSnapshotRepository
         var documents = await _collection.Find(filter).ToListAsync();
 
         return new VehicleSnapshotMapper().ToDomain(documents);
+    }
+
+    public async Task<VehicleSnapshot?> GetLastAsync()
+    {
+        var filter = Builders<VehicleSnapshotDocument>.Filter.Gte(x => x.Timestamp, DateTime.UtcNow);
+        
+        var document = await _collection.Find(filter).FirstOrDefaultAsync();
+        return new VehicleSnapshotMapper().ToDomain(document);
     }
 
 }

@@ -22,4 +22,11 @@ public class TestController : ControllerBase
         var result = await _snapshotRepository.GetRecorsForLastAsync(seconds);
         return Ok(result);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Get()
+    {
+        var result = await _snapshotRepository.GetLastAsync();
+        return Ok(result);
+    }
 }
