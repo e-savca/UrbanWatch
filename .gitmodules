@@ -1,3 +1,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/e-savca/UrbanWatch.FE.git
+[submodule "backend/api"]
+	path = backend/api
+	url = https://github.com/e-savca/UrbanWatch.API.git
