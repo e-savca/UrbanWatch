@@ -14,14 +14,14 @@ To simplify working with submodules, two shell scripts are provided inside the `
 To add a submodule to your project, run the following command from the root of the repository:
 
 ```bash
-git submodule add https://github.com/e-savca/UrbanWatch.FE.git frontend
+git submodule add https://github.com/e-savca/UrbanWatch.Worker.git backend/worker
 ```
 
 Then commit the changes:
 
 ```bash
 git add .gitmodules frontend
-git commit -m "Add submodule: module-repo"
+git commit -m "Add submodule: UrbanWatch.Worker"
 git push
 ```
 
