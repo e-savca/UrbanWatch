@@ -6,18 +6,19 @@ Run the appropriate `docker-compose` command based on your desired environment.
 
 ### ✅ Available Compose Environments
 
-| Command                    | Description                        |
-|----------------------------|------------------------------------|
-| `docker-compose -f docker-compose.dev.yml up --build` | Base development environment |
-| `docker-compose -f docker-compose.dev.api.yml up --build` | API-only setup              |
-| `docker-compose -f docker-compose.dev.api-worker.yml up --build` | API with worker services    |
-| `docker-compose up --build` | Default Compose setup (`docker-compose.yml`) |
+#### 🏭 Production (default)
+```sh
+docker-compose up --build
+```
 
-## 📝 Example
+#### 🧪 Development with Portainer
+```sh
+docker-compose -f docker-compose.dev.portainer.yml up --build
+```
 
-```bash
-# For API with worker setup:
-docker-compose -f docker-compose.dev.api-worker.yml up --build
+#### 💻 Development on Localhost
+```sh
+docker-compose -f docker-compose.dev.local.yml up --build
 ```
 
 ## 📌 Notes
