@@ -1,14 +1,15 @@
 #!/bin/bash
+set -e
 
-echo "🔄 Updating submodules to latest commits from origin..."
+echo "🔄 Updating all submodules to latest 'origin/main'..."
 
-git submodule init
-git submodule update
+# Init submodules if not already
+git submodule update --init --recursive
 
+# Pull latest for each submodule
 git submodule foreach '
-  echo "📁 Updating $name ..."
-  git checkout main || echo "⚠️ Could not checkout main in $name"
-  git pull origin main || echo "⚠️ Could not pull from origin/main in $name"
+  echo "➡️ Updating $name ..."
+  git fetch origin
+  git checkout main
+  git pull origin main
 '
-
-echo "✅ Submodules updated to latest commits."
