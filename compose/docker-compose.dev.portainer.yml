@@ -16,27 +16,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo_data:/data/db
-  api:
-    build:
-      context: ../api
-      dockerfile: Dockerfile.dev
-    ports:
-      - '5020:5020'
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-    volumes:
-      - ../api:/app
-    command:
-      [
-        'dotnet',
-        'watch',
-        'run',
-        '--project',
-        'src/UrbanWatchAPI.Presentation/UrbanWatchAPI.Presentation.dll',
-      ]
-    depends_on:
-      - mongo
-      - redis
   worker:
     build:
       context: ../worker
@@ -63,7 +42,27 @@ services:
     depends_on:
       - mongodb
       - redis
-
+  api:
+    build:
+      context: ../api
+      dockerfile: Dockerfile.dev
+    ports:
+      - '5020:5020'
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - ../api:/app
+    command:
+      [
+        'dotnet',
+        'watch',
+        'run',
+        '--project',
+        'src/UrbanWatchAPI.Presentation/UrbanWatchAPI.Presentation.dll',
+      ]
+    depends_on:
+      - mongo
+      - redis
 volumes:
   mongo_data:
   redis_data:
