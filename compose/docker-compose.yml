@@ -16,17 +16,18 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo_data:/data/db
-  api:
-    build: ../api
-    ports:
-      - '5020:5020'
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-    depends_on:
-      - mongo
-      - redis
+  # api:
+  #   build: ../api
+  #   ports:
+  #     - '5020:5020'
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #   depends_on:
+  #     - mongo
+  #     - redis
+  #     - worker
   worker:
-    build: ../worker
+    image: ghcr.io/e-savca/urbanwatch-worker:latest
     environment:
       TRANZY_API_KEY_PROD01: ${TRANZY_API_KEY_PROD01}
       TRANZY_API_KEY_PROD02: ${TRANZY_API_KEY_PROD02}
@@ -39,7 +40,6 @@ services:
       MONGO__PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     restart: always
     depends_on:
-      - api
       - mongodb
       - redis
 

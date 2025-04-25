@@ -16,52 +16,35 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo_data:/data/db
+
+  # api:
+  #   image: ghcr.io/e-savca/urbanwatch-api:latest
+  #   ports:
+  #     - '5020:5020'
+  #   environment:
+  #     ASPNETCORE_ENVIRONMENT: Development
+  #   depends_on:
+  #     - mongo
+  #     - redis
+  #     - worker
+
   worker:
-    build:
-      context: ../worker
-      dockerfile: Dockerfile.dev
+    image: ghcr.io/e-savca/urbanwatch-worker:latest
     environment:
       TRANZY_API_KEY_DEV01: ${TRANZY_API_KEY_DEV01}
+      TRANZY_API_KEY_PROD01: ${TRANZY_API_KEY_PROD01}
+      TRANZY_API_KEY_PROD02: ${TRANZY_API_KEY_PROD02}
+      TRANZY_API_KEY_PROD03: ${TRANZY_API_KEY_PROD03}
       ASPNETCORE_ENVIRONMENT: 'Development'
       MONGO__HOST: mongodb
       MONGO__PORT: 27017
       MONGO__DATABASE: UrbanWatchDB
       MONGO__USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO__PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      REDIS_CONNECTION_STRING: redis
     restart: always
-    volumes:
-      - ../worker:/app
-    command:
-      [
-        'dotnet',
-        'watch',
-        'run',
-        '--project',
-        'src/UrbanWatch.Worker/UrbanWatch.Worker.csproj',
-      ]
     depends_on:
       - mongodb
-      - redis
-  api:
-    build:
-      context: ../api
-      dockerfile: Dockerfile.dev
-    ports:
-      - '5020:5020'
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-    volumes:
-      - ../api:/app
-    command:
-      [
-        'dotnet',
-        'watch',
-        'run',
-        '--project',
-        'src/UrbanWatchAPI.Presentation/UrbanWatchAPI.Presentation.dll',
-      ]
-    depends_on:
-      - mongo
       - redis
 volumes:
   mongo_data:
